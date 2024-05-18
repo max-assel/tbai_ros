@@ -1,2 +1,1 @@
-# tbai
-Towards better athletic intelligence
+# Videos
