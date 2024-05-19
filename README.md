@@ -1,25 +1,25 @@
 # Videos
 
 ## Chapter 3
-### MpcController perceptive: 1 -> 2
+### Mpc perceptive: 1 -> 2
 
-### MpcController perceptive: 5 -> 6
+### Mpc perceptive: 5 -> 6
 
-### MpcController perceptive: 8 -> 9
+### Mpc perceptive: 8 -> 9
 
-### MpcController perceptive: 11 -> 12
+### Mpc perceptive: 11 -> 12
 
-### MpcController perceptive: 12 -> 1
+### Mpc perceptive: 12 -> 1
 
-### MpcController blind: 1 -> 2
+### Mpc blind: 1 -> 2
 
-### MpcController blind: 5 -> 6
+### Mpc blind: 5 -> 6
 
-### MpcController blind: 8 -> 9
+### Mpc blind: 8 -> 9
 
-### MpcController blind: 11 -> 12
+### Mpc blind: 11 -> 12
 
-### MpcController blind: 12 -> 1
+### Mpc blind: 12 -> 1
 
 ### Bob perceptive: 1 -> 2
 
