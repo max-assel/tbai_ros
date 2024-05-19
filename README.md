@@ -60,3 +60,15 @@
 ### Dtc blind: 11 -> 12
 
 ### Dtc blind: 12 -> 1
+
+## Chapter 4
+
+### Context-aware: 1 -> 2
+
+### Context-aware: 5 -> 6
+
+### Context-aware: 8 -> 9
+
+### Context-aware: 11 -> 12
+
+### Context-aware: 12 -> 1
