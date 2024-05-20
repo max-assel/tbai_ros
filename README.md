@@ -127,23 +127,34 @@ https://github.com/lnotspotl/tbai/assets/82883398/553e6f41-b133-4427-a972-4e9bc1
 
 ### Dtc perceptive: 1 -> 2
 
+
+https://github.com/lnotspotl/tbai/assets/82883398/022d38db-c450-4475-a0c8-2e70bc22839b
+
+
 ### Dtc perceptive: 5 -> 6
+
+
+https://github.com/lnotspotl/tbai/assets/82883398/f3382a44-bf96-48d0-8891-423258f611df
+
 
 ### Dtc perceptive: 8 -> 9
 
+
+https://github.com/lnotspotl/tbai/assets/82883398/c88b23d1-acfd-4e4b-8c04-4acdc70350c0
+
+
 ### Dtc perceptive: 11 -> 12
+
+
+https://github.com/lnotspotl/tbai/assets/82883398/34e9a512-7a3e-4d57-9b01-d5d7787785ac
+
 
 ### Dtc perceptive: 12 -> 1
 
-### Dtc blind: 1 -> 2
 
-### Dtc blind: 5 -> 6
+https://github.com/lnotspotl/tbai/assets/82883398/83438a0d-58a8-47a5-9e98-73ab15bdc3f0
 
-### Dtc blind: 8 -> 9
 
-### Dtc blind: 11 -> 12
-
-### Dtc blind: 12 -> 1
 
 ## Chapter 4
 
