@@ -173,7 +173,10 @@ https://github.com/lnotspotl/tbai/assets/82883398/2d75d603-6c10-4111-bc21-e2b5cc
 
 
 
-https://github.com/lnotspotl/tbai/assets/82883398/3b904f9f-a9aa-4614-b791-8c3801a9e7dc
+
+https://github.com/lnotspotl/tbai/assets/82883398/df49c9b3-fc4f-42ea-bb17-22d12861d06c
+
+
 
 
 
@@ -181,7 +184,10 @@ https://github.com/lnotspotl/tbai/assets/82883398/3b904f9f-a9aa-4614-b791-8c3801
 
 
 
-https://github.com/lnotspotl/tbai/assets/82883398/8d3cd9d9-994a-48da-a3a4-abd6525fae78
+
+
+https://github.com/lnotspotl/tbai/assets/82883398/6bd23f35-7056-4e44-9245-768924269495
+
 
 
 
