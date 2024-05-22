@@ -168,8 +168,15 @@ https://github.com/lnotspotl/tbai/assets/82883398/fcdc28c2-85f3-40b1-bd6e-3b780f
 
 https://github.com/lnotspotl/tbai/assets/82883398/d2736644-e32a-4ad2-8039-1b85f18857e1
 
+### Joe perceptive 1 -> 2
 
+### Joe perceptive 5 -> 6
 
+### Joe perceptive 8 -> 9
+
+### Joe perceptive 11 -> 12
+
+### Joe perceptive 12 -> 1
 
 ## Chapter 4
 
