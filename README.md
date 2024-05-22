@@ -170,13 +170,33 @@ https://github.com/lnotspotl/tbai/assets/82883398/d2736644-e32a-4ad2-8039-1b85f1
 
 ### Joe perceptive 1 -> 2
 
+
+https://github.com/lnotspotl/tbai/assets/82883398/d6fee619-12f8-4785-b52f-594c2d4d82bf
+
+
 ### Joe perceptive 5 -> 6
+
+
+https://github.com/lnotspotl/tbai/assets/82883398/56467e44-2071-4a67-8f24-b0a67ad75970
+
 
 ### Joe perceptive 8 -> 9
 
+
+https://github.com/lnotspotl/tbai/assets/82883398/5f667414-5b64-437b-8f4b-8277bc8dc32d
+
+
 ### Joe perceptive 11 -> 12
 
+
+https://github.com/lnotspotl/tbai/assets/82883398/64b0aeb6-8bd4-42d5-9e78-f653898809f5
+
+
 ### Joe perceptive 12 -> 1
+
+
+https://github.com/lnotspotl/tbai/assets/82883398/17843ce8-58cb-4cf4-8359-598013917762
+
 
 ## Chapter 4
 
