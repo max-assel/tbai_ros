@@ -44,8 +44,8 @@ reference_generator:
     x_index: 1
     y_index: 0
     yaw_index: 3
-    x_scale: 1.0
-    y_scale: 0.5
+    x_scale: 0.4
+    y_scale: 0.4
     yaw_scale: 0.5
 
   twist:

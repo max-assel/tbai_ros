@@ -89,6 +89,8 @@ class ReferenceTrajectoryGenerator {
     std::unique_ptr<grid_map::GridMap> terrainMapPtr_;
     SystemObservation latestObservation_;
 
+    std::unique_ptr<KinematicsModelBase<scalar_t>> kinematicsModel_;
+
     bool blind_;
 };
 
