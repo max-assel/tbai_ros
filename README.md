@@ -71,6 +71,25 @@ https://github.com/lnotspotl/tbai/assets/82883398/e3455dd3-10e8-41da-bb02-87fbdf
 
 ![overview_01](https://github.com/lnotspotl/tbai/assets/82883398/2c17f08d-6994-4982-8739-2b8246dfcb32)
 
+## Controller architectures
+
+## Mpc 
+![mpc_03](https://github.com/lnotspotl/tbai/assets/82883398/daabb2c2-8ced-4ffd-956e-35279b78563b)
+
+
+## Rl (Bob)
+
+![bob_03](https://github.com/lnotspotl/tbai/assets/82883398/3ea71f1c-b58c-4028-93d3-971592aa364d)
+
+
+## Dtc
+
+![dtc_03](https://github.com/lnotspotl/tbai/assets/82883398/10b3481d-7782-4a0e-ac31-24e2786c3402)
+
+## Joe
+
+![joe_03](https://github.com/lnotspotl/tbai/assets/82883398/0139df20-d2ce-4de1-884f-ce37e770ee08)
+
 
 ## Installing libtorch C++
 There are two steps to installing `libtorch`. First, you need to download a suitable `libtorch` version.
@@ -97,6 +116,29 @@ Your `dependencies` folder should not look as follows:
   <img src="https://github.com/lnotspotl/tbai/assets/82883398/657d8681-1abd-4dae-b4c2-15347ed542fd" />
 </p>
 That's it. You should now be able to compile the entire project. Enjoy 🤗
+
+## Installing tbai
+```bash
+# Install dependencies
+sudo apt install libmpfr-dev
+
+# Download project
+mkdir -p <your-file>/src && cd <your-file> && catkin init && cd src
+git clone git@github.com:lnotspotl/tbai.git --recursive
+
+# Install other dependencies using rosdep
+cd .. && rosdep install --from-paths src --ignore-src -r -y && cd src/tbai
+
+# !! Now install libtorch by following the installation guideline above
+
+# Build tbai
+catkin config -DCMAKE_BUILD_TYPE=Release
+bash ./tbai.bash --build  # This will only build the necessary packages
+
+# Source tbai
+cd ../.. && source devel/setup.bash
+```
+If any of the steps throws an error for you, please let use know and we will try to extend this guideline with a fix as soon as possible. Thanks 🤗
 
 ## Credits
 This project stands on the shoulders of giants.
