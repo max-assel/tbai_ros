@@ -170,6 +170,7 @@ class DtcController final : public tbai::core::Controller {
     std::unique_ptr<tbai::reference::ReferenceVelocityGenerator> refVelGen_;
     void publishReference(const TargetTrajectories &targetTrajectories);
     ros::Publisher refPub_;
+    ros::Publisher gaitPublisher_;
 
     vector_t defaultJointAngles_;
     std::vector<std::string> jointNames_;

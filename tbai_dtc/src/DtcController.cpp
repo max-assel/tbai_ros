@@ -16,6 +16,7 @@
 #include <ocs2_centroidal_model/PinocchioCentroidalDynamics.h>
 
 #include <ocs2_msgs/mpc_target_trajectories.h>
+#include <std_msgs/String.h>
 #include "ocs2_ros_interfaces/common/RosMsgConversions.h"
 #include <ocs2_legged_robot/gait/MotionPhaseDefinition.h>
 
@@ -82,6 +83,7 @@ DtcController::DtcController(const std::shared_ptr<tbai::core::StateSubscriber> 
     DTC_PRINT("Setting up reference velocity generator");
     refVelGen_ = tbai::reference::getReferenceVelocityGeneratorUnique(nh);
     refPub_ = nh.advertise<ocs2_msgs::mpc_target_trajectories>("anymal_mpc_target", 1, false);
+    gaitPublisher_ = nh.advertise<std_msgs::String>("anymal_gait", 1, false);
 
     horizon_ = 1.0;  // TODO: Load from config
     mpcRate_ = 30;   // TODO: Load from config
@@ -416,7 +418,7 @@ vector3_t DtcController::getProjectedGravityObservation(scalar_t currentTime, sc
 vector3_t DtcController::getCommandObservation(scalar_t currentTime, scalar_t dt) {
     tbai::reference::ReferenceVelocity refvel = refVelGen_->getReferenceVelocity(currentTime, 0.1);
     return vector3_t(refvel.velocity_x * LIN_VEL_SCALE, refvel.velocity_y * LIN_VEL_SCALE,
-                     refvel.yaw_rate * ANG_VEL_SCALE * 2);
+                     refvel.yaw_rate * ANG_VEL_SCALE);
 }
 
 vector_t DtcController::getDofPosObservation(scalar_t currentTime, scalar_t dt) const {
@@ -744,6 +746,11 @@ void DtcController::changeController(const std::string &controllerType, scalar_t
     }
     pastAction_ = vector_t::Zero(12);
     lastTargetTrajectories_.reset();
+
+    // Set gait
+    auto msg = std_msgs::String();
+    msg.data = "trot";
+    gaitPublisher_.publish(msg);
 }
 
 bool DtcController::checkStability() const {

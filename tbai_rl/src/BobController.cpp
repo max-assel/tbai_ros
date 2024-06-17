@@ -309,7 +309,7 @@ void BobController::fillCommand(at::Tensor &input, scalar_t currentTime, scalar_
     auto command = refVelGen_->getReferenceVelocity(currentTime, dt);
     input[0] = command.velocity_x * 2;
     input[1] = command.velocity_y * 2;
-    input[2] = command.yaw_rate * 2;
+    input[2] = command.yaw_rate;
 }
 
 /***********************************************************************************************************************/

@@ -50,8 +50,8 @@
     <param name="urdfFile"          value="$(find ocs2_robotic_assets)/resources/anymal_d/urdf/anymal.urdf" />
 
     <!-- Launch Gait command node -->
-    <node pkg="ocs2_anymal_commands" type="gait_command_node" name="gait_command_node"
-          output="screen" launch-prefix="gnome-terminal --"/>
+    <node pkg="ocs2_anymal_commands" type="gait_command_ros_node" name="gait_command_ros_node"
+          output="screen"/>
 
     <arg name="rvizconfig" default="$(find tbai_dtc)/launch/rviz/dtc.rviz" />
       <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen" /> 
