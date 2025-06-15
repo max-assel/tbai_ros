@@ -36,6 +36,8 @@
     <!-- Launch simple node -->
     <node name="simple" pkg="tbai_rl_blind" type="simple" output="screen"/>
 
+    <!-- Launch virtual joystick -->
+    <node name="virtual_joystick" pkg="tbai_utils" type="virtual_joystick.py" output="screen"/>
 
     <!-- Start Rviz visualizer -->
     <arg name="rvizconfig" default="$(find tbai_rl_blind)/launch/rviz/go2.rviz" />
