@@ -54,7 +54,7 @@ https://github.com/lnotspotl/tbai/assets/82883398/ebc2d90d-5c03-4207-a868-2e9436
 
 
 
-## Dtc
+## DTC: Deep Tracking Control
 
 
 https://github.com/lnotspotl/tbai/assets/82883398/6cf672db-b737-4724-a6da-afa0c8dd19d5
