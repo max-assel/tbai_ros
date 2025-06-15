@@ -31,11 +31,15 @@ void StatePublisher::Load(physics::ModelPtr robot, sdf::ElementPtr sdf) {
 
     auto base = config.get<std::string>("base_name");
     baseLinkPtr_ = robot->GetChildLink(base);
+    bool found = baseLinkPtr_ != nullptr;
+    ROS_INFO_STREAM("[StatePublisher] Base link " << base << " found: " << found);
 
     // get joints; ignore 'universe' and 'root_joint'
     auto jointNames = config.get<std::vector<std::string>>("joint_names");
     for (int i = 0; i < jointNames.size(); ++i) {
         joints_.push_back(robot->GetJoint(jointNames[i]));
+        found = joints_.back() != nullptr;
+        ROS_INFO_STREAM("[StatePublisher] Joint " << jointNames[i] << " found: " << found);
     }
 
     // initialize last publish time

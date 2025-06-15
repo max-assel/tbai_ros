@@ -36,6 +36,22 @@ class AnymalDInverseKinematics : public InverseKinematics {
     scalar_t a4_;
 };
 
+class Go2InverseKinematics : public InverseKinematics {
+   public:
+    Go2InverseKinematics(scalar_t d2, scalar_t a3, scalar_t a4, matrix_t defaultStance)
+        : d2_(d2), a3_(a3), a4_(a4) {
+        defaultStance_ = defaultStance;
+    }
+
+    vector_t solve_ik(matrix_t &footPositions) override;
+
+   private:
+    scalar_t d2_;
+    scalar_t a3_;
+    scalar_t a4_;
+};
+
+
 /**
  * @brief Get the InverseKinematics unique pointer, initialize with values from config
  *

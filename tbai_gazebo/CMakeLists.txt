@@ -37,12 +37,12 @@ target_link_libraries(JointController ${catkin_LIBRARIES})
 target_compile_options(JointController PRIVATE ${OCS2_CXX_FLAGS})
 
 ## RBD state plugin
-# Anymal state estimator plugin
+# Robot state publisher plugin
 add_library(StatePublisher src/StatePublisher.cpp)
 target_link_libraries(StatePublisher ${gazebo_LIBRARIES} ${catkin_LIBRARIES})
 target_compile_options(StatePublisher PRIVATE ${OCS2_CXX_FLAGS})
 
-# Anymal contact sensor
+# Robot contact sensor
 add_library(ContactSensor SHARED src/ContactSensor.cpp)
 target_link_libraries(ContactSensor ${catkin_LIBRARIES} ${gazebo_LIBRARIES})
 target_compile_options(ContactSensor PRIVATE ${OCS2_CXX_FLAGS})

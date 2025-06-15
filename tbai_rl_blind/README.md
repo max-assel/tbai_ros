@@ -1,9 +1,16 @@
 # tbai_rl_blind package
 
-## Example
+## Example Go2
 ```bash
 # Start ROS and relevant nodes
-roslaunch tbai_rl_blind simple.launch gui:=true
+roslaunch tbai_rl_blind simple_go2.launch gui:=true
+```
+
+
+## Example Anymal D
+```bash
+# Start ROS and relevant nodes
+roslaunch tbai_rl_blind simple_anymal_d.launch gui:=true
 
 # Change controllers
 rostopic pub /anymal_d/change_controller std_msgs/String "data: 'RL'"

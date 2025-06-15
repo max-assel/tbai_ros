@@ -20,7 +20,7 @@ vector_t InverseKinematics::solve(vector_t &legHeightDiffs) {
 vector_t AnymalDInverseKinematics::solve_ik(matrix_t &footPositions) {
     vector_t joint_angles(12);
     for (int i = 0; i < 4; ++i) {
-        const scalar_t d2 = i < 2 ? d2_ : -d2_;
+        const scalar_t d2 = i < 2 ? d2_ : -d2_; // assume LF LH RF RH leg order
         const scalar_t a3 = a3_;
         const scalar_t a4 = a4_;
 
@@ -54,6 +54,37 @@ vector_t AnymalDInverseKinematics::solve_ik(matrix_t &footPositions) {
 /**********************************************************************************************************************/
 /**********************************************************************************************************************/
 /**********************************************************************************************************************/
+vector_t Go2InverseKinematics::solve_ik(matrix_t &footPositions) {
+    vector_t joint_angles(12);
+    for (int i = 0; i < 4; ++i) {
+        const scalar_t d2 = i < 2 ? d2_ : -d2_; // assume LF LH RF RH leg order
+        const scalar_t a3 = a3_;
+        const scalar_t a4 = a4_;
+
+        const scalar_t x = footPositions(i, 0);
+        const scalar_t y = footPositions(i, 1);
+        const scalar_t z = footPositions(i, 2);
+
+        const scalar_t E = y * y + z * z - d2 * d2;
+        const scalar_t E_sqrt = sqrt(E);
+        scalar_t theta1 = atan2(E_sqrt, d2) + atan2(z, y);
+
+        scalar_t D = (E + x * x - a3 * a3 - a4 * a4) / (2.0 * a3 * a4);
+        D = std::max(static_cast<scalar_t>(-1.0), std::min(static_cast<scalar_t>(1.0), D));
+        scalar_t theta4 = -atan2(sqrt(1.0 - D * D), D);
+
+        scalar_t theta3 = atan2(-x, E_sqrt) - atan2(a4 * sin(theta4), a3 + a4 * cos(theta4));
+
+        joint_angles.segment<3>(3 * i) = (vector3_t() << theta1, theta3, theta4).finished();
+    }
+
+    return joint_angles;
+}
+
+
+/**********************************************************************************************************************/
+/**********************************************************************************************************************/
+/**********************************************************************************************************************/
 std::unique_ptr<InverseKinematics> getInverseKinematicsUnique() {
     auto robotName = tbai::core::fromRosConfig<std::string>("robot_name");
     auto d2 = tbai::core::fromRosConfig<scalar_t>("bob_controller/ik/d2");
@@ -63,6 +94,10 @@ std::unique_ptr<InverseKinematics> getInverseKinematicsUnique() {
 
     if (robotName == "anymal_d") {
         return std::make_unique<AnymalDInverseKinematics>(d2, a3, a4, defaultStance);
+    }
+
+    if (robotName == "go2") {
+        return std::make_unique<Go2InverseKinematics>(d2, a3, a4, defaultStance);
     }
 
     throw std::runtime_error("Inverse kinematics for robot " + robotName + " not implemented");
