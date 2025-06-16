@@ -72,6 +72,7 @@ BobController::BobController(const std::shared_ptr<tbai::core::StateSubscriber> 
 
     standJointAngles_ = tbai::core::fromRosConfig<vector_t>("static_controller/stand_controller/joint_angles");
     ACTION_SCALE = tbai::core::fromRosConfig<scalar_t>("bob_controller/action_scale"); // TODO: Remove capital letters, this is a parameter
+    LIN_VEL_SCALE = tbai::core::fromRosConfig<scalar_t>("bob_controller/lin_vel_scale");
 }
 
 /***********************************************************************************************************************/
