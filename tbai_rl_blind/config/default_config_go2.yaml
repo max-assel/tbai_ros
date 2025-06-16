@@ -31,6 +31,7 @@ bob_controller:
   kd: 0.5
   model_path: "package://tbai_rl_blind/models/go2_blind.pt"
   action_scale: 0.25
+  lin_vel_scale: 2.0
 
   default_stance: [
     [ 0.025,  0.096, -0.263],

@@ -1,4 +1,4 @@
-robot_name: 'anymal_d'
+robot_name: 'go2'
 
 joint_names: &jn ["LF_HAA", "LF_HFE", "LF_KFE", "LH_HAA", "LH_HFE", "LH_KFE", "RF_HAA", "RF_HFE", "RF_KFE", "RH_HAA", "RH_HFE", "RH_KFE"]
 base_name: "base"
@@ -17,9 +17,9 @@ state_publisher:
 
 static_controller:
   stand_controller:
-    joint_angles: [0.0, 0.4, -0.8, 0.0, -0.4, 0.8, 0.0, 0.4, -0.8, 0.0, -0.4, 0.8] # LF, LH, RF, RH
+    joint_angles: [0.0, 0.806, -1.802, 0.0, 0.996, -1.802, 0.0, 0.806, -1.802, 0.0, 0.996, -1.802] # LF, LH, RF, RH
   sit_controller:
-    joint_angles: [0.0, 1.5, -2.6, 0.0, -1.5, 2.6, 0.0, 1.5, -2.6, 0.0, -1.5, 2.6] # LF, LH, RF, RH
+    joint_angles: [0.0, 0.806, -1.802, 0.0, 0.996, -1.802, 0.0, 0.806, -1.802, 0.0, 0.996, -1.802] # LF, LH, RF, RH
   kp: 400
   kd: 5
   interpolation_time: 1.0 # s
@@ -27,31 +27,31 @@ static_controller:
 
 bob_controller:
   blind: true
-  kp: 80.0
-  kd: 2.0
-  model_path: "package://tbai_rl_blind/models/anymal_model_action12_anymal_d_blind.pt"
-  action_scale: 0.5
-  lin_vel_scale: 2.0
+  kp: 30.0
+  kd: 0.5
+  model_path: "package://tbai_rl_blind/models/go2_blind_no_vel.pt"
+  action_scale: 0.25
+  lin_vel_scale: 0.0
 
   default_stance: [
-    [ 0.00790786,  0.05720384, -0.573],
-    [-0.00790786,  0.05720384, -0.573],
-    [ 0.00790786, -0.05720384, -0.573],
-    [-0.00790786, -0.05720384, -0.573],
+    [ 0.025,  0.096, -0.263],
+    [-0.025,  0.096, -0.263],
+    [ 0.025, -0.096, -0.263],
+    [-0.025, -0.096, -0.263],
   ]
 
   ik:
-    d2: 0.20875
-    a3: 0.285
-    a4: 0.404999816790082
+    d2: 0.0955
+    a3: 0.213
+    a4: 0.213
 
   cpg:
     period: 0.6
     time_offsets: [0.0, 0.3, 0.3, 0.0]  # LF, LH, RF, RH
-    swing_height: 0.2
+    swing_height: 0.1
 
 reference_generator:
-  type: "joystick"
+  type: "twist"
 
   joystick:
     topic: "joy"
