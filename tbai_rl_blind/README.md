@@ -4,6 +4,9 @@
 ```bash
 # Start ROS and relevant nodes
 roslaunch tbai_rl_blind simple_go2.launch gui:=true
+
+# TODO: change namespace from anymal_d to go2
+rostopic pub /anymal_d/change_controller std_msgs/String "data: 'BOB'"  # RL and BOB are the same controllers
 ```
 
 
