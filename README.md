@@ -4,13 +4,13 @@
 
 ```
 📦tbai
- ┣ 📂tbai_static               # Static (high gain PD) controller
- ┣ 📂tbai_mpc_perceptive       # Perceptive NMPC controller [1]
- ┣ 📂tbai_mpc_blind            # Blind NMPC controller [1]
- ┣ 📂tbai_rl_perceptive        # Perceptive RL controller [2]
- ┣ 📂tbai_rl_blind             # Blind RL controller [2]
- ┣ 📂tbai_dtc                  # DTC controller (perceptive) [3]
- ┣ 📂tbai_joe                  # Perceptive NMPC controller with NN-based tracking controller [1],[3]
+ ┣ 📂tbai_ros_static               # Static (high gain PD) controller
+ ┣ 📂tbai_ros_mpc_perceptive       # Perceptive NMPC controller [1]
+ ┣ 📂tbai_ros_mpc_blind            # Blind NMPC controller [1]
+ ┣ 📂tbai_ros_rl_perceptive        # Perceptive RL controller [2]
+ ┣ 📂tbai_ros_rl_blind             # Blind RL controller [2]
+ ┣ 📂tbai_ros_dtc                  # DTC controller (perceptive) [3]
+ ┣ 📂tbai_ros_joe                  # Perceptive NMPC controller with NN-based tracking controller [1],[3]
 
  [1] Perceptive Locomotion through Nonlinear Model Predictive Control
      https://arxiv.org/abs/2208.08373

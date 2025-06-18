@@ -52,7 +52,7 @@ function test() {
 
 function open_docs() {
     script_dir=$(dirname "$0")
-    docs_dir=${script_dir}/../../build/tbai_docs/output/doxygen/html/index.html
+    docs_dir=${script_dir}/../../build/tbai_ros_docs/output/doxygen/html/index.html
     google-chrome $docs_dir
 }
 
@@ -88,8 +88,8 @@ if [[ "$1" == "--docs" ]]; then
 fi
 
 if [[ "$1" == "--rebuild_docs" ]]; then
-    catkin clean tbai_docs
-    catkin build tbai_docs
+    catkin clean tbai_ros_docs
+    catkin build tbai_ros_docs
 fi
 
 print_help
