@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   tbai_ros_gridmap
   tbai_ros_reference
   geometry_msgs
+  tbai
   visualization_msgs
 )
 

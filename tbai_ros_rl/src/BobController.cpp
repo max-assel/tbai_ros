@@ -19,6 +19,8 @@
 #include <pinocchio/parsers/urdf.hpp>
 #include <pinocchio/algorithm/frames.hpp>
 
+#include <tbai_core/Logging.hpp>
+
 namespace tbai {
 namespace rl {
 
@@ -164,6 +166,8 @@ tbai_ros_msgs::JointCommandArray BobController::getCommandMessage(scalar_t curre
 
     // reconstructed hidden information
     hidden_ = out.index({Slice(COMMAND_SIZE, None)});
+
+    TBAI_LOG_INFO_THROTTLE(1.0, "Time : {} ms", std::chrono::duration_cast<std::chrono::microseconds>(t4 - ts3).count() / 1000.0);
 
     // unpack action
     at::Tensor phaseOffsets = action.index({Slice(0, 4)});
