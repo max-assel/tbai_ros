@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 
     // Add static controller
     controller.addController(
-        std::make_unique<tbai::static_::StaticController>(configParam, controller.getStateSubscriberPtr()), true);
+        std::make_unique<tbai::static_::StaticController>(configParam, controller.getStateSubscriberPtr()));
 
     std::cerr << "Starting controller loop" << std::endl;
 
