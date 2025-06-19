@@ -29,7 +29,10 @@ bob_controller:
   blind: true
   kp: 80.0
   kd: 2.0
-  model_path: "package://tbai_ros_rl_blind/models/anymal_model_action12_anymal_d_blind.pt"
+
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "anymal_model_action12_anymal_d_blind.pt"
+
   action_scale: 0.5
   lin_vel_scale: 2.0
 

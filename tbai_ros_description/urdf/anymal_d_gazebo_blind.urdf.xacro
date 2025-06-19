@@ -37,7 +37,7 @@
 
 <!-- State publisher -->
 <gazebo>
-  <plugin filename="/home/kuba/Documents/ros_env/devel/.private/tbai_ros_gazebo/lib/libStatePublisher.so" name="StatePublisher"/>
+  <plugin filename="/home/kuba/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libStatePublisher.so" name="StatePublisher"/>
 </gazebo>
 
 <!-- Add contact sensors -->

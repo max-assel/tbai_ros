@@ -29,6 +29,8 @@ catkin_package(
   DEPENDS
 )
 
+find_package(spdlog REQUIRED)
+
 ## Build
 include_directories(
     include
@@ -37,12 +39,11 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME}
-  src/BobController.cpp
-  src/InverseKinematics.cpp
-  src/CentralPatternGenerator.cpp
   src/Visualizers.cpp
+  src/BobController.cpp
 )
 target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
     ${pinocchio_LIBRARIES}
+    spdlog
 )

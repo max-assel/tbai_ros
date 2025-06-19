@@ -11,6 +11,7 @@
 #include <tbai_ros_core/control/Publishers.hpp>
 #include <tbai_ros_core/control/Subscribers.hpp>
 #include <tbai_ros_static/StaticController.hpp>
+#include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
 
 int main(int argc, char *argv[]) {
     ros::init(argc, argv, "tbai_ros_static");
@@ -40,6 +41,8 @@ int main(int argc, char *argv[]) {
 
     std::cerr << "Adding static controller" << std::endl;
 
+    const std::string urdfString = nh.param<std::string>("robot_description", "");
+
     // Add static controller
     controller.addController(
         std::make_unique<tbai::static_::StaticController>(configParam, controller.getStateSubscriberPtr()));
@@ -47,7 +50,7 @@ int main(int argc, char *argv[]) {
     std::cerr << "Adding Bob controller" << std::endl;
 
     // Add Bob controller
-    controller.addController(std::make_unique<tbai::rl::BobController>(controller.getStateSubscriberPtr()));
+    controller.addController(std::make_unique<tbai::rl::RosBobController>(urdfString, controller.getStateSubscriberPtr(), tbai::reference::getReferenceVelocityGeneratorShared(nh)));
 
     std::cerr << "Starting controller loop" << std::endl;
 

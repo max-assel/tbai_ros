@@ -29,7 +29,10 @@ bob_controller:
   blind: true
   kp: 30.0
   kd: 0.5
-  model_path: "package://tbai_ros_rl_blind/models/go2_blind_no_vel.pt"
+
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "go2_blind_no_vel_noise.pt"
+  
   action_scale: 0.25
   lin_vel_scale: 0.0
 

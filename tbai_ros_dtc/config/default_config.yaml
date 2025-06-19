@@ -24,6 +24,10 @@ static_controller:
   interpolation_time: 1.0 # s
   rate: 50 # Hz
 
+dtc_controller:
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "dtc_02.pt" # dtc_02.pt trained in env with stepping stones, dtc_01.pt without them
+
 anymal_d:
   joint_controller:
       type: tbai_ros_gazebo/JointController

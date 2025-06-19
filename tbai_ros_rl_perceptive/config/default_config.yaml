@@ -31,7 +31,10 @@ bob_controller:
   blind: false
   kp: 80.0
   kd: 2.0
-  model_path: "package://tbai_ros_rl_perceptive/models/anymal_model_action12_anymal_d_perceptive.pt"
+
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "anymal_model_action12_anymal_d_perceptive.pt"
+
   action_scale: 0.5
   lin_vel_scale: 2.0
 

@@ -45,11 +45,16 @@ int main(int argc, char *argv[]) {
 
     std::cerr << "Adding controllers" << std::endl;
 
+    auto referenceVelocityGenerator = tbai::reference::getReferenceVelocityGeneratorShared(nh);
+    const std::string urdfString = nh.param<std::string>("robot_description", "");
+
     // Add all controllers
     controller.addController(
         std::make_unique<tbai::static_::StaticController>(configParam, controller.getStateSubscriberPtr()));
-    controller.addController(std::make_unique<tbai::rl::BobController>(controller.getStateSubscriberPtr()));
-    controller.addController(std::make_unique<tbai::mpc::MpcController>(controller.getStateSubscriberPtr()));
+    controller.addController(
+        std::make_unique<tbai::rl::RosBobController>(urdfString, controller.getStateSubscriberPtr(), referenceVelocityGenerator));
+    controller.addController(
+        std::make_unique<tbai::mpc::MpcController>(controller.getStateSubscriberPtr()));
 
     std::cerr << "Starting controller loop" << std::endl;
 

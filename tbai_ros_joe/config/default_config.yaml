@@ -23,6 +23,10 @@ static_controller:
   interpolation_time: 1.0 # s
   rate: 50 # Hz
 
+joe_controller:
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "sjoe.pt"
+
 anymal_d:
   joint_controller:
       type: tbai_ros_gazebo/JointController

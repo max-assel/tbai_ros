@@ -7,9 +7,9 @@
 #include <robot_state_publisher/robot_state_publisher.h>
 #include <ros/ros.h>
 #include <tbai_ros_core/config/YamlConfig.hpp>
-#include <tbai_ros_rl/State.hpp>
 #include <tf/transform_broadcaster.h>
 #include <torch/script.h>
+#include <tbai_bob/State.hpp>
 
 namespace tbai {
 namespace rl {

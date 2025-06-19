@@ -30,6 +30,8 @@
 
 #include <tbai_ros_core/Utils.hpp>
 
+#include <tbai_core/config/Config.hpp>
+
 #define DTC_PRINT(message) std::cout << "[Dtc controller] | " << message << std::endl
 
 namespace tbai {
@@ -60,13 +62,15 @@ DtcController::DtcController(const std::shared_ptr<tbai::StateSubscriber> &state
     jointNames_ = tbai::core::fromRosConfig<std::vector<std::string>>("joint_names");
 
     // Load DTC model
-    std::string dtcModelFile;
-    TBAI_STD_THROW_IF(!nh.getParam("dtcModelFile", dtcModelFile), "DTC model file not found");
+    std::string hfRepo = tbai::fromGlobalConfig<std::string>("dtc_controller/hf_repo");
+    std::string hfModel = tbai::fromGlobalConfig<std::string>("dtc_controller/hf_model");
+    std::string modelPath = tbai::downloadFromHuggingFace(hfRepo, hfModel);
+
     try {
         DTC_PRINT("Loading torch model");
-        dtcModel_ = torch::jit::load(dtcModelFile);
+        dtcModel_ = torch::jit::load(modelPath);
     } catch (const c10::Error &e) {
-        std::cerr << "Could not load model from: " << dtcModelFile << std::endl;
+        std::cerr << "Could not load model from: " << modelPath << std::endl;
         throw std::runtime_error("Could not load model");
     }
     DTC_PRINT("Torch model loaded");

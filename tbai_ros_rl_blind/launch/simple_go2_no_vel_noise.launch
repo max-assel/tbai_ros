@@ -18,6 +18,9 @@
     <!-- Upload config path to ROS param server -->
     <param name="tbai_config_path" type="string" value="$(arg tbai_config_path)"/>
 
+    <!-- Set environment variable for config path -->
+    <env name="TBAI_GLOBAL_CONFIG_PATH" value="$(arg tbai_config_path)"/>
+
     <!-- Launch gazebo -->
     <include file="$(find tbai_ros_gazebo)/launch/world.launch">
         <arg name="controllers_ns" value="$(arg controllers_ns)"/>

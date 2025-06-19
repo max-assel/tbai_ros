@@ -29,6 +29,7 @@
 #include <vector>
 
 #include <tbai_ros_core/Utils.hpp>
+#include <tbai_core/config/Config.hpp>
 
 #define JOE_PRINT(message) std::cout << "[Joe controller] | " << message << std::endl
 
@@ -60,13 +61,15 @@ JoeController::JoeController(const std::shared_ptr<tbai::StateSubscriber> &state
     jointNames_ = tbai::core::fromRosConfig<std::vector<std::string>>("joint_names");
 
     // Load JOE model
-    std::string joeModelFile;
-    TBAI_STD_THROW_IF(!nh.getParam("joeModelFile", joeModelFile), "JOE model file not found");
+    std::string hfRepo = tbai::fromGlobalConfig<std::string>("joe_controller/hf_repo");
+    std::string hfModel = tbai::fromGlobalConfig<std::string>("joe_controller/hf_model");
+    std::string modelPath = tbai::downloadFromHuggingFace(hfRepo, hfModel);
+
     try {
         JOE_PRINT("Loading torch model");
-        joeModel_ = torch::jit::load(joeModelFile);
+        joeModel_ = torch::jit::load(modelPath);
     } catch (const c10::Error &e) {
-        std::cerr << "Could not load model from: " << joeModelFile << std::endl;
+        std::cerr << "Could not load model from: " << modelPath << std::endl;
         throw std::runtime_error("Could not load model");
     }
     JOE_PRINT("Torch model loaded");
