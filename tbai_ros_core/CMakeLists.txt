@@ -15,14 +15,11 @@ find_package(catkin REQUIRED COMPONENTS
 )
 find_package(yaml-cpp REQUIRED)
 
-include(cmake/tbai_cm.cmake)
-
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES  ${PROJECT_NAME} ${PROJECT_NAME}_config 
   CATKIN_DEPENDS roscpp roslib tbai_ros_msgs ocs2_robotic_tools
   DEPENDS yaml-cpp
-  CFG_EXTRAS tbai_cm.cmake
 )
 
 ## Build

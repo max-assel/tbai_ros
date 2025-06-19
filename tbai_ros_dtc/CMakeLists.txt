@@ -9,13 +9,6 @@ find_package(catkin REQUIRED COMPONENTS
   tbai_ros_core
 )
 
-set(Torch_DIR ${LIBTORCH_CMAKE_DIR})
-find_package(Torch)
-if (NOT Torch_FOUND)
-    message(FATAL_ERROR "PyTorch Not Found! Move your libtorch to the ${LIBTORCH_DIR} folder. You can a symlink if you want. See the 'Installing libtorch C++' section in the README.md file.")
-endif()
-
-
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   tbai_ros_msgs
@@ -51,7 +44,6 @@ find_package(pinocchio REQUIRED)
 include_directories(
     include
     ${catkin_INCLUDE_DIRS}
-    ${TORCH_INCLUDE_DIRS}
 )
 
 add_library(${PROJECT_NAME}
@@ -60,7 +52,6 @@ add_library(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
     ${pinocchio_LIBRARIES}
-    ${TORCH_LIBRARIES}
 )
 target_compile_options(${PROJECT_NAME} PUBLIC ${OCS2_CXX_FLAGS})
 

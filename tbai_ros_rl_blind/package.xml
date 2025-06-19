@@ -14,6 +14,8 @@
   <depend>tbai_ros_static</depend>
   <depend>tbai_ros_rl</depend>
   <depend>tbai_ros_utils</depend>
+  <depend>tbai_ros_description</depend>
+  <depend>tbai_ros_gazebo</depend>
   <depend>tbai</depend>
 
   <export>

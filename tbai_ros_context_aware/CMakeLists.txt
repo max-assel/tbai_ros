@@ -9,11 +9,6 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(catkin REQUIRED COMPONENTS
     tbai_ros_core
 )
-set(Torch_DIR ${LIBTORCH_CMAKE_DIR})
-find_package(Torch)
-if (NOT Torch_FOUND)
-    message(FATAL_ERROR "PyTorch Not Found! Move your libtorch to the ${LIBTORCH_DIR} folder. You can a symlink if you want. See the 'Installing libtorch C++' section in the README.md file.")
-endif()
 
 find_package(catkin REQUIRED COMPONENTS
     roscpp
@@ -32,12 +27,11 @@ catkin_package(
 
 include_directories(
  ${catkin_INCLUDE_DIRS}
- ${TORCH_INCLUDE_DIRS}
 )
 
 add_executable(simple
     src/simple.cpp
 )
 target_link_libraries(simple
-    ${catkin_LIBRARIES} yaml-cpp ${TORCH_LIBRARIES}
+    ${catkin_LIBRARIES} yaml-cpp
 )

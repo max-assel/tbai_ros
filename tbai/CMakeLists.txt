@@ -25,5 +25,5 @@ find_package(catkin REQUIRED)
 file(MAKE_DIRECTORY ${CATKIN_DEVEL_PREFIX}/include)
 catkin_package(
   INCLUDE_DIRS ${CATKIN_DEVEL_PREFIX}/include
-  LIBRARIES tbai_core tbai_bob
+  LIBRARIES tbai_core tbai_bob torch torch_cpu c10
 )

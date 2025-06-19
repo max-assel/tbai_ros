@@ -89,33 +89,6 @@ https://github.com/lnotspotl/tbai/assets/82883398/e3455dd3-10e8-41da-bb02-87fbdf
 
 ![joe_03](https://github.com/lnotspotl/tbai/assets/82883398/0139df20-d2ce-4de1-884f-ce37e770ee08)
 
-
-## Installing libtorch C++
-There are two steps to installing `libtorch`. First, you need to download a suitable `libtorch` version.
-Once the library is downloaded, it's necessary to create a symlink to it in the `dependencies` folder.
-Here's how to do it:
-
-### 1. Getting libtorch download link
-Get your download link from the [official PyTorch website](https://pytorch.org/). Note that opting for the `(cxx11 ABI)` version is paramount.
-If you download the `(Pre-cxx11 ABI)` version, things won't work as necessary.
-
-
-![image](https://github.com/lnotspotl/tbai/assets/82883398/183255fc-83c5-4bab-a48d-f70e5c7593d7)
-
-
-### 2. Downloading libtorch and creating a symlink
-Now that you have your url, you can download the library, unzip it and create a symlink in the `dependencies` folder.
-```bash
-wget <your-url>
-unzip <downloaded-zip> -d <your-folder>  # can be `dependencies`
-ln -s <your-folder>/libtorch dependencies  # Only necessary if, in the previous step, you did not unzip in `dependencies`
-```
-Your `dependencies` folder should not look as follows:
-<p align="center">
-  <img src="https://github.com/lnotspotl/tbai/assets/82883398/657d8681-1abd-4dae-b4c2-15347ed542fd" />
-</p>
-That's it. You should now be able to compile the entire project. Enjoy 🤗
-
 ## Installing tbai
 ```bash
 # Install dependencies
@@ -127,8 +100,6 @@ git clone git@github.com:lnotspotl/tbai.git --recursive
 
 # Install other dependencies using rosdep
 cd .. && rosdep install --from-paths src --ignore-src -r -y && cd src/tbai
-
-# !! Now install libtorch by following the installation guideline above
 
 # Build tbai
 catkin config -DCMAKE_BUILD_TYPE=Release
