@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
     auto changeControllerTopic = config.get<std::string>("change_controller_topic");
 
     ros::NodeHandle nh;
-    tbai::core::CentralController controller(nh, stateTopic, commandTopic, changeControllerTopic);
+    tbai::RosCentralController controller(nh, stateTopic, commandTopic, changeControllerTopic);
 
     // Add static controller
     controller.addController(

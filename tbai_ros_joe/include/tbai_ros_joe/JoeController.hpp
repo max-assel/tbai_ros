@@ -38,6 +38,10 @@
 #include <ocs2_anymal_commands/ReferenceExtrapolation.h>
 #include <ocs2_switched_model_interface/core/Rotations.h>
 
+#include <tbai_core/control/CommandPublisher.hpp>
+#include <tbai_core/control/Controller.hpp>
+#include <tbai_core/control/StateSubscriber.hpp>
+
 namespace tbai {
 namespace joe {
 
@@ -47,11 +51,11 @@ using namespace tbai::core;
 using namespace tbai;
 using namespace switched_model;
 
-class JoeController final : public tbai::core::Controller {
+class JoeController final : public tbai::Controller {
    public:
     JoeController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriber);
 
-    tbai_ros_msgs::JointCommandArray getCommandMessage(scalar_t currentTime, scalar_t dt) override;
+    std::vector<MotorCommand> getMotorCommands(scalar_t currentTime, scalar_t dt) override;
 
     void visualize() override;
 

@@ -41,6 +41,10 @@
 
 #include <tbai_core/control/StateSubscriber.hpp>
 
+#include <tbai_core/control/CommandPublisher.hpp>
+#include <tbai_core/control/Controller.hpp>
+#include <tbai_core/control/StateSubscriber.hpp>
+
 namespace tbai {
 namespace dtc {
 
@@ -50,11 +54,11 @@ using namespace tbai::core;
 using namespace tbai;
 using namespace switched_model;
 
-class DtcController final : public tbai::core::Controller {
+class DtcController final : public tbai::Controller {
    public:
     DtcController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriber);
 
-    tbai_ros_msgs::JointCommandArray getCommandMessage(scalar_t currentTime, scalar_t dt) override;
+    std::vector<MotorCommand> getMotorCommands(scalar_t currentTime, scalar_t dt) override;
 
     void visualize() override;
 

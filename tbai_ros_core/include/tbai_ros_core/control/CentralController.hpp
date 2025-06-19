@@ -73,7 +73,7 @@ class RosCentralController : public tbai::CentralController {
     void changeControllerCallback(const std_msgs::String::ConstPtr &msg);
 
     /** Command publisher */
-    std::unique_ptr<CommandPublisher> commandPublisher_;
+    std::shared_ptr<CommandPublisher> commandPublisher_;
 
     /** State subscriber */
     std::shared_ptr<StateSubscriber> stateSubscriberPtr_;

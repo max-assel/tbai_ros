@@ -70,7 +70,7 @@ void MpcController::spinOnceReferenceThread() {
     referenceThreadCallbackQueue_.callAvailable(ros::WallDuration(0.0));
 }
 
-tbai_ros_msgs::JointCommandArray MpcController::getCommandMessage(scalar_t currentTime, scalar_t dt) {
+std::vector<MotorCommand> MpcController::getMotorCommands(scalar_t currentTime, scalar_t dt) {
     mrt_.spinMRT();
     mrt_.updatePolicy();
 
@@ -91,7 +91,7 @@ tbai_ros_msgs::JointCommandArray MpcController::getCommandMessage(scalar_t curre
 
     ocs2::vector_t joint_accelerations = (dummyInput.tail<12>() - desiredInput.tail<12>()) / time_eps;
 
-    auto commandMessage = wbcPtr_->getCommandMessage(tNow_, observation.state, observation.input, observation.mode,
+    auto commands = wbcPtr_->getMotorCommands(tNow_, observation.state, observation.input, observation.mode,
                                                      desiredState, desiredInput, desiredMode, joint_accelerations);
 
     timeSinceLastMpcUpdate_ += dt;
@@ -100,7 +100,7 @@ tbai_ros_msgs::JointCommandArray MpcController::getCommandMessage(scalar_t curre
         setObservation();
     }
 
-    return commandMessage;
+    return commands;
 }
 
 void MpcController::referenceThread() {

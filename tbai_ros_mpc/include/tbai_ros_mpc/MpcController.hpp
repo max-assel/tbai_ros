@@ -17,15 +17,18 @@
 #include <tbai_ros_mpc/reference/ReferenceTrajectoryGenerator.hpp>
 #include <tbai_ros_mpc/wbc/WbcBase.hpp>
 #include <tbai_ros_msgs/JointCommandArray.h>
+#include <tbai_core/control/CommandPublisher.hpp>
+#include <tbai_core/control/Controller.hpp>
+#include <tbai_core/control/StateSubscriber.hpp>
 
 namespace tbai {
 
 namespace mpc {
-class MpcController final : public tbai::core::Controller {
+class MpcController final : public tbai::Controller {
    public:
     MpcController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr);
 
-    tbai_ros_msgs::JointCommandArray getCommandMessage(scalar_t currentTime, scalar_t dt) override;
+    std::vector<MotorCommand> getMotorCommands(scalar_t currentTime, scalar_t dt) override;
 
     void visualize() override;
 

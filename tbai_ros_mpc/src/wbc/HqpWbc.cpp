@@ -10,7 +10,7 @@
 
 namespace switched_model {
 
-tbai_ros_msgs::JointCommandArray HqpWbc::getCommandMessage(scalar_t currentTime, const vector_t &currentState,
+std::vector<tbai::MotorCommand> HqpWbc::getMotorCommands(scalar_t currentTime, const vector_t &currentState,
                                                        const vector_t &currentInput, const size_t currentMode,
                                                        const vector_t &desiredState, const vector_t &desiredInput,
                                                        const size_t desiredMode,
@@ -61,10 +61,10 @@ tbai_ros_msgs::JointCommandArray HqpWbc::getCommandMessage(scalar_t currentTime,
     std::swap(torques(5), torques(8));
 
     // Generator command message
-    tbai_ros_msgs::JointCommandArray commandMessage;
-    commandMessage.joint_commands.resize(jointNames_.size());
+    std::vector<tbai::MotorCommand> commands;
+    commands.resize(jointNames_.size());
     for (size_t i = 0; i < jointNames_.size(); ++i) {
-        tbai_ros_msgs::JointCommand command;
+        tbai::MotorCommand command;
         command.joint_name = jointNames_[i];
         command.desired_position = qDesired[i];
         command.desired_velocity = vDesired[i];
@@ -76,10 +76,10 @@ tbai_ros_msgs::JointCommandArray HqpWbc::getCommandMessage(scalar_t currentTime,
             command.kd = jointStanceKd_;
         }
         command.torque_ff = torques[i];
-        commandMessage.joint_commands[i] = std::move(command);
+        commands[i] = std::move(command);
     }
 
-    return commandMessage;
+    return commands;
 }
 
 /*********************************************************************************************************************/

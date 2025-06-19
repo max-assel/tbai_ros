@@ -113,7 +113,7 @@ void DtcController::publishReference(const TargetTrajectories &targetTrajectorie
     refPub_.publish(mpcTargetTrajectoriesMsg);
 }
 
-tbai_ros_msgs::JointCommandArray DtcController::getCommandMessage(scalar_t currentTime, scalar_t dt) {
+std::vector<MotorCommand> DtcController::getMotorCommands(scalar_t currentTime, scalar_t dt) {
     mrt_.spinMRT();
     mrt_.updatePolicy();
 
@@ -165,10 +165,10 @@ tbai_ros_msgs::JointCommandArray DtcController::getCommandMessage(scalar_t curre
 
     vector_t commandedJointAngles = defaultJointAngles_ + pastAction_ * ACTION_SCALE;
 
-    tbai_ros_msgs::JointCommandArray jointCommandArray;
-    jointCommandArray.joint_commands.resize(jointNames_.size());
+    std::vector<MotorCommand> commands;
+    commands.resize(jointNames_.size());
     for (int i = 0; i < jointNames_.size(); ++i) {
-        auto &command = jointCommandArray.joint_commands[i];
+        auto &command = commands[i];
         command.joint_name = jointNames_[i];
         command.desired_position = commandedJointAngles[i];
         command.desired_velocity = 0.0;
@@ -193,7 +193,7 @@ tbai_ros_msgs::JointCommandArray DtcController::getCommandMessage(scalar_t curre
         publishReference(generateTargetTrajectories(currentTime, dt, commandObservation));
     }
 
-    return jointCommandArray;
+    return commands;
 }
 
 contact_flag_t DtcController::getDesiredContactFlags(scalar_t currentTime, scalar_t dt) {
