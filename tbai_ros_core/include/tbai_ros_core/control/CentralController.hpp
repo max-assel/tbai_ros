@@ -11,10 +11,11 @@
 #include "tbai_ros_core/control/StateSubscriber.hpp"
 #include <std_msgs/String.h>
 
-namespace tbai {
-namespace core {
+#include <tbai_core/control/CentralController.hpp>
+#include <tbai_core/control/CommandPublisher.hpp>
 
-class CentralController {
+namespace tbai {
+class RosCentralController : public tbai::CentralController {
    public:
     /**
      * @brief Construct a new Central Controller object
@@ -24,7 +25,7 @@ class CentralController {
      * @param commandTopic : topic to publish command messages to
      * @param changeControllerTopic : topic to subscribe to for changing controller
      */
-    CentralController(ros::NodeHandle &nh, const std::string &stateTopic, const std::string &commandTopic,
+    RosCentralController(ros::NodeHandle &nh, const std::string &stateTopic, const std::string &commandTopic,
                       const std::string &changeControllerTopic);
 
     /**
@@ -39,21 +40,13 @@ class CentralController {
      * @param configParam : ROS parameter containing config file path
      *
      */
-    CentralController(ros::NodeHandle &nh, const std::string &configParam);
+    RosCentralController(ros::NodeHandle &nh, const std::string &configParam);
 
     /**
      * @brief Start main control loop
      *
      */
-    void start();
-
-    /**
-     * @brief Add controller to central controller
-     *
-     * @param controller : controller to add
-     * @param makeActive : whether to make this controller active
-     */
-    void addController(std::unique_ptr<Controller> controller, bool makeActive = false);
+    void start() override;
 
     /**
      * @brief Get state subscriber pointer
@@ -79,18 +72,14 @@ class CentralController {
     /** Callback for changing controller */
     void changeControllerCallback(const std_msgs::String::ConstPtr &msg);
 
-    /** Controllers */
-    std::vector<std::unique_ptr<Controller>> controllers_;
-
-    /** Currently used controller */
-    Controller *activeController_;
+    /** Command publisher */
+    std::unique_ptr<CommandPublisher> commandPublisher_;
 
     /** State subscriber */
     std::shared_ptr<StateSubscriber> stateSubscriberPtr_;
 
     /** ROS stuff */
     ros::Rate loopRate_;
-    ros::Publisher commandPublisher_;
     ros::Subscriber changeControllerSubscriber_;
 
     /** Whether or not the SIT controller is present */
@@ -103,5 +92,4 @@ class CentralController {
     scalar_t initTime_;
 };
 
-}  // namespace core
 }  // namespace tbai

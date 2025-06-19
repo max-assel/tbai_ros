@@ -42,7 +42,7 @@ StaticController::StaticController(const std::string &configRosParam,
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-tbai_ros_msgs::JointCommandArray StaticController::getCommandMessage(scalar_t currentTime, scalar_t dt) {
+std::vector<MotorCommand> StaticController::getMotorCommands(scalar_t currentTime, scalar_t dt) {
     timeSinceLastVisualizationUpdate_ += dt;
 
     if (alpha_ != -1.0) {
@@ -163,7 +163,7 @@ void StaticController::publishJointAngles(const vector_t &currentState, const ro
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-tbai_ros_msgs::JointCommandArray StaticController::getInterpCommandMessage(scalar_t dt) {
+std::vector<MotorCommand> StaticController::getInterpCommandMessage(scalar_t dt) {
     // Update alpha
     alpha_ = std::min(alpha_ + dt / interpolationTime_, static_cast<scalar_t>(1.0));
 
@@ -181,32 +181,32 @@ tbai_ros_msgs::JointCommandArray StaticController::getInterpCommandMessage(scala
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-tbai_ros_msgs::JointCommandArray StaticController::getStandCommandMessage() {
+std::vector<MotorCommand> StaticController::getStandCommandMessage() {
     return packCommandMessage(standJointAngles_);
 }
 
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-tbai_ros_msgs::JointCommandArray StaticController::getSitCommandMessage() {
+std::vector<MotorCommand> StaticController::getSitCommandMessage() {
     return packCommandMessage(sitJointAngles_);
 }
 
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-tbai_ros_msgs::JointCommandArray StaticController::packCommandMessage(const vector_t &jointAngles) {
-    tbai_ros_msgs::JointCommandArray commandArray;
-    commandArray.joint_commands.resize(jointAngles.size());
+std::vector<MotorCommand> StaticController::packCommandMessage(const vector_t &jointAngles) {
+    std::vector<MotorCommand> commandArray;
+    commandArray.resize(jointAngles.size());
     for (size_t i = 0; i < jointAngles.size(); ++i) {
-        tbai_ros_msgs::JointCommand command;
+        MotorCommand command;
         command.joint_name = jointNames_[i];
         command.desired_position = jointAngles[i];
         command.desired_velocity = 0.0;
         command.kp = kp_;
         command.kd = kd_;
         command.torque_ff = 0.0;
-        commandArray.joint_commands[i] = command;
+        commandArray[i] = command;
     }
     return commandArray;
 }

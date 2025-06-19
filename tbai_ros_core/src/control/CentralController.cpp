@@ -4,49 +4,55 @@
 #include <tbai_ros_core/Utils.hpp>
 #include <tbai_ros_msgs/JointCommandArray.h>
 
+#include <tbai_ros_core/control/CommandPublisher.hpp>
+
 namespace tbai {
-namespace core {
+
+using namespace tbai::core;
 
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-CentralController::CentralController(ros::NodeHandle &nh, const std::string &stateTopic,
+RosCentralController::RosCentralController(ros::NodeHandle &nh, const std::string &stateTopic,
                                      const std::string &commandTopic, const std::string &changeControllerTopic)
-    : loopRate_(1), activeController_(nullptr) {
+    : loopRate_(1), CentralController() {
     initTime_ = tbai::core::getEpochStart();
 
     stateSubscriberPtr_ = std::shared_ptr<StateSubscriber>(new RosStateSubscriber(nh, stateTopic));
-    commandPublisher_ = nh.advertise<tbai_ros_msgs::JointCommandArray>(commandTopic, 1);
-    changeControllerSubscriber_ =
-        nh.subscribe(changeControllerTopic, 1, &CentralController::changeControllerCallback, this);
+    changeControllerSubscriber_ = nh.subscribe(changeControllerTopic, 1, &RosCentralController::changeControllerCallback, this);
+    commandPublisher_ = std::unique_ptr<CommandPublisher>(new RosCommandPublisher(nh, commandTopic));
     fallbackControllerType_ = "SIT";
 }
 
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-CentralController::CentralController(ros::NodeHandle &nh, const std::string &configParam)
-    : loopRate_(1), activeController_(nullptr) {
+RosCentralController::RosCentralController(ros::NodeHandle &nh, const std::string &configParam)
+    : loopRate_(1), CentralController() {
     auto config = YamlConfig::fromRosParam(configParam);
     auto stateTopic = config.get<std::string>("state_topic");
     auto commandTopic = config.get<std::string>("command_topic");
     auto changeControllerTopic = config.get<std::string>("change_controller_topic");
 
     stateSubscriberPtr_ = std::shared_ptr<StateSubscriber>(new RosStateSubscriber(nh, stateTopic));
-    commandPublisher_ = nh.advertise<tbai_ros_msgs::JointCommandArray>(commandTopic, 1);
-    changeControllerSubscriber_ =
-        nh.subscribe(changeControllerTopic, 1, &CentralController::changeControllerCallback, this);
+    changeControllerSubscriber_ = nh.subscribe(changeControllerTopic, 1, &RosCentralController::changeControllerCallback, this);
+    commandPublisher_ = std::unique_ptr<CommandPublisher>(new RosCommandPublisher(nh, commandTopic));
+    fallbackControllerType_ = "SIT";
 }
 
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-void CentralController::start() {
+void RosCentralController::start() {
+    std::cerr << "[DEBUG]Starting controller loop" << std::endl;
+
     // Make sure there is an active controller
     if (activeController_ == nullptr) {
+        std::cerr << "[DEBUG]No active controller found" << std::endl;
         ROS_ERROR("No active controller found");
         return;
     }
+    std::cerr << "[DEBUG]Active controller found" << std::endl;
 
     // Check if fallback controller is available
     containsFallbackController_ = checkForFallbackController();
@@ -55,6 +61,7 @@ void CentralController::start() {
     }
 
     // Wait for initial state message
+    std::cerr << "[DEBUG]Waiting for initial state message" << std::endl;
     stateSubscriberPtr_->waitTillInitialized();
 
     if (ros::ok()) {
@@ -62,8 +69,11 @@ void CentralController::start() {
         loopRate_ = ros::Rate(activeController_->getRate());
     }
 
+    std::cerr << "[DEBUG]Initial state message received" << std::endl;
+
     scalar_t lastTime = getCurrentTime();
     while (ros::ok()) {
+
         // Keep track of time for stats
         auto t1 = std::chrono::high_resolution_clock::now();
 
@@ -91,7 +101,6 @@ void CentralController::start() {
         loopRate_.sleep();
         auto t3 = std::chrono::high_resolution_clock::now();
 
-        // Compute timing stats
         auto duration1 = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
         auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2).count();
         auto sleepTimePercentage = 100.0 * duration2 / (duration1 + duration2);
@@ -105,17 +114,7 @@ void CentralController::start() {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-void CentralController::addController(std::unique_ptr<Controller> controller, bool makeActive) {
-    controllers_.push_back(std::move(controller));
-    if (makeActive || activeController_ == nullptr) {
-        activeController_ = controllers_.back().get();
-    }
-}
-
-/*********************************************************************************************************************/
-/*********************************************************************************************************************/
-/*********************************************************************************************************************/
-bool CentralController::checkForFallbackController() {
+bool RosCentralController::checkForFallbackController() {
     for (const auto &controller : controllers_) {
         if (controller->isSupported(fallbackControllerType_)) {
             return true;
@@ -127,7 +126,7 @@ bool CentralController::checkForFallbackController() {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-void CentralController::switchToFallbackController() {
+void RosCentralController::switchToFallbackController() {
     std_msgs::String msg;
     msg.data = fallbackControllerType_;
     changeControllerCallback(std_msgs::String::ConstPtr(new std_msgs::String(msg)));
@@ -136,22 +135,22 @@ void CentralController::switchToFallbackController() {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-void CentralController::step(scalar_t currentTime, scalar_t dt) {
-    auto commandMessage = activeController_->getCommandMessage(currentTime, dt);
-    commandPublisher_.publish(commandMessage);
+void RosCentralController::step(scalar_t currentTime, scalar_t dt) {
+    auto commandMessage = activeController_->getMotorCommands(currentTime, dt);
+        commandPublisher_->publish(commandMessage);
 }
 
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-const std::shared_ptr<StateSubscriber> &CentralController::getStateSubscriberPtr() {
+const std::shared_ptr<StateSubscriber> &RosCentralController::getStateSubscriberPtr() {
     return stateSubscriberPtr_;
 }
 
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-void CentralController::changeControllerCallback(const std_msgs::String::ConstPtr &msg) {
+void RosCentralController::changeControllerCallback(const std_msgs::String::ConstPtr &msg) {
     const std::string controllerType = msg->data;
     for (auto &controller : controllers_) {
         if (controller->isSupported(controllerType)) {
@@ -168,5 +167,4 @@ void CentralController::changeControllerCallback(const std_msgs::String::ConstPt
     ROS_WARN_STREAM("[CentralController] Controller " << controllerType << " not supported");
 }
 
-}  // namespace core
 }  // namespace tbai

@@ -135,7 +135,7 @@ bool BobController::checkStability() const {
 /***********************************************************************************************************************/
 /***********************************************************************************************************************/
 /***********************************************************************************************************************/
-tbai_ros_msgs::JointCommandArray BobController::getCommandMessage(scalar_t currentTime, scalar_t dt) {
+std::vector<MotorCommand> BobController::getMotorCommands(scalar_t currentTime, scalar_t dt) {
     auto state = getBobnetState();
 
     // Do not keep track of gradients
@@ -187,7 +187,7 @@ tbai_ros_msgs::JointCommandArray BobController::getCommandMessage(scalar_t curre
     jointAngles2_ = ik_->solve(legHeights) + jointResidualsVec;
 
     // Send command
-    auto ret = getCommandMessage(jointAngles2_);
+    auto ret = getMotorCommands(jointAngles2_);
 
     // Compute IK again for buffer, TODO: Remove this calculation
     cpg_->step(-dt);
@@ -206,11 +206,11 @@ tbai_ros_msgs::JointCommandArray BobController::getCommandMessage(scalar_t curre
 /***********************************************************************************************************************/
 /***********************************************************************************************************************/
 /***********************************************************************************************************************/
-tbai_ros_msgs::JointCommandArray BobController::getCommandMessage(const vector_t &jointAngles) {
-    tbai_ros_msgs::JointCommandArray commandArray;
-    commandArray.joint_commands.resize(jointAngles.size());
+std::vector<MotorCommand> BobController::getMotorCommands(const vector_t &jointAngles) {
+    std::vector<MotorCommand> commands;
+    commands.resize(jointAngles.size());
     for (size_t i = 0; i < jointAngles.size(); ++i) {
-        tbai_ros_msgs::JointCommand &command = commandArray.joint_commands[i];
+        MotorCommand &command = commands[i];
         command.joint_name = jointNames_[i];
         command.desired_position = jointAngles[i];
         command.desired_velocity = 0.0;
@@ -218,7 +218,7 @@ tbai_ros_msgs::JointCommandArray BobController::getCommandMessage(const vector_t
         command.kd = kd_;
         command.torque_ff = 0.0;
     }
-    return commandArray;
+    return commands;
 }
 
 /***********************************************************************************************************************/

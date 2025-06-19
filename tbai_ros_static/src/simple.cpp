@@ -18,11 +18,15 @@ int main(int argc, char *argv[]) {
     auto changeControllerTopic = config.get<std::string>("change_controller_topic");
 
     ros::NodeHandle nh;
-    tbai::core::CentralController controller(nh, stateTopic, commandTopic, changeControllerTopic);
+    tbai::RosCentralController controller(nh, stateTopic, commandTopic, changeControllerTopic);
+
+    std::cerr << "Adding static controller" << std::endl;
 
     // Add static controller
     controller.addController(
-        std::make_unique<tbai::static_::StaticController>(configParam, controller.getStateSubscriberPtr()));
+        std::make_unique<tbai::static_::StaticController>(configParam, controller.getStateSubscriberPtr()), true);
+
+    std::cerr << "Starting controller loop" << std::endl;
 
     // Start controller loop
     controller.start();

@@ -9,10 +9,12 @@
 #include <robot_state_publisher/robot_state_publisher.h>
 #include <tf/transform_broadcaster.h>
 
+#include <tbai_core/control/Controller.hpp>
+
 namespace tbai {
 namespace static_ {
 
-class StaticController : public tbai::core::Controller {
+class StaticController : public tbai::Controller {
    public:
     /**
      * @brief Construct a new StaticController object
@@ -22,7 +24,7 @@ class StaticController : public tbai::core::Controller {
     StaticController(const std::string &configRosParam,
                      std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr);
 
-    tbai_ros_msgs::JointCommandArray getCommandMessage(scalar_t currentTime, scalar_t dt) override;
+    std::vector<MotorCommand> getMotorCommands(scalar_t currentTime, scalar_t dt) override;
 
     void visualize() override;
 
@@ -47,16 +49,16 @@ class StaticController : public tbai::core::Controller {
     void publishJointAngles(const vector_t &currentState, const ros::Time &currentTime);
 
     /** Get command message during interpolation phase */
-    tbai_ros_msgs::JointCommandArray getInterpCommandMessage(scalar_t dt);
+    std::vector<MotorCommand> getInterpCommandMessage(scalar_t dt);
 
     /** Get command message when standing */
-    tbai_ros_msgs::JointCommandArray getStandCommandMessage();
+    std::vector<MotorCommand> getStandCommandMessage();
 
     /** Get command message when sitting */
-    tbai_ros_msgs::JointCommandArray getSitCommandMessage();
+    std::vector<MotorCommand> getSitCommandMessage();
 
     /** Pack desired joint angles into a command message */
-    tbai_ros_msgs::JointCommandArray packCommandMessage(const vector_t &jointAngles);
+    std::vector<MotorCommand> packCommandMessage(const vector_t &jointAngles);
 
     /** State subscriber */
     std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr_;

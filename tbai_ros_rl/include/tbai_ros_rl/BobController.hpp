@@ -21,6 +21,10 @@
 #include <pinocchio/multibody/data.hpp>
 #include <pinocchio/algorithm/kinematics.hpp>
 
+#include <tbai_core/control/CommandPublisher.hpp>
+#include <tbai_core/control/StateSubscriber.hpp>
+#include <tbai_core/control/Controller.hpp>
+
 #include <functional>
 
 #include <tbai_ros_rl/State.hpp>
@@ -33,11 +37,11 @@ using namespace tbai;             // NOLINT
 using namespace torch::indexing;  // NOLINT
 using torch::jit::script::Module;
 
-class BobController : public tbai::core::Controller {
+class BobController : public tbai::Controller {
    public:
     BobController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr);
 
-    tbai_ros_msgs::JointCommandArray getCommandMessage(scalar_t currentTime, scalar_t dt) override;
+    std::vector<MotorCommand> getMotorCommands(scalar_t currentTime, scalar_t dt) override;
 
     void visualize() override;
 
@@ -88,7 +92,7 @@ class BobController : public tbai::core::Controller {
     at::Tensor getNNInput(const State &state, scalar_t currentTime, scalar_t dt);
 
     void setupPinocchioModel();
-    tbai_ros_msgs::JointCommandArray getCommandMessage(const vector_t &jointAngles);
+    std::vector<MotorCommand> getMotorCommands(const vector_t &jointAngles);
     pinocchio::Model pinocchioModel_;
     pinocchio::Data pinocchioData_;
     State getBobnetState();
