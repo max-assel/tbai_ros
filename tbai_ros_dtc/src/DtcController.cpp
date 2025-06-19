@@ -39,7 +39,7 @@ namespace dtc {
 DtcController::DtcController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriber)
     : stateSubscriberPtr_(stateSubscriber), mrt_("anymal") {
     // Load initial time - the epoch
-    initTime_ = tbai::core::getEpochStart();
+    initTime_ = tbai::readInitTime();
 
     // Launch ROS nodes
     ros::NodeHandle nh;

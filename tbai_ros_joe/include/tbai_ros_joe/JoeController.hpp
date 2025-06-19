@@ -18,8 +18,7 @@
 #include <pinocchio/multibody/model.hpp>
 #include <tbai_ros_core/Rotations.hpp>
 #include <tbai_ros_core/Types.hpp>
-#include <tbai_ros_core/control/Controller.hpp>
-#include <tbai_ros_core/control/StateSubscriber.hpp>
+#include <tbai_ros_core/control/Subscribers.hpp>
 #include <tbai_ros_gridmap/GridmapInterface.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
 #include <torch/script.h>
@@ -38,9 +37,8 @@
 #include <ocs2_anymal_commands/ReferenceExtrapolation.h>
 #include <ocs2_switched_model_interface/core/Rotations.h>
 
-#include <tbai_core/control/CommandPublisher.hpp>
-#include <tbai_core/control/Controller.hpp>
-#include <tbai_core/control/StateSubscriber.hpp>
+#include <tbai_core/control/Controllers.hpp>
+#include <tbai_core/Utils.hpp>
 
 namespace tbai {
 namespace joe {
@@ -68,6 +66,10 @@ class JoeController final : public tbai::Controller {
     scalar_t getRate() const override { return 50.0; }
 
     bool checkStability() const override;
+
+    bool ok() const override { return ros::ok(); }
+
+    void triggerCallbacks() override { ros::spinOnce(); }
 
    private:
     // Torchscript model
