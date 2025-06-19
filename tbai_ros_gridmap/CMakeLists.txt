@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
     tbai_ros_core
     grid_map_ros
     grid_map_core
+    tbai
 )
 find_package(OpenCV REQUIRED)
 

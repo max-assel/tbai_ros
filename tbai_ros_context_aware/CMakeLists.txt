@@ -21,6 +21,7 @@ find_package(catkin REQUIRED COMPONENTS
     tbai_ros_mpc
     tbai_ros_static
     tbai_ros_rl
+    tbai
 )
 
 catkin_package(

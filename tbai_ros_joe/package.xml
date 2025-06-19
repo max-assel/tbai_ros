@@ -27,6 +27,7 @@
   <depend>ocs2_quadruped_interface</depend>
   <depend>ocs2_anymal_mpc</depend>
   <depend>ocs2_switched_model_interface</depend>
+  <depend>tbai</depend>
 
   <export>
   </export>

@@ -20,7 +20,7 @@ namespace static_ {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 StaticController::StaticController(const std::string &configRosParam,
-                                   std::shared_ptr<tbai::core::StateSubscriber> stateSubscriberPtr)
+                                   std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr)
     : stateSubscriberPtr_(stateSubscriberPtr),
       alpha_(-1.0),
       currentControllerType_("SIT"),

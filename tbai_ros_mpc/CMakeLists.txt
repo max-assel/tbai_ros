@@ -28,6 +28,7 @@ find_package(catkin REQUIRED COMPONENTS
     ocs2_pinocchio_interface
     ocs2_quadruped_interface
     ocs2_switched_model_interface
+    tbai
 )
 
 catkin_package(

@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   tbai_ros_msgs
   tbai_ros_core
   geometry_msgs
+  tbai
 )
 
 catkin_package(

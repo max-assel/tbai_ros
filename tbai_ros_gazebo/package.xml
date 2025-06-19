@@ -17,6 +17,7 @@
   <depend>hardware_interface</depend>
   <depend>pluginlib</depend>
   <depend>roscpp</depend>
+  <depend>tbai</depend>
 
   <export>
       <controller_interface plugin="${prefix}/controller_plugins.xml"/>

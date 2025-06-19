@@ -1,19 +1,18 @@
 #include "tbai_ros_core/control/StateSubscriber.hpp"
 
 namespace tbai {
-namespace core {
 
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-StateSubscriber::StateSubscriber(ros::NodeHandle &nh, const std::string &stateTopic) {
-    stateSubscriber_ = nh.subscribe(stateTopic, 1, &StateSubscriber::stateMessageCallback, this);
+RosStateSubscriber::RosStateSubscriber(ros::NodeHandle &nh, const std::string &stateTopic) {
+    stateSubscriber_ = nh.subscribe(stateTopic, 1, &RosStateSubscriber::stateMessageCallback, this);
 }
 
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-void StateSubscriber::waitTillInitialized() {
+void RosStateSubscriber::waitTillInitialized() {
     while (!stateMessage_ && ros::ok()) {
         ros::spinOnce();
         ros::Duration(0.05).sleep();
@@ -24,14 +23,14 @@ void StateSubscriber::waitTillInitialized() {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-void StateSubscriber::updateLatestRbdState() {
+void RosStateSubscriber::updateLatestRbdState() {
     latestRbdState_ = vector_t(Eigen::Map<vector_t>(stateMessage_->rbd_state.data(), stateMessage_->rbd_state.size()));
 }
 
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-const vector_t &StateSubscriber::getLatestRbdState() {
+const vector_t &RosStateSubscriber::getLatestRbdState() {
     if (!stateReady_) {
         updateLatestRbdState();
         stateReady_ = true;
@@ -42,10 +41,9 @@ const vector_t &StateSubscriber::getLatestRbdState() {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-void StateSubscriber::stateMessageCallback(const tbai_ros_msgs::RbdState::Ptr &msg) {
+void RosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::RbdState::Ptr &msg) {
     stateMessage_ = msg;
     stateReady_ = false;
 }
 
-}  // namespace core
 }  // namespace tbai

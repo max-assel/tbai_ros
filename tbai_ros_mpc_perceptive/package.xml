@@ -14,6 +14,7 @@
   <depend>tbai_ros_core</depend>
   <depend>tbai_ros_msgs</depend>
   <depend>tbai_ros_static</depend>
+  <depend>tbai</depend>
 
   <export>
   </export>

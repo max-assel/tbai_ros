@@ -34,7 +34,7 @@ static inline int mod(int a, int b) {
 /***********************************************************************************************************************/
 /***********************************************************************************************************************/
 /***********************************************************************************************************************/
-BobController::BobController(const std::shared_ptr<tbai::core::StateSubscriber> &stateSubscriberPtr)
+BobController::BobController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr)
     : stateSubscriberPtr_(stateSubscriberPtr) {
     ros::NodeHandle nh;
 

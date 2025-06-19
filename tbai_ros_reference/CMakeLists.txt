@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
     sensor_msgs
     geometry_msgs
     tbai_ros_core
+    tbai
 )
 
 find_package(yaml-cpp REQUIRED)

@@ -2,53 +2,27 @@
 
 #include <algorithm>
 #include <string>
+#include <vector>
+
+#include <tbai_core/control/StateSubscriber.hpp>
 
 #include "tbai_ros_core/Types.hpp"
 #include "tbai_ros_msgs/RbdState.h"
 #include <ros/ros.h>
 
 namespace tbai {
-namespace core {
-
-class StateSubscriber {
+class RosStateSubscriber : public tbai::StateSubscriber {
    public:
-    /**
-     * @brief Construct a new State Subscriber object
-     *
-     * @param nh : ROS node handle
-     * @param stateTopic : ROS topic name for state messages
-     */
-    StateSubscriber(ros::NodeHandle &nh, const std::string &stateTopic);
+    RosStateSubscriber(ros::NodeHandle &nh, const std::string &stateTopic);
 
-    /**
-     * @brief Wait until the first state message is received
-     *
-     */
-    void waitTillInitialized();
+    void waitTillInitialized() override;
 
-    /**
-     * @brief Get latest Rbd state
-     *
-     * @return const vector_t& : latest rbd state
-     */
-    const vector_t &getLatestRbdState();
+    const vector_t &getLatestRbdState() override;
 
-    /**
-     * @brief Get the Latest Rbd Stamp
-     *
-     * @return const ros::Time& : latest rbd stamp
-     */
-    inline const ros::Time &getLatestRbdStamp() { return stateMessage_->stamp; }
+    const scalar_t getLatestRbdStamp() override { return stateMessage_->stamp.toSec(); }
 
-    /**
-     * @brief Get the Contact Flags
-     *
-     * @return std::arrat<bool, 4> : contact flags
-     */
-    inline std::array<bool, 4> getContactFlags() {
-        std::array<bool, 4> contactFlags;
-        std::copy(stateMessage_->contact_flags.begin(), stateMessage_->contact_flags.end(), contactFlags.begin());
-        return contactFlags;
+    const std::vector<bool> getContactFlags() override {
+        return std::vector<bool>(stateMessage_->contact_flags.begin(), stateMessage_->contact_flags.end());
     }
 
    private:
@@ -71,5 +45,4 @@ class StateSubscriber {
     vector_t latestRbdState_;
 };
 
-}  // namespace core
 }  // namespace tbai

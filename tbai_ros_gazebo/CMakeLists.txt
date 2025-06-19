@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   tbai_ros_core
   ocs2_robotic_tools
   std_msgs
+  tbai
 )
 
 find_package(gazebo REQUIRED)

@@ -15,6 +15,7 @@
   <depend>ocs2_robotic_assets</depend>
   <depend>ocs2_robotic_tools</depend>
   <depend>std_msgs</depend>
+  <depend>tbai</depend>
 
   <export>
   </export>

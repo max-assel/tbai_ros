@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   tbai_ros_core
   tbai_ros_static
   tbai_ros_rl
+  tbai
 )
 
 set(Torch_DIR ${LIBTORCH_CMAKE_DIR})

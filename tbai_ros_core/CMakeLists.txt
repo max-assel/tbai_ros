@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   roslib
   ocs2_robotic_tools
+  tbai
 )
 find_package(yaml-cpp REQUIRED)
 

@@ -16,7 +16,7 @@
 namespace tbai {
 namespace mpc {
 
-MpcController::MpcController(const std::shared_ptr<tbai::core::StateSubscriber> &stateSubscriberPtr)
+MpcController::MpcController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr)
     : stateSubscriberPtr_(stateSubscriberPtr), mrt_("anymal"), stopReferenceThread_(false) {
     initTime_ = tbai::core::getEpochStart();
 
@@ -201,10 +201,12 @@ ocs2::SystemObservation MpcController::generateSystemObservation() const {
 
     // Set observation time
     ocs2::SystemObservation observation;
-    observation.time = stateSubscriberPtr_->getLatestRbdStamp().toSec() - initTime_;
+    observation.time = stateSubscriberPtr_->getLatestRbdStamp() - initTime_;
 
     // Set mode
-    observation.mode = switched_model::stanceLeg2ModeNumber(stateSubscriberPtr_->getContactFlags());
+    auto contactFlags = stateSubscriberPtr_->getContactFlags();
+    std::array<bool, 4> contactFlagsArray = {contactFlags[0], contactFlags[1], contactFlags[2], contactFlags[3]};
+    observation.mode = switched_model::stanceLeg2ModeNumber(contactFlagsArray);
 
     // Set state
     observation.state = rbdState.head<3 + 3 + 3 + 3 + 12>();

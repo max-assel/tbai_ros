@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include <tbai_core/control/StateSubscriber.hpp>
 #include "tbai_ros_core/Types.hpp"
 #include "tbai_ros_core/config/YamlConfig.hpp"
 #include "tbai_ros_core/control/Controller.hpp"

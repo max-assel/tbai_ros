@@ -35,7 +35,7 @@ using torch::jit::script::Module;
 
 class BobController : public tbai::core::Controller {
    public:
-    BobController(const std::shared_ptr<tbai::core::StateSubscriber> &stateSubscriberPtr);
+    BobController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr);
 
     tbai_ros_msgs::JointCommandArray getCommandMessage(scalar_t currentTime, scalar_t dt) override;
 
@@ -52,7 +52,7 @@ class BobController : public tbai::core::Controller {
     bool checkStability() const override;
 
    private:
-    std::shared_ptr<tbai::core::StateSubscriber> stateSubscriberPtr_;
+    std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr_;
 
     scalar_t kp_;
     scalar_t kd_;

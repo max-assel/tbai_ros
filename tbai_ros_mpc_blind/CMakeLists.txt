@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
     tbai_ros_core
     tbai_ros_mpc
     tbai_ros_static
+    tbai
 )
 
 catkin_package(

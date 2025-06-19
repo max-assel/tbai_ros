@@ -36,7 +36,7 @@ namespace tbai {
 
 namespace dtc {
 
-DtcController::DtcController(const std::shared_ptr<tbai::core::StateSubscriber> &stateSubscriber)
+DtcController::DtcController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriber)
     : stateSubscriberPtr_(stateSubscriber), mrt_("anymal") {
     // Load initial time - the epoch
     initTime_ = tbai::core::getEpochStart();
@@ -768,10 +768,12 @@ ocs2::SystemObservation DtcController::generateSystemObservation() {
 
     // Set observation time
     ocs2::SystemObservation observation;
-    observation.time = stateSubscriberPtr_->getLatestRbdStamp().toSec() - initTime_;
+    observation.time = stateSubscriberPtr_->getLatestRbdStamp() - initTime_;
 
     // Set mode
-    observation.mode = switched_model::stanceLeg2ModeNumber(stateSubscriberPtr_->getContactFlags());
+    auto contactFlags = stateSubscriberPtr_->getContactFlags();
+    std::array<bool, 4> contactFlagsArray = {contactFlags[0], contactFlags[1], contactFlags[2], contactFlags[3]};
+    observation.mode = switched_model::stanceLeg2ModeNumber(contactFlagsArray);
 
     // Set state
     observation.state = rbdState.head<3 + 3 + 3 + 3 + 12>();

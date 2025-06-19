@@ -17,7 +17,7 @@
   <depend>kdl_parser</depend>
   <depend>robot_state_publisher</depend>
   <depend>geometry_msgs</depend>
-
+  <depend>tbai</depend>
   <export>
   </export>
 </package>

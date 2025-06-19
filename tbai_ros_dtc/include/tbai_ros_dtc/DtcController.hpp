@@ -39,6 +39,8 @@
 #include <ocs2_anymal_commands/ReferenceExtrapolation.h>
 #include <ocs2_switched_model_interface/core/Rotations.h>
 
+#include <tbai_core/control/StateSubscriber.hpp>
+
 namespace tbai {
 namespace dtc {
 
@@ -50,7 +52,7 @@ using namespace switched_model;
 
 class DtcController final : public tbai::core::Controller {
    public:
-    DtcController(const std::shared_ptr<tbai::core::StateSubscriber> &stateSubscriber);
+    DtcController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriber);
 
     tbai_ros_msgs::JointCommandArray getCommandMessage(scalar_t currentTime, scalar_t dt) override;
 
@@ -141,7 +143,7 @@ class DtcController final : public tbai::core::Controller {
     vector_t getDesiredFootVelocitiesObservation(scalar_t currentTime, scalar_t dt);
     vector_t getHeightSamplesObservation(scalar_t currentTime, scalar_t dt);
 
-    std::shared_ptr<tbai::core::StateSubscriber> stateSubscriberPtr_;
+    std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr_;
 
     const scalar_t LIN_VEL_SCALE = 2.0;
     const scalar_t ANG_VEL_SCALE = 0.25;

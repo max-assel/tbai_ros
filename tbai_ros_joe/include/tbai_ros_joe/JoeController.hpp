@@ -49,7 +49,7 @@ using namespace switched_model;
 
 class JoeController final : public tbai::core::Controller {
    public:
-    JoeController(const std::shared_ptr<tbai::core::StateSubscriber> &stateSubscriber);
+    JoeController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriber);
 
     tbai_ros_msgs::JointCommandArray getCommandMessage(scalar_t currentTime, scalar_t dt) override;
 
@@ -140,7 +140,7 @@ class JoeController final : public tbai::core::Controller {
     vector_t getDesiredFootVelocitiesObservation(scalar_t currentTime, scalar_t dt);
     vector_t getHeightSamplesObservation(scalar_t currentTime, scalar_t dt);
 
-    std::shared_ptr<tbai::core::StateSubscriber> stateSubscriberPtr_;
+    std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr_;
 
     const scalar_t LIN_VEL_SCALE = 2.0;
     const scalar_t ANG_VEL_SCALE = 0.25;

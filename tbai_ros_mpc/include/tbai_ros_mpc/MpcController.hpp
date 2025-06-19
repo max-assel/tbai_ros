@@ -23,7 +23,7 @@ namespace tbai {
 namespace mpc {
 class MpcController final : public tbai::core::Controller {
    public:
-    MpcController(const std::shared_ptr<tbai::core::StateSubscriber> &stateSubscriberPtr);
+    MpcController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr);
 
     tbai_ros_msgs::JointCommandArray getCommandMessage(scalar_t currentTime, scalar_t dt) override;
 
@@ -40,7 +40,7 @@ class MpcController final : public tbai::core::Controller {
     bool checkStability() const override;
 
    private:
-    std::shared_ptr<tbai::core::StateSubscriber> stateSubscriberPtr_;
+    std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr_;
 
     std::unique_ptr<switched_model::QuadrupedInterface> quadrupedInterfacePtr_;
     std::unique_ptr<switched_model::QuadrupedVisualizer> visualizerPtr_;

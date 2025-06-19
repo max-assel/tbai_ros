@@ -15,7 +15,7 @@ CentralController::CentralController(ros::NodeHandle &nh, const std::string &sta
     : loopRate_(1), activeController_(nullptr) {
     initTime_ = tbai::core::getEpochStart();
 
-    stateSubscriberPtr_ = std::make_shared<StateSubscriber>(nh, stateTopic);
+    stateSubscriberPtr_ = std::shared_ptr<StateSubscriber>(new RosStateSubscriber(nh, stateTopic));
     commandPublisher_ = nh.advertise<tbai_ros_msgs::JointCommandArray>(commandTopic, 1);
     changeControllerSubscriber_ =
         nh.subscribe(changeControllerTopic, 1, &CentralController::changeControllerCallback, this);
@@ -32,7 +32,7 @@ CentralController::CentralController(ros::NodeHandle &nh, const std::string &con
     auto commandTopic = config.get<std::string>("command_topic");
     auto changeControllerTopic = config.get<std::string>("change_controller_topic");
 
-    stateSubscriberPtr_ = std::make_shared<StateSubscriber>(nh, stateTopic);
+    stateSubscriberPtr_ = std::shared_ptr<StateSubscriber>(new RosStateSubscriber(nh, stateTopic));
     commandPublisher_ = nh.advertise<tbai_ros_msgs::JointCommandArray>(commandTopic, 1);
     changeControllerSubscriber_ =
         nh.subscribe(changeControllerTopic, 1, &CentralController::changeControllerCallback, this);

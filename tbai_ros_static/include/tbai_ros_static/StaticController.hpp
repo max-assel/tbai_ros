@@ -20,7 +20,7 @@ class StaticController : public tbai::core::Controller {
      * @param configRosParam : ROS parameter name for controller configuration file
      */
     StaticController(const std::string &configRosParam,
-                     std::shared_ptr<tbai::core::StateSubscriber> stateSubscriberPtr);
+                     std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr);
 
     tbai_ros_msgs::JointCommandArray getCommandMessage(scalar_t currentTime, scalar_t dt) override;
 
@@ -59,7 +59,7 @@ class StaticController : public tbai::core::Controller {
     tbai_ros_msgs::JointCommandArray packCommandMessage(const vector_t &jointAngles);
 
     /** State subscriber */
-    std::shared_ptr<tbai::core::StateSubscriber> stateSubscriberPtr_;
+    std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr_;
 
     /** Visualization */
     tf::TransformBroadcaster tfBroadcaster_;
