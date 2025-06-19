@@ -4,6 +4,7 @@
 #include <pinocchio/fwd.hpp>
 // clang-format on
 
+#include <functional>
 #include <memory>
 #include <string>
 #include <vector>
@@ -11,24 +12,17 @@
 #include "tbai_ros_rl/CentralPatternGenerator.hpp"
 #include "tbai_ros_rl/InverseKinematics.hpp"
 #include <Eigen/Dense>
-#include <tbai_ros_core/control/Controller.hpp>
-#include <tbai_ros_core/control/StateSubscriber.hpp>
+#include <pinocchio/algorithm/kinematics.hpp>
+#include <pinocchio/multibody/data.hpp>
+#include <pinocchio/multibody/model.hpp>
+#include <tbai_ros_core/control/Subscribers.hpp>
 #include <tbai_ros_gridmap/GridmapInterface.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
-#include <torch/script.h>
-
-#include <pinocchio/multibody/model.hpp>
-#include <pinocchio/multibody/data.hpp>
-#include <pinocchio/algorithm/kinematics.hpp>
-
-#include <tbai_core/control/CommandPublisher.hpp>
-#include <tbai_core/control/StateSubscriber.hpp>
-#include <tbai_core/control/Controller.hpp>
-
-#include <functional>
-
 #include <tbai_ros_rl/State.hpp>
 #include <tbai_ros_rl/Visualizers.hpp>
+#include <torch/script.h>
+
+#include <tbai_core/control/Controllers.hpp>
 
 namespace tbai {
 namespace rl {
@@ -54,6 +48,10 @@ class BobController : public tbai::Controller {
     scalar_t getRate() const override { return 50.0; }
 
     bool checkStability() const override;
+
+    bool ok() const override { return ros::ok(); }
+
+    void triggerCallbacks() override { ros::spinOnce(); }
 
    private:
     std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr_;
