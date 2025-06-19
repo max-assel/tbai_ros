@@ -12,9 +12,7 @@
 #include <ocs2_anymal_models/QuadrupedKinematics.h>
 #include <tbai_ros_mpc/wbc/Task.hpp>
 #include <tbai_ros_msgs/JointCommandArray.h>
-#include <tbai_core/control/CommandPublisher.hpp>
-#include <tbai_core/control/Controller.hpp>
-#include <tbai_core/control/StateSubscriber.hpp>
+#include <tbai_core/control/Controllers.hpp>
 
 namespace switched_model {
 

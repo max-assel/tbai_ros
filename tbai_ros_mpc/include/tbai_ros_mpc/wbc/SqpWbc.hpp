@@ -10,9 +10,7 @@
 #include <tbai_ros_mpc/wbc/SqpSolver.hpp>
 #include <tbai_ros_mpc/wbc/WbcBase.hpp>
 
-#include <tbai_core/control/CommandPublisher.hpp>
-#include <tbai_core/control/Controller.hpp>
-#include <tbai_core/control/StateSubscriber.hpp>
+#include <tbai_core/control/Controllers.hpp>
 
 namespace switched_model {
 

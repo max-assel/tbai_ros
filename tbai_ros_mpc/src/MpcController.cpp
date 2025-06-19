@@ -18,7 +18,7 @@ namespace mpc {
 
 MpcController::MpcController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr)
     : stateSubscriberPtr_(stateSubscriberPtr), mrt_("anymal"), stopReferenceThread_(false) {
-    initTime_ = tbai::core::getEpochStart();
+    initTime_ = tbai::readInitTime();
 
     const std::string robotName = "anymal";
     ros::NodeHandle nh;

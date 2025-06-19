@@ -12,14 +12,12 @@
 #include <ros/callback_queue.h>
 #include <ros/ros.h>
 #include <tbai_ros_core/Types.hpp>
-#include <tbai_ros_core/control/Controller.hpp>
-#include <tbai_ros_core/control/StateSubscriber.hpp>
+#include <tbai_ros_core/control/Subscribers.hpp>
 #include <tbai_ros_mpc/reference/ReferenceTrajectoryGenerator.hpp>
 #include <tbai_ros_mpc/wbc/WbcBase.hpp>
 #include <tbai_ros_msgs/JointCommandArray.h>
-#include <tbai_core/control/CommandPublisher.hpp>
-#include <tbai_core/control/Controller.hpp>
-#include <tbai_core/control/StateSubscriber.hpp>
+#include <tbai_core/control/Controllers.hpp>
+#include <tbai_core/Utils.hpp>
 
 namespace tbai {
 
@@ -41,6 +39,10 @@ class MpcController final : public tbai::Controller {
     scalar_t getRate() const override { return 200.0; }
 
     bool checkStability() const override;
+
+    bool ok() const override { return ros::ok(); }
+
+    void triggerCallbacks() override { ros::spinOnce(); }
 
    private:
     std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr_;
