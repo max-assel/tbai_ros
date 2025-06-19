@@ -1,6 +1,6 @@
 #pragma once
 
-#include <tbai_core/control/CommandPublisher.hpp>
+#include <tbai_core/control/Publishers.hpp>
 #include <tbai_ros_msgs/JointCommandArray.h>
 
 namespace tbai {

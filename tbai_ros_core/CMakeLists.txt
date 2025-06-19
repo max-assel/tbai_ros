@@ -30,8 +30,7 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME}
-  src/control/CentralController.cpp
-  src/control/StateSubscriber.cpp
+  src/control/Subscribers.cpp
 )
 
 add_library(${PROJECT_NAME}_config

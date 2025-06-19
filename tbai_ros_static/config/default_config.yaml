@@ -19,7 +19,7 @@ static_controller:
   kp: 400
   kd: 5
   interpolation_time: 1.0 # s
-  rate: 5000 # Hz
+  rate: 50 # Hz
 
 anymal_d:
   joint_controller:

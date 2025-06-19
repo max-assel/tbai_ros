@@ -4,12 +4,12 @@
 #include <string>
 #include <vector>
 
-#include "tbai_ros_core/control/Controller.hpp"
-#include "tbai_ros_core/control/StateSubscriber.hpp"
-#include <robot_state_publisher/robot_state_publisher.h>
-#include <tf/transform_broadcaster.h>
+#include <ros/ros.h>
 
-#include <tbai_core/control/Controller.hpp>
+#include "tbai_ros_core/control/Subscribers.hpp"
+#include <robot_state_publisher/robot_state_publisher.h>
+#include <tbai_core/control/Controllers.hpp>
+#include <tf/transform_broadcaster.h>
 
 namespace tbai {
 namespace static_ {
@@ -21,8 +21,7 @@ class StaticController : public tbai::Controller {
      *
      * @param configRosParam : ROS parameter name for controller configuration file
      */
-    StaticController(const std::string &configRosParam,
-                     std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr);
+    StaticController(const std::string &configRosParam, std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr);
 
     std::vector<MotorCommand> getMotorCommands(scalar_t currentTime, scalar_t dt) override;
 
@@ -37,6 +36,10 @@ class StaticController : public tbai::Controller {
     scalar_t getRate() const override;
 
     bool checkStability() const override { return true; }
+
+    bool ok() const override { return ros::ok(); }
+
+    void triggerCallbacks() override { ros::spinOnce(); }
 
    private:
     /** Load settings from config file specified by ROS param*/
