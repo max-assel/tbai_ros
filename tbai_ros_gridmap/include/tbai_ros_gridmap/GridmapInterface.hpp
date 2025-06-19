@@ -6,7 +6,7 @@
 #include <grid_map_core/GridMap.hpp>
 #include <grid_map_ros/grid_map_ros.hpp>
 #include <ros/callback_queue.h>
-#include <tbai_ros_core/Types.hpp>
+#include <tbai_core/Types.hpp>
 
 namespace tbai {
 namespace gridmap {

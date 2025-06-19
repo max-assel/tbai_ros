@@ -4,7 +4,7 @@
 #include <ocs2_quadruped_interface/QuadrupedMpc.h>
 #include <ocs2_quadruped_interface/QuadrupedMpcNode.h>
 #include <ros/init.h>
-#include <tbai_ros_core/Throws.hpp>
+#include <tbai_core/Throws.hpp>
 
 int main(int argc, char *argv[]) {
     // Initialize ros node
@@ -13,17 +13,17 @@ int main(int argc, char *argv[]) {
 
     // Anymal urdf
     std::string urdfString;
-    TBAI_ROS_THROW_IF(!nodeHandle.getParam("/robot_description", urdfString),
+    TBAI_THROW_UNLESS(nodeHandle.getParam("/robot_description", urdfString),
                       "Failed to get parameter /robot_description");
 
     // Task settings
     std::string taskSettingsFile;
-    TBAI_ROS_THROW_IF(!nodeHandle.getParam("/task_settings_file", taskSettingsFile),
+    TBAI_THROW_UNLESS(nodeHandle.getParam("/task_settings_file", taskSettingsFile),
                       "Failed to get parameter /task_settings_file");
 
     // Frame declarations
     std::string frameDeclarationFile;
-    TBAI_ROS_THROW_IF(!nodeHandle.getParam("/frame_declaration_file", frameDeclarationFile),
+    TBAI_THROW_UNLESS(nodeHandle.getParam("/frame_declaration_file", frameDeclarationFile),
                       "Failed to get parameter /frame_declaration_file");
 
     // Prepare robot interface
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
     if (anymalInterface->modelSettings().algorithm_ == switched_model::Algorithm::SQP) {
         ROS_INFO_STREAM("[MpcNode] Using SQP MPC");
         std::string sqpSettingsFile;
-        TBAI_ROS_THROW_IF(!nodeHandle.getParam("/sqp_settings_file", sqpSettingsFile),
+        TBAI_THROW_UNLESS(nodeHandle.getParam("/sqp_settings_file", sqpSettingsFile),
                           "Failed to get parameter /sqp_settings_file");
         const auto sqpSettings = ocs2::sqp::loadSettings(sqpSettingsFile);
         auto mpcPtr = switched_model::getSqpMpc(*anymalInterface, mpcSettings, sqpSettings);

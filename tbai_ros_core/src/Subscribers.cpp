@@ -1,4 +1,4 @@
-#include "tbai_ros_core/control/Subscribers.hpp"
+#include "tbai_ros_core/Subscribers.hpp"
 
 namespace tbai {
 

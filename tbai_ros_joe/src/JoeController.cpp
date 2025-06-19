@@ -2,36 +2,29 @@
 #include <pinocchio/fwd.hpp>
 // clang-format on
 
-#include <tbai_ros_core/config/YamlConfig.hpp>
 #include "tbai_ros_joe/JoeController.hpp"
 
-#include <pinocchio/parsers/urdf.hpp>
-#include <ocs2_legged_robot/gait/LegLogic.h>
-#include <ocs2_core/misc/LinearInterpolation.h>
+#include <string>
+#include <vector>
 
-#include <ocs2_robotic_tools/common/RotationTransforms.h>
-#include <ocs2_robotic_tools/common/RotationDerivativesTransforms.h>
+#include "ocs2_ros_interfaces/common/RosMsgConversions.h"
 #include <ocs2_centroidal_model/AccessHelperFunctions.h>
 #include <ocs2_centroidal_model/ModelHelperFunctions.h>
 #include <ocs2_centroidal_model/PinocchioCentroidalDynamics.h>
-
-#include <ocs2_msgs/mpc_target_trajectories.h>
-#include "ocs2_ros_interfaces/common/RosMsgConversions.h"
-#include <ocs2_legged_robot/gait/MotionPhaseDefinition.h>
-
+#include <ocs2_core/misc/LinearInterpolation.h>
 #include <ocs2_core/reference/TargetTrajectories.h>
+#include <ocs2_legged_robot/gait/LegLogic.h>
+#include <ocs2_legged_robot/gait/MotionPhaseDefinition.h>
+#include <ocs2_msgs/mpc_target_trajectories.h>
+#include <ocs2_robotic_tools/common/RotationDerivativesTransforms.h>
+#include <ocs2_robotic_tools/common/RotationTransforms.h>
 #include <ocs2_switched_model_interface/core/MotionPhaseDefinition.h>
-
 #include <pinocchio/algorithm/centroidal.hpp>
-#include <string>
-#include <tbai_ros_core/Asserts.hpp>
-#include <tbai_ros_core/Throws.hpp>
-#include <vector>
-
-#include <tbai_ros_core/Utils.hpp>
+#include <pinocchio/parsers/urdf.hpp>
+#include <tbai_core/Throws.hpp>
+#include <tbai_core/Utils.hpp>
 #include <tbai_core/config/Config.hpp>
-
-#define JOE_PRINT(message) std::cout << "[Joe controller] | " << message << std::endl
+#include <tbai_core/Logging.hpp>
 
 namespace tbai {
 
@@ -48,17 +41,17 @@ JoeController::JoeController(const std::shared_ptr<tbai::StateSubscriber> &state
 
     // Load parameters
     std::string taskFile, urdfFile, referenceFile;
-    TBAI_STD_THROW_IF(!nh.getParam("taskFile", taskFile), "Task file not found");
-    TBAI_STD_THROW_IF(!nh.getParam("urdfFile", urdfFile), "URDF file not found");
-    TBAI_STD_THROW_IF(!nh.getParam("referenceFile", referenceFile), "Reference file not found");
+    TBAI_THROW_UNLESS(nh.getParam("taskFile", taskFile), "Task file not found");
+    TBAI_THROW_UNLESS(nh.getParam("urdfFile", urdfFile), "URDF file not found");
+    TBAI_THROW_UNLESS(nh.getParam("referenceFile", referenceFile), "Reference file not found");
 
     // Load default joint angles
-    JOE_PRINT("[JoeController] Loading default joint angles");
-    defaultJointAngles_ = tbai::core::fromRosConfig<vector_t>("static_controller/stand_controller/joint_angles");
+    TBAI_LOG_INFO("[JoeController] Loading default joint angles");
+    defaultJointAngles_ = tbai::fromGlobalConfig<vector_t>("static_controller/stand_controller/joint_angles");
 
     // Load joint names
-    JOE_PRINT("[JoeController] Loading joint names");
-    jointNames_ = tbai::core::fromRosConfig<std::vector<std::string>>("joint_names");
+    TBAI_LOG_INFO("[JoeController] Loading joint names");
+    jointNames_ = tbai::fromGlobalConfig<std::vector<std::string>>("joint_names");
 
     // Load JOE model
     std::string hfRepo = tbai::fromGlobalConfig<std::string>("joe_controller/hf_repo");
@@ -66,13 +59,13 @@ JoeController::JoeController(const std::shared_ptr<tbai::StateSubscriber> &state
     std::string modelPath = tbai::downloadFromHuggingFace(hfRepo, hfModel);
 
     try {
-        JOE_PRINT("Loading torch model");
+        TBAI_LOG_INFO("Loading torch model");
         joeModel_ = torch::jit::load(modelPath);
     } catch (const c10::Error &e) {
         std::cerr << "Could not load model from: " << modelPath << std::endl;
         throw std::runtime_error("Could not load model");
     }
-    JOE_PRINT("Torch model loaded");
+    TBAI_LOG_INFO("Torch model loaded");
 
     // Do basic ff check
     torch::Tensor input = torch::empty({MODEL_INPUT_SIZE});
@@ -82,20 +75,20 @@ JoeController::JoeController(const std::shared_ptr<tbai::StateSubscriber> &state
     std::cout << "Input: " << input.view({1, -1}) << std::endl;
     std::cout << "Output: " << output.view({1, -1}) << std::endl;
 
-    JOE_PRINT("Setting up reference velocity generator");
+    TBAI_LOG_INFO("Setting up reference velocity generator");
     refVelGen_ = tbai::reference::getReferenceVelocityGeneratorUnique(nh);
     refPub_ = nh.advertise<ocs2_msgs::mpc_target_trajectories>("anymal_mpc_target", 1, false);
 
-    horizon_ = 1.0; // TODO:  Load this parameter from the config file
-    mpcRate_ = 30; // TODO:  Load this parameter from the config file
+    horizon_ = 1.0;  // TODO:  Load this parameter from the config file
+    mpcRate_ = 30;   // TODO:  Load this parameter from the config file
     pastAction_ = vector_t().setZero(12);
 
     if (!blind_) {
-        JOE_PRINT("Initializing gridmap interface");
+        TBAI_LOG_INFO("Initializing gridmap interface");
         gridmap_ = tbai::gridmap::getGridmapInterfaceUnique();
     }
 
-    JOE_PRINT("Initializing quadruped interface");
+    TBAI_LOG_INFO("Initializing quadruped interface");
     std::string urdf, taskFolder;
     ros::param::get("robot_description", urdf);
     ros::param::get("task_folder", taskFolder);
@@ -107,8 +100,8 @@ JoeController::JoeController(const std::shared_ptr<tbai::StateSubscriber> &state
                                                               quadrupedInterface.getJointNames(),
                                                               quadrupedInterface.getBaseName(), nh));
 
-    JOE_PRINT("Initialization done");
-    JOE_PRINT(defaultJointAngles_.transpose());
+    TBAI_LOG_INFO("Initialization done");
+    TBAI_LOG_INFO(defaultJointAngles_.transpose());
 }
 
 void JoeController::publishReference(const TargetTrajectories &targetTrajectories) {
@@ -176,7 +169,7 @@ std::vector<MotorCommand> JoeController::getMotorCommands(scalar_t currentTime, 
     pastAction_ = torch2vector(torchAction);
 
     vector_t commandedJointAngles = defaultJointAngles_;
-    for(int i = 0; i < 12; ++i) {
+    for (int i = 0; i < 12; ++i) {
         commandedJointAngles[i] += torchAction[i].item<float>() * ACTION_SCALE;
     }
 
@@ -414,12 +407,14 @@ void JoeController::computeBaseKinematicsAndDynamics(scalar_t currentTime, scala
 
 vector3_t JoeController::getLinearVelocityObservation(scalar_t currentTime, scalar_t dt) const {
     const vector_t &rbdState = stateSubscriberPtr_->getLatestRbdState();
-    return (rbdState.segment<3>(9) + (vector_t::Zero(3) * (-0.12))) * LIN_VEL_SCALE;  // COM velocity - already expessed in base frame
+    return (rbdState.segment<3>(9) + (vector_t::Zero(3) * (-0.12))) *
+           LIN_VEL_SCALE;  // COM velocity - already expessed in base frame
 }
 
 vector3_t JoeController::getAngularVelocityObservation(scalar_t currentTime, scalar_t dt) const {
     const vector_t &rbdState = stateSubscriberPtr_->getLatestRbdState();
-    return (rbdState.segment<3>(6) + (vector_t::Zero(3) * (-0.22))) * ANG_VEL_SCALE;  // Angular velocity - already expessed in base frame
+    return (rbdState.segment<3>(6) + (vector_t::Zero(3) * (-0.22))) *
+           ANG_VEL_SCALE;  // Angular velocity - already expessed in base frame
 }
 
 vector3_t JoeController::getProjectedGravityObservation(scalar_t currentTime, scalar_t dt) const {
@@ -704,10 +699,14 @@ vector_t JoeController::getDesiredFootVelocitiesObservation(scalar_t currentTime
 
     matrix3_t R_base_world = getRotationMatrixBaseWorld(stateSubscriberPtr_->getLatestRbdState());
 
-    vector_t lf_vel = -R_base_world * (desiredFootVelocities[0] - currentFootVelocities[0]) + vector_t::Zero(3) * (-0.2);
-    vector_t rf_vel = -R_base_world * (desiredFootVelocities[1] - currentFootVelocities[1]) + vector_t::Zero(3) * (-0.2);
-    vector_t lh_vel = -R_base_world * (desiredFootVelocities[2] - currentFootVelocities[2]) + vector_t::Zero(3) * (-0.2);
-    vector_t rh_vel = -R_base_world * (desiredFootVelocities[3] - currentFootVelocities[3]) + vector_t::Zero(3) * (-0.2);
+    vector_t lf_vel =
+        -R_base_world * (desiredFootVelocities[0] - currentFootVelocities[0]) + vector_t::Zero(3) * (-0.2);
+    vector_t rf_vel =
+        -R_base_world * (desiredFootVelocities[1] - currentFootVelocities[1]) + vector_t::Zero(3) * (-0.2);
+    vector_t lh_vel =
+        -R_base_world * (desiredFootVelocities[2] - currentFootVelocities[2]) + vector_t::Zero(3) * (-0.2);
+    vector_t rh_vel =
+        -R_base_world * (desiredFootVelocities[3] - currentFootVelocities[3]) + vector_t::Zero(3) * (-0.2);
 
     vector_t out(4 * 3);
     out << lf_vel, lh_vel, rf_vel, rh_vel;
@@ -740,7 +739,7 @@ vector_t JoeController::getHeightSamplesObservation(scalar_t currentTime, scalar
             scalar_t y = pos(1);
             scalar_t height = gridmap_->atPosition(x, y);
             scalar_t height_diff = height - currentFootPosition(2);
-            out(legidx * 10 + i) = std::max(-0.5, std::min(0.5,height_diff));
+            out(legidx * 10 + i) = std::max(-0.5, std::min(0.5, height_diff));
         }
     }
     return out;
@@ -751,9 +750,9 @@ void JoeController::visualize() {
 }
 
 void JoeController::changeController(const std::string &controllerType, scalar_t currentTime) {
-    JOE_PRINT("Changing controller");
+    TBAI_LOG_INFO("Changing controller");
     resetMpc();
-    JOE_PRINT("Controller changed");
+    TBAI_LOG_INFO("Controller changed");
     if (!blind_) {
         gridmap_->waitTillInitialized();
     }
@@ -811,34 +810,34 @@ ocs2::SystemObservation JoeController::generateSystemObservation() {
 }
 
 void JoeController::resetMpc() {
-    JOE_PRINT("Waiting for state subscriber to initialize...");
+    TBAI_LOG_INFO("Waiting for state subscriber to initialize...");
 
     // Wait to receive observation
     stateSubscriberPtr_->waitTillInitialized();
 
-    JOE_PRINT("State subscriber initialized");
+    TBAI_LOG_INFO("State subscriber initialized");
 
     // Prepare initial observation for MPC
     ocs2::SystemObservation mpcObservation = generateSystemObservation();
 
-    JOE_PRINT("Initial observation generated");
+    TBAI_LOG_INFO("Initial observation generated");
 
     // Prepare target trajectory
     ocs2::TargetTrajectories initTargetTrajectories({0.0}, {mpcObservation.state}, {mpcObservation.input});
 
-    JOE_PRINT("Resetting MPC...");
+    TBAI_LOG_INFO("Resetting MPC...");
     mrt_.resetMpcNode(initTargetTrajectories);
 
     while (!mrt_.initialPolicyReceived() && ros::ok()) {
         ROS_INFO("Waiting for initial policy...");
-        JOE_PRINT("Waiting for initial policy...");
+        TBAI_LOG_INFO("Waiting for initial policy...");
         ros::spinOnce();
         mrt_.spinMRT();
         mrt_.setCurrentObservation(generateSystemObservation());
         ros::Duration(0.1).sleep();
     }
 
-    JOE_PRINT("Initial policy received");
+    TBAI_LOG_INFO("Initial policy received");
 
     ROS_INFO("Initial policy received.");
 }

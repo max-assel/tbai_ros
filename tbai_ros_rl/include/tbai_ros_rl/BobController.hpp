@@ -14,7 +14,7 @@
 #include <pinocchio/multibody/data.hpp>
 #include <pinocchio/multibody/model.hpp>
 #include <tbai_bob/BobController.hpp>
-#include <tbai_ros_core/control/Subscribers.hpp>
+#include <tbai_ros_core/Subscribers.hpp>
 #include <tbai_ros_gridmap/GridmapInterface.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
 #include <tbai_ros_rl/Visualizers.hpp>

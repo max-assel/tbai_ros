@@ -2,7 +2,7 @@
 #include <pinocchio/fwd.hpp>
 // clang-format on
 
-#include <tbai_ros_core/config/YamlConfig.hpp>
+ 
 #include "tbai_ros_dtc/DtcController.hpp"
 
 #include <pinocchio/parsers/urdf.hpp>
@@ -24,15 +24,13 @@
 
 #include <pinocchio/algorithm/centroidal.hpp>
 #include <string>
-#include <tbai_ros_core/Asserts.hpp>
-#include <tbai_ros_core/Throws.hpp>
+ 
+#include <tbai_core/Throws.hpp>
 #include <vector>
 
-#include <tbai_ros_core/Utils.hpp>
-
+#include <tbai_core/Utils.hpp>
+#include <tbai_core/Logging.hpp>
 #include <tbai_core/config/Config.hpp>
-
-#define DTC_PRINT(message) std::cout << "[Dtc controller] | " << message << std::endl
 
 namespace tbai {
 
@@ -49,17 +47,17 @@ DtcController::DtcController(const std::shared_ptr<tbai::StateSubscriber> &state
 
     // Load parameters
     std::string taskFile, urdfFile, referenceFile;
-    TBAI_STD_THROW_IF(!nh.getParam("taskFile", taskFile), "Task file not found");
-    TBAI_STD_THROW_IF(!nh.getParam("urdfFile", urdfFile), "URDF file not found");
-    TBAI_STD_THROW_IF(!nh.getParam("referenceFile", referenceFile), "Reference file not found");
+    TBAI_THROW_UNLESS(nh.getParam("taskFile", taskFile), "Task file not found");
+    TBAI_THROW_UNLESS(nh.getParam("urdfFile", urdfFile), "URDF file not found");
+    TBAI_THROW_UNLESS(nh.getParam("referenceFile", referenceFile), "Reference file not found");
 
     // Load default joint angles
-    DTC_PRINT("[DtcController] Loading default joint angles");
-    defaultJointAngles_ = tbai::core::fromRosConfig<vector_t>("static_controller/stand_controller/joint_angles");
+    TBAI_LOG_INFO("Loading default joint angles");
+    defaultJointAngles_ = tbai::fromGlobalConfig<vector_t>("static_controller/stand_controller/joint_angles");
 
     // Load joint names
-    DTC_PRINT("[DtcController] Loading joint names");
-    jointNames_ = tbai::core::fromRosConfig<std::vector<std::string>>("joint_names");
+    TBAI_LOG_INFO("Loading joint names");
+    jointNames_ = tbai::fromGlobalConfig<std::vector<std::string>>("joint_names");
 
     // Load DTC model
     std::string hfRepo = tbai::fromGlobalConfig<std::string>("dtc_controller/hf_repo");
@@ -67,13 +65,13 @@ DtcController::DtcController(const std::shared_ptr<tbai::StateSubscriber> &state
     std::string modelPath = tbai::downloadFromHuggingFace(hfRepo, hfModel);
 
     try {
-        DTC_PRINT("Loading torch model");
+        TBAI_LOG_INFO("Loading torch model");
         dtcModel_ = torch::jit::load(modelPath);
     } catch (const c10::Error &e) {
         std::cerr << "Could not load model from: " << modelPath << std::endl;
         throw std::runtime_error("Could not load model");
     }
-    DTC_PRINT("Torch model loaded");
+    TBAI_LOG_INFO("Torch model loaded");
 
     // Do basic ff check
     torch::Tensor input = torch::empty({MODEL_INPUT_SIZE});
@@ -83,7 +81,7 @@ DtcController::DtcController(const std::shared_ptr<tbai::StateSubscriber> &state
     std::cout << "Input: " << input.view({1, -1}) << std::endl;
     std::cout << "Output: " << output.view({1, -1}) << std::endl;
 
-    DTC_PRINT("Setting up reference velocity generator");
+    TBAI_LOG_INFO("Setting up reference velocity generator");
     refVelGen_ = tbai::reference::getReferenceVelocityGeneratorUnique(nh);
     refPub_ = nh.advertise<ocs2_msgs::mpc_target_trajectories>("anymal_mpc_target", 1, false);
 
@@ -92,11 +90,11 @@ DtcController::DtcController(const std::shared_ptr<tbai::StateSubscriber> &state
     pastAction_ = vector_t().setZero(12);
 
     if (!blind_) {
-        DTC_PRINT("Initializing gridmap interface");
+        TBAI_LOG_INFO("Initializing gridmap interface");
         gridmap_ = tbai::gridmap::getGridmapInterfaceUnique();
     }
 
-    DTC_PRINT("Initializing quadruped interface");
+    TBAI_LOG_INFO("Initializing quadruped interface");
     std::string urdf, taskFolder;
     ros::param::get("robot_description", urdf);
     ros::param::get("task_folder", taskFolder);
@@ -108,8 +106,8 @@ DtcController::DtcController(const std::shared_ptr<tbai::StateSubscriber> &state
                                                               quadrupedInterface.getJointNames(),
                                                               quadrupedInterface.getBaseName(), nh));
 
-    DTC_PRINT("Initialization done");
-    DTC_PRINT(defaultJointAngles_.transpose());
+    TBAI_LOG_INFO("Initialization done");
+    TBAI_LOG_INFO(defaultJointAngles_.transpose());
 }
 
 void DtcController::publishReference(const TargetTrajectories &targetTrajectories) {
@@ -740,9 +738,9 @@ void DtcController::visualize() {
 }
 
 void DtcController::changeController(const std::string &controllerType, scalar_t currentTime) {
-    DTC_PRINT("Changing controller");
+    TBAI_LOG_INFO("Changing controller");
     resetMpc();
-    DTC_PRINT("Controller changed");
+    TBAI_LOG_INFO("Controller changed");
     if (!blind_) {
         gridmap_->waitTillInitialized();
     }
@@ -800,34 +798,34 @@ ocs2::SystemObservation DtcController::generateSystemObservation() {
 }
 
 void DtcController::resetMpc() {
-    DTC_PRINT("Waiting for state subscriber to initialize...");
+    TBAI_LOG_INFO("Waiting for state subscriber to initialize...");
 
     // Wait to receive observation
     stateSubscriberPtr_->waitTillInitialized();
 
-    DTC_PRINT("State subscriber initialized");
+    TBAI_LOG_INFO("State subscriber initialized");
 
     // Prepare initial observation for MPC
     ocs2::SystemObservation mpcObservation = generateSystemObservation();
 
-    DTC_PRINT("Initial observation generated");
+    TBAI_LOG_INFO("Initial observation generated");
 
     // Prepare target trajectory
     ocs2::TargetTrajectories initTargetTrajectories({0.0}, {mpcObservation.state}, {mpcObservation.input});
 
-    DTC_PRINT("Resetting MPC...");
+    TBAI_LOG_INFO("Resetting MPC...");
     mrt_.resetMpcNode(initTargetTrajectories);
 
     while (!mrt_.initialPolicyReceived() && ros::ok()) {
         ROS_INFO("Waiting for initial policy...");
-        DTC_PRINT("Waiting for initial policy...");
+        TBAI_LOG_INFO("Waiting for initial policy...");
         ros::spinOnce();
         mrt_.spinMRT();
         mrt_.setCurrentObservation(generateSystemObservation());
         ros::Duration(0.1).sleep();
     }
 
-    DTC_PRINT("Initial policy received");
+    TBAI_LOG_INFO("Initial policy received");
 
     ROS_INFO("Initial policy received.");
 }

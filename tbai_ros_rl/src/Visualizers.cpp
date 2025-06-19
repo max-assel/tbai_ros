@@ -6,6 +6,8 @@
 #include <visualization_msgs/Marker.h>
 #include <visualization_msgs/MarkerArray.h>
 
+#include <tbai_core/config/Config.hpp>
+
 namespace tbai {
 
 namespace rl {
@@ -15,13 +17,13 @@ namespace rl {
 /***********************************************************************************************************************/
 StateVisualizer::StateVisualizer() {
     // Load odom frame name
-    odomFrame_ = tbai::core::fromRosConfig<std::string>("odom_frame");
+    odomFrame_ = tbai::fromGlobalConfig<std::string>("odom_frame");
 
     // Load base frame name
-    baseFrame_ = tbai::core::fromRosConfig<std::string>("base_name");
+    baseFrame_ = tbai::fromGlobalConfig<std::string>("base_name");
 
     // Load joint names
-    jointNames_ = tbai::core::fromRosConfig<std::vector<std::string>>("joint_names");
+    jointNames_ = tbai::fromGlobalConfig<std::vector<std::string>>("joint_names");
 
     // Setup state publisher
     std::string urdfString;
@@ -83,11 +85,11 @@ void StateVisualizer::publishJointAngles(const ros::Time &timeStamp, const State
 /***********************************************************************************************************************/
 HeightsReconstructedVisualizer::HeightsReconstructedVisualizer() {
     ros::NodeHandle nh;
-    std::string markerTopic = tbai::core::fromRosConfig<std::string>("marker_topic");
+    std::string markerTopic = tbai::fromGlobalConfig<std::string>("marker_topic");
     markerPublisher_ = nh.advertise<visualization_msgs::MarkerArray>(markerTopic, 1);
 
-    odomFrame_ = tbai::core::fromRosConfig<std::string>("odom_frame");
-    blind_ = tbai::core::fromRosConfig<bool>("bob_controller/blind");
+    odomFrame_ = tbai::fromGlobalConfig<std::string>("odom_frame");
+    blind_ = tbai::fromGlobalConfig<bool>("bob_controller/blind");
 }
 
 /***********************************************************************************************************************/

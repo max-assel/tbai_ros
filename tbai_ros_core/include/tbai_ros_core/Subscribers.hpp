@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "tbai_ros_core/Types.hpp"
+#include <tbai_core/Types.hpp>
 #include "tbai_ros_msgs/RbdState.h"
 #include <ros/ros.h>
 #include <std_msgs/String.h>

@@ -8,7 +8,7 @@
 #include <gazebo/physics/physics.hh>
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
-#include <tbai_ros_core/Types.hpp>
+#include <tbai_core/Types.hpp>
 
 namespace gazebo {
 class StatePublisher : public ModelPlugin {

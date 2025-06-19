@@ -1,9 +1,6 @@
 #include "tbai_ros_reference/ReferenceVelocityGenerator.hpp"
 
-#include <tbai_ros_core/config/YamlConfig.hpp>
-
-#define SIGN(x) ((x) >= 0 ? 1 : -1)
-
+#include <tbai_core/config/Config.hpp>
 namespace tbai {
 namespace reference {
 
@@ -48,25 +45,24 @@ void TwistReferenceVelocityGenerator::callback(const geometry_msgs::Twist &msg) 
 }
 
 std::unique_ptr<ReferenceVelocityGenerator> getReferenceVelocityGeneratorUnique(ros::NodeHandle &nh) {
-    using tbai::core::fromRosConfig;
-    auto type = fromRosConfig<std::string>("reference_generator/type");
+    auto type = tbai::fromGlobalConfig<std::string>("reference_generator/type");
 
     if (type == "joystick") {
-        auto topic = fromRosConfig<std::string>("reference_generator/joystick/topic");
-        auto rampedVelocity = fromRosConfig<scalar_t>("reference_generator/joystick/ramped_velocity");
-        auto xIndex = fromRosConfig<size_t>("reference_generator/joystick/x_index");
-        auto yIndex = fromRosConfig<size_t>("reference_generator/joystick/y_index");
-        auto yawIndex = fromRosConfig<size_t>("reference_generator/joystick/yaw_index");
-        auto xScale = fromRosConfig<scalar_t>("reference_generator/joystick/x_scale");
-        auto yScale = fromRosConfig<scalar_t>("reference_generator/joystick/y_scale");
-        auto yawScale = fromRosConfig<scalar_t>("reference_generator/joystick/yaw_scale");
+        auto topic = tbai::fromGlobalConfig<std::string>("reference_generator/joystick/topic");
+        auto rampedVelocity = tbai::fromGlobalConfig<scalar_t>("reference_generator/joystick/ramped_velocity");
+        auto xIndex = tbai::fromGlobalConfig<size_t>("reference_generator/joystick/x_index");
+        auto yIndex = tbai::fromGlobalConfig<size_t>("reference_generator/joystick/y_index");
+        auto yawIndex = tbai::fromGlobalConfig<size_t>("reference_generator/joystick/yaw_index");
+        auto xScale = tbai::fromGlobalConfig<scalar_t>("reference_generator/joystick/x_scale");
+        auto yScale = tbai::fromGlobalConfig<scalar_t>("reference_generator/joystick/y_scale");
+        auto yawScale = tbai::fromGlobalConfig<scalar_t>("reference_generator/joystick/yaw_scale");
 
         return std::make_unique<JoystickReferenceVelocityGenerator>(nh, topic, rampedVelocity, xIndex, yIndex, yawIndex,
                                                                     xScale, yScale, yawScale);
     }
 
     if (type == "twist") {
-        auto topic = fromRosConfig<std::string>("reference_generator/twist/topic");
+        auto topic = tbai::fromGlobalConfig<std::string>("reference_generator/twist/topic");
         return std::make_unique<TwistReferenceVelocityGenerator>(nh, topic);
     }
 

@@ -13,31 +13,21 @@ find_package(catkin REQUIRED COMPONENTS
   ocs2_robotic_tools
   tbai
 )
-find_package(yaml-cpp REQUIRED)
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES  ${PROJECT_NAME} ${PROJECT_NAME}_config 
+  LIBRARIES  ${PROJECT_NAME}
   CATKIN_DEPENDS roscpp roslib tbai_ros_msgs ocs2_robotic_tools
-  DEPENDS yaml-cpp
 )
 
 ## Build
 include_directories(
     include
     ${catkin_INCLUDE_DIRS}
-    ${YAML_CPP_INCLUDE_DIR}
 )
 
 add_library(${PROJECT_NAME}
-  src/control/Subscribers.cpp
-)
-
-add_library(${PROJECT_NAME}_config
-  src/config/YamlConfig.cpp
-)
-target_link_libraries(${PROJECT_NAME}_config
-  ${YAML_CPP_LIBRARIES}
+  src/Subscribers.cpp
 )
 
 install(
@@ -48,23 +38,6 @@ install(
 )
 
 install(
-  TARGETS ${PROJECT_NAME}_config
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-install(DIRECTORY include/${PROJECT_NAME}/
+  DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-)
-
-## Testing
-catkin_add_gtest(test_config
-  test/testConfig.cpp
-)
-target_link_libraries(test_config
-  ${PROJECT_NAME}
-  ${PROJECT_NAME}_config
-  ${catkin_LIBRARIES}
-  ${YAML_CPP_LIBRARIES}
 )

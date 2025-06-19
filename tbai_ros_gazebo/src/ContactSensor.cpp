@@ -1,7 +1,9 @@
 #include "tbai_ros_gazebo/ContactSensor.hpp"
 
-#include <tbai_ros_core/Types.hpp>
-#include <tbai_ros_core/config/YamlConfig.hpp>
+#include <tbai_core/Types.hpp>
+#include <tbai_core/config/Config.hpp>
+#include <tbai_core/Logging.hpp>
+ 
 
 namespace gazebo {
 GZ_REGISTER_SENSOR_PLUGIN(ContactSensor)
@@ -13,7 +15,7 @@ void ContactSensor::Load(sensors::SensorPtr sensor, sdf::ElementPtr sdf) {
     this->parentSensor = std::dynamic_pointer_cast<sensors::ContactSensor>(sensor);
 
     if (!this->parentSensor) {
-        ROS_ERROR_STREAM("[ContactSensor] Could not load contact sensor plugin.");
+        TBAI_LOG_FATAL("Could not load contact sensor plugin.");
         return;
     }
 
@@ -27,13 +29,13 @@ void ContactSensor::Load(sensors::SensorPtr sensor, sdf::ElementPtr sdf) {
     // Set initial state
     lastState_ = false;
 
-    ROS_INFO_STREAM("[ContactSensor] Loading ContactSensor plugin. Publishing on topic /" << topicName);
+    TBAI_LOG_INFO("Loading ContactSensor plugin. Publishing on topic /{}", topicName);
 
     // Setup update rate
-    auto updateRate = tbai::core::fromRosConfig<tbai::scalar_t>("contact_sensor/update_rate");
+    auto updateRate = tbai::fromGlobalConfig<tbai::scalar_t>("contact_sensor/update_rate");
     this->parentSensor->SetUpdateRate(updateRate);
 
-    ROS_INFO_STREAM("[ContactSensor] Loaded ContactSensor plugin. Update rate: " << updateRate << " Hz");
+    TBAI_LOG_INFO("Loaded ContactSensor plugin. Update rate: {} Hz", updateRate);
 }
 
 /**********************************************************************************************************************/

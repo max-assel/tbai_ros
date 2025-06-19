@@ -17,9 +17,9 @@
 #include <pinocchio/algorithm/kinematics.hpp>
 #include <pinocchio/multibody/data.hpp>
 #include <pinocchio/multibody/model.hpp>
-#include <tbai_ros_core/Rotations.hpp>
-#include <tbai_ros_core/Types.hpp>
-#include <tbai_ros_core/control/Subscribers.hpp>
+#include <tbai_core/Rotations.hpp>
+#include <tbai_core/Types.hpp>
+#include <tbai_ros_core/Subscribers.hpp>
 #include <tbai_ros_gridmap/GridmapInterface.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
 #include <torch/script.h>
@@ -46,7 +46,6 @@ namespace dtc {
 
 using namespace ocs2;
 using namespace ocs2::legged_robot;
-using namespace tbai::core;
 using namespace tbai;
 using namespace switched_model;
 
@@ -81,7 +80,7 @@ class DtcController final : public tbai::Controller {
     // Helper functions
     inline vector_t getRpyAngles(const vector_t &state) const {
         vector_t rpyocs2 = state.head<3>();
-        return tbai::core::mat2rpy(tbai::core::ocs2rpy2quat(rpyocs2).toRotationMatrix());
+        return tbai::mat2rpy(tbai::ocs2rpy2quat(rpyocs2).toRotationMatrix());
     }
     inline vector_t getOcs2ZyxEulerAngles(const vector_t &state) {
         vector_t rpy = getRpyAngles(state);
@@ -90,7 +89,7 @@ class DtcController final : public tbai::Controller {
         return rpy.reverse();
     }
     inline matrix3_t getRotationMatrixWorldBase(const vector_t &state) const {
-        return tbai::core::ocs2rpy2quat(state.head<3>()).toRotationMatrix();
+        return tbai::ocs2rpy2quat(state.head<3>()).toRotationMatrix();
     }
     inline matrix3_t getRotationMatrixBaseWorld(const vector_t &state) const {
         return getRotationMatrixWorldBase(state).transpose();
@@ -98,7 +97,7 @@ class DtcController final : public tbai::Controller {
     inline matrix3_t getRotationMatrixWorldBaseYaw(const vector_t &state) const {
         vector_t rpy = getRpyAngles(state);
         rpy.head<2>().setZero();
-        return tbai::core::rpy2mat(rpy);
+        return tbai::rpy2mat(rpy);
     }
     inline matrix3_t getRotationMatrixBaseWorldYaw(const vector_t &state) const {
         return getRotationMatrixWorldBaseYaw(state).transpose();

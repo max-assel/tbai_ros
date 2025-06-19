@@ -8,9 +8,12 @@
 #include <string>
 
 #include <Eigen/Geometry>
-#include <tbai_ros_core/Rotations.hpp>
-#include <tbai_ros_core/config/YamlConfig.hpp>
+#include <tbai_core/Rotations.hpp>
+ 
 #include <tbai_ros_msgs/RbdState.h>
+
+#include <tbai_core/Logging.hpp>
+#include <tbai_core/config/Config.hpp>
 
 namespace gazebo {
 
@@ -18,45 +21,44 @@ namespace gazebo {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 void StatePublisher::Load(physics::ModelPtr robot, sdf::ElementPtr sdf) {
-    ROS_INFO_STREAM("[StatePublisher] Loading StatePublisher plugin");
+    TBAI_LOG_INFO("Loading StatePublisher plugin");
     // set Gazebo callback function
     updateConnection_ = event::Events::ConnectWorldUpdateBegin(std::bind(&StatePublisher::OnUpdate, this));
 
     this->robot_ = robot;
-    auto config = tbai::core::YamlConfig::fromRosParam("/tbai_config_path");
 
     ros::NodeHandle nh;
-    auto stateTopic = config.get<std::string>("state_topic");
+    auto stateTopic = tbai::fromGlobalConfig<std::string>("state_topic");
     statePublisher_ = nh.advertise<tbai_ros_msgs::RbdState>(stateTopic, 2);
 
-    auto base = config.get<std::string>("base_name");
+    auto base = tbai::fromGlobalConfig<std::string>("base_name");
     baseLinkPtr_ = robot->GetChildLink(base);
     bool found = baseLinkPtr_ != nullptr;
-    ROS_INFO_STREAM("[StatePublisher] Base link " << base << " found: " << found);
+    TBAI_LOG_INFO("Base link {} found: {}", base, found);
 
     // get joints; ignore 'universe' and 'root_joint'
-    auto jointNames = config.get<std::vector<std::string>>("joint_names");
+    auto jointNames = tbai::fromGlobalConfig<std::vector<std::string>>("joint_names");
     for (int i = 0; i < jointNames.size(); ++i) {
         joints_.push_back(robot->GetJoint(jointNames[i]));
         found = joints_.back() != nullptr;
-        ROS_INFO_STREAM("[StatePublisher] Joint " << jointNames[i] << " found: " << found);
+        TBAI_LOG_INFO("Joint {} found: {}", jointNames[i], found);
     }
 
     // initialize last publish time
     lastSimTime_ = robot->GetWorld()->SimTime();
 
-    rate_ = config.get<double>("state_publisher/update_rate");
+    rate_ = tbai::fromGlobalConfig<double>("state_publisher/update_rate");
     period_ = 1.0 / rate_;
 
     // get contact topics
-    auto contactTopics = config.get<std::vector<std::string>>("contact_topics");
+    auto contactTopics = tbai::fromGlobalConfig<std::vector<std::string>>("contact_topics");
     for (int i = 0; i < contactTopics.size(); ++i) {
         contactFlags_[i] = false;
         auto callback = [this, i](const std_msgs::Bool::ConstPtr &msg) { contactFlags_[i] = msg->data; };
         contactSubscribers_[i] = nh.subscribe<std_msgs::Bool>(contactTopics[i], 1, callback);
     }
 
-    ROS_INFO_STREAM("[StatePublisher] Loaded StatePublisher plugin");
+    TBAI_LOG_INFO("Loaded StatePublisher plugin");
 }  // namespace gazebo
 
 /*********************************************************************************************************************/
@@ -82,7 +84,7 @@ void StatePublisher::OnUpdate() {
                                                    baseOrientationIgn.Y(), baseOrientationIgn.Z());
     const tbai::matrix3_t R_world_base = baseQuaternion.toRotationMatrix();
     const tbai::matrix3_t R_base_world = R_world_base.transpose();
-    const tbai::vector_t rpy = tbai::core::mat2oc2rpy(R_world_base, lastYaw_);
+    const tbai::vector_t rpy = tbai::mat2oc2rpy(R_world_base, lastYaw_);
     lastYaw_ = rpy[2];
 
     // Base position in world frame
@@ -95,7 +97,7 @@ void StatePublisher::OnUpdate() {
     }
 
     // Base angular velocity in base frame
-    const Eigen::Vector3d angularVelocityWorld = tbai::core::mat2aa(R_world_base * lastOrientationBase2World_) / dt;
+    const Eigen::Vector3d angularVelocityWorld = tbai::mat2aa(R_world_base * lastOrientationBase2World_) / dt;
     const Eigen::Vector3d angularVelocityBase = R_base_world * angularVelocityWorld;
 
     // Base linear velocity in base frame

@@ -7,8 +7,10 @@
 #include <ocs2_switched_model_interface/core/Rotations.h>
 #include <ocs2_switched_model_interface/terrain/PlaneFitting.h>
 #include <ocs2_switched_model_msgs/local_terrain.h>
-#include <tbai_ros_core/Throws.hpp>
-#include <tbai_ros_core/config/YamlConfig.hpp>
+#include <tbai_core/Throws.hpp>
+
+#include <tbai_core/config/Config.hpp>
+ 
 namespace tbai {
 namespace mpc {
 namespace reference {
@@ -22,12 +24,12 @@ LocalTerrainEstimator::LocalTerrainEstimator() {
 
     // Load robot description - urdf
     std::string urdfString;
-    TBAI_ROS_THROW_IF(!nodeHandle.getParam("/robot_description", urdfString),
+    TBAI_THROW_UNLESS(nodeHandle.getParam("/robot_description", urdfString),
                       "Failed to get robot description from parameter server.");
 
     // load frame declaration file
     std::string frameDeclarationFile;
-    TBAI_ROS_THROW_IF(!nodeHandle.getParam("/frame_declaration_file", frameDeclarationFile),
+    TBAI_THROW_UNLESS(nodeHandle.getParam("/frame_declaration_file", frameDeclarationFile),
                       "Failed to get frame declaration file from parameter server.");
 
     // Load kinematics model
@@ -79,27 +81,27 @@ void LocalTerrainEstimator::updateLocalTerrainEstimate(const std::vector<vector3
 /*********************************************************************************************************************/
 ReferenceTrajectoryGenerator::ReferenceTrajectoryGenerator(const std::string &targetCommandFile, ros::NodeHandle &nh)
     : firstObservationReceived_(false) {
-    using tbai::core::fromRosConfig;
+    using tbai::fromGlobalConfig;
 
     defaultJointState_.setZero(12);
     loadSettings(targetCommandFile);
 
-    trajdt_ = fromRosConfig<scalar_t>("mpc_controller/reference_trajectory/traj_dt");
-    trajKnots_ = fromRosConfig<size_t>("mpc_controller/reference_trajectory/traj_knots");
+    trajdt_ = tbai::fromGlobalConfig<scalar_t>("mpc_controller/reference_trajectory/traj_dt");
+    trajKnots_ = tbai::fromGlobalConfig<size_t>("mpc_controller/reference_trajectory/traj_knots");
 
     // Setup ROS subscribers
-    auto observationTopic = fromRosConfig<std::string>("mpc_controller/reference_trajectory/observation_topic");
+    auto observationTopic = tbai::fromGlobalConfig<std::string>("mpc_controller/reference_trajectory/observation_topic");
     observationSubscriber_ =
         nh.subscribe(observationTopic, 1, &ReferenceTrajectoryGenerator::observationCallback, this);
 
-    auto terrainTopic = fromRosConfig<std::string>("mpc_controller/reference_trajectory/terrain_topic");
+    auto terrainTopic = tbai::fromGlobalConfig<std::string>("mpc_controller/reference_trajectory/terrain_topic");
     terrainSubscriber_ = nh.subscribe(terrainTopic, 1, &ReferenceTrajectoryGenerator::terrainCallback, this);
 
     // Setup ROS publishers
-    auto referenceTopic = fromRosConfig<std::string>("mpc_controller/reference_trajectory/reference_topic");
+    auto referenceTopic = tbai::fromGlobalConfig<std::string>("mpc_controller/reference_trajectory/reference_topic");
     referencePublisher_ = nh.advertise<ocs2_msgs::mpc_target_trajectories>(referenceTopic, 1, false);
 
-    blind_ = fromRosConfig<bool>("mpc_controller/reference_trajectory/blind");
+    blind_ = tbai::fromGlobalConfig<bool>("mpc_controller/reference_trajectory/blind");
 
     velocityGeneratorPtr_ = tbai::reference::getReferenceVelocityGeneratorUnique(nh);
     terrainPublisher_ = nh.advertise<ocs2_switched_model_msgs::local_terrain>("/local_terrain", 1, false);
@@ -267,7 +269,7 @@ void ReferenceTrajectoryGenerator::terrainCallback(const grid_map_msgs::GridMap 
 
 std::unique_ptr<ReferenceTrajectoryGenerator> getReferenceTrajectoryGeneratorUnique(ros::NodeHandle &nh) {
     std::string configPath;
-    TBAI_ROS_THROW_IF(!nh.getParam("target_command_config_file", configPath),
+    TBAI_THROW_UNLESS(nh.getParam("target_command_config_file", configPath),
                       "Failed to get config file path from parameter server.");
     return std::make_unique<ReferenceTrajectoryGenerator>(configPath, nh);
 }

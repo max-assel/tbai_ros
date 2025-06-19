@@ -8,7 +8,7 @@
 #include <geometry_msgs/Twist.h>
 #include <ros/ros.h>
 #include <sensor_msgs/Joy.h>
-#include <tbai_ros_core/Types.hpp>
+#include <tbai_core/Types.hpp>
 
 namespace tbai {
 namespace reference {

@@ -10,8 +10,8 @@
 #include <vector>
 
 #include <ocs2_switched_model_interface/core/MotionPhaseDefinition.h>
-#include <tbai_ros_core/Utils.hpp>
-#include <tbai_ros_core/Throws.hpp>
+#include <tbai_core/Utils.hpp>
+#include <tbai_core/Throws.hpp>
 
 namespace tbai {
 namespace mpc {
@@ -25,26 +25,26 @@ MpcController::MpcController(const std::shared_ptr<tbai::StateSubscriber> &state
 
     // Load default joint state
     std::string targetCommandConfig;
-    TBAI_ROS_THROW_IF(!nh.getParam("/target_command_config_file", targetCommandConfig),
+    TBAI_THROW_UNLESS(nh.getParam("/target_command_config_file", targetCommandConfig),
                       "Failed to get parameter /target_command_config_file");
 
     // URDF
     std::string urdfString;
-    TBAI_ROS_THROW_IF(!nh.getParam("/robot_description", urdfString), "Failed to get parameter /robot_description");
+    TBAI_THROW_UNLESS(nh.getParam("/robot_description", urdfString), "Failed to get parameter /robot_description");
 
     // Task settings
     std::string taskSettingsFile;
-    TBAI_ROS_THROW_IF(!nh.getParam("/task_settings_file", taskSettingsFile),
+    TBAI_THROW_UNLESS(nh.getParam("/task_settings_file", taskSettingsFile),
                       "Failed to get parameter /task_settings_file");
 
     // Frame declarations
     std::string frameDeclarationFile;
-    TBAI_ROS_THROW_IF(!nh.getParam("/frame_declaration_file", frameDeclarationFile),
+    TBAI_THROW_UNLESS(nh.getParam("/frame_declaration_file", frameDeclarationFile),
                       "Failed to get parameter /frame_declaration_file");
 
     // Controller config
     std::string controllerConfigFile;
-    TBAI_ROS_THROW_IF(!nh.getParam("/controller_config_file", controllerConfigFile),
+    TBAI_THROW_UNLESS(nh.getParam("/controller_config_file", controllerConfigFile),
                       "Failed to get parameter /controller_config_file");
 
     quadrupedInterfacePtr_ =

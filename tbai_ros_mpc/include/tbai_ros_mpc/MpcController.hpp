@@ -11,8 +11,8 @@
 #include <ocs2_ros_interfaces/mrt/MRT_ROS_Interface.h>
 #include <ros/callback_queue.h>
 #include <ros/ros.h>
-#include <tbai_ros_core/Types.hpp>
-#include <tbai_ros_core/control/Subscribers.hpp>
+#include <tbai_core/Types.hpp>
+#include <tbai_ros_core/Subscribers.hpp>
 #include <tbai_ros_mpc/reference/ReferenceTrajectoryGenerator.hpp>
 #include <tbai_ros_mpc/wbc/WbcBase.hpp>
 #include <tbai_ros_msgs/JointCommandArray.h>

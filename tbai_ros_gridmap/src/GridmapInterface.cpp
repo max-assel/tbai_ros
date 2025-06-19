@@ -2,8 +2,11 @@
 
 #include <numeric>
 
-#include <tbai_ros_core/Asserts.hpp>
-#include <tbai_ros_core/config/YamlConfig.hpp>
+#include <tbai_core/Asserts.hpp>
+#include <tbai_core/config/Config.hpp>
+
+ 
+ 
 
 namespace tbai {
 namespace gridmap {
@@ -59,8 +62,8 @@ void GridmapInterface::waitTillInitialized() {
 /**********************************************************************************************************************/
 std::unique_ptr<GridmapInterface> getGridmapInterfaceUnique() {
     ros::NodeHandle nh;
-    auto topic = tbai::core::fromRosConfig<std::string>("gridmap_topic");
-    auto layer = tbai::core::fromRosConfig<std::string>("gridmap_layer");
+    auto topic = tbai::fromGlobalConfig<std::string>("gridmap_topic");
+    auto layer = tbai::fromGlobalConfig<std::string>("gridmap_layer");
 
     return std::unique_ptr<GridmapInterface>(new GridmapInterface(nh, topic, layer));
 }

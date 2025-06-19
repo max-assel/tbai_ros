@@ -8,9 +8,11 @@
 #include <geometry_msgs/TransformStamped.h>
 #include <kdl_parser/kdl_parser.hpp>
 #include <ros/package.h>
-#include <tbai_ros_core/Rotations.hpp>
-#include <tbai_ros_core/Types.hpp>
-#include <tbai_ros_core/config/YamlConfig.hpp>
+#include <tbai_core/Rotations.hpp>
+#include <tbai_core/Types.hpp>
+
+#include <tbai_core/config/Config.hpp>
+ 
 #include <urdf/model.h>
 
 namespace tbai {
@@ -19,13 +21,12 @@ namespace static_ {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-StaticController::StaticController(const std::string &configRosParam,
-                                   std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr)
+StaticController::StaticController(std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr)
     : stateSubscriberPtr_(stateSubscriberPtr),
       alpha_(-1.0),
       currentControllerType_("SIT"),
       timeSinceLastVisualizationUpdate_(100.0) {
-    loadSettings(configRosParam);
+    loadSettings();
 
     // Setup state publisher
     std::string urdfString;
@@ -109,17 +110,16 @@ scalar_t StaticController::getRate() const {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-void StaticController::loadSettings(const std::string &configRosParam) {
-    auto config = tbai::core::YamlConfig::fromRosParam(configRosParam, '/');
-    kp_ = config.get<scalar_t>("static_controller/kp");
-    kd_ = config.get<scalar_t>("static_controller/kd");
-    rate_ = config.get<scalar_t>("static_controller/rate");
+void StaticController::loadSettings() {
+    kp_ = tbai::fromGlobalConfig<scalar_t>("static_controller/kp");
+    kd_ = tbai::fromGlobalConfig<scalar_t>("static_controller/kd");
+    rate_ = tbai::fromGlobalConfig<scalar_t>("static_controller/rate");
     std::cout << "Current rate" << rate_ << std::endl;
 
-    standJointAngles_ = config.get<vector_t>("static_controller/stand_controller/joint_angles");
-    sitJointAngles_ = config.get<vector_t>("static_controller/sit_controller/joint_angles");
-    jointNames_ = config.get<std::vector<std::string>>("joint_names");
-    interpolationTime_ = config.get<scalar_t>("static_controller/interpolation_time");
+    standJointAngles_ = tbai::fromGlobalConfig<vector_t>("static_controller/stand_controller/joint_angles");
+    sitJointAngles_ = tbai::fromGlobalConfig<vector_t>("static_controller/sit_controller/joint_angles");
+    jointNames_ = tbai::fromGlobalConfig<std::vector<std::string>>("joint_names");
+    interpolationTime_ = tbai::fromGlobalConfig<scalar_t>("static_controller/interpolation_time");
 }
 
 /*********************************************************************************************************************/
@@ -139,7 +139,7 @@ void StaticController::publishOdomBaseTransforms(const vector_t &currentState, c
     odomBaseTransform.transform.translation.z = currentState(5);
 
     // Orientation
-    tbai::quaternion_t quat = tbai::core::ocs2rpy2quat(currentState.head<3>());
+    tbai::quaternion_t quat = tbai::ocs2rpy2quat(currentState.head<3>());
     odomBaseTransform.transform.rotation.x = quat.x();
     odomBaseTransform.transform.rotation.y = quat.y();
     odomBaseTransform.transform.rotation.z = quat.z();

@@ -1,6 +1,7 @@
 #include "tbai_ros_mpc/wbc/Factory.hpp"
 
-#include <tbai_ros_core/config/YamlConfig.hpp>
+#include <tbai_core/config/Config.hpp>
+ 
 
 namespace switched_model {
 
@@ -8,7 +9,7 @@ std::unique_ptr<WbcBase> getWbcUnique(const std::string &controllerConfigFile, c
                                       const switched_model::ComModelBase<scalar_t> &comModel,
                                       const switched_model::KinematicsModelBase<scalar_t> &kinematics,
                                       const std::vector<std::string> &jointNames) {
-    auto wbcType = tbai::core::fromRosConfig<std::string>("mpc_controller/wbc_type");
+    auto wbcType = tbai::fromGlobalConfig<std::string>("mpc_controller/wbc_type");
 
     if (wbcType == "hqp") {
         return std::make_unique<HqpWbc>(controllerConfigFile, urdfString, comModel, kinematics, jointNames);
