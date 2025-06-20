@@ -15,7 +15,7 @@ void ContactSensor::Load(sensors::SensorPtr sensor, sdf::ElementPtr sdf) {
     this->parentSensor = std::dynamic_pointer_cast<sensors::ContactSensor>(sensor);
 
     if (!this->parentSensor) {
-        TBAI_LOG_FATAL("Could not load contact sensor plugin.");
+        TBAI_GLOBAL_LOG_FATAL("Could not load contact sensor plugin.");
         return;
     }
 
@@ -29,13 +29,13 @@ void ContactSensor::Load(sensors::SensorPtr sensor, sdf::ElementPtr sdf) {
     // Set initial state
     lastState_ = false;
 
-    TBAI_LOG_INFO("Loading ContactSensor plugin. Publishing on topic /{}", topicName);
+    TBAI_GLOBAL_LOG_INFO("Loading ContactSensor plugin. Publishing on topic /{}", topicName);
 
     // Setup update rate
     auto updateRate = tbai::fromGlobalConfig<tbai::scalar_t>("contact_sensor/update_rate");
     this->parentSensor->SetUpdateRate(updateRate);
 
-    TBAI_LOG_INFO("Loaded ContactSensor plugin. Update rate: {} Hz", updateRate);
+    TBAI_GLOBAL_LOG_INFO("Loaded ContactSensor plugin. Update rate: {} Hz", updateRate);
 }
 
 /**********************************************************************************************************************/

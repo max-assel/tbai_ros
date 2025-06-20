@@ -21,7 +21,7 @@ namespace gazebo {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 void StatePublisher::Load(physics::ModelPtr robot, sdf::ElementPtr sdf) {
-    TBAI_LOG_INFO("Loading StatePublisher plugin");
+    TBAI_GLOBAL_LOG_INFO("Loading StatePublisher plugin");
     // set Gazebo callback function
     updateConnection_ = event::Events::ConnectWorldUpdateBegin(std::bind(&StatePublisher::OnUpdate, this));
 
@@ -34,14 +34,14 @@ void StatePublisher::Load(physics::ModelPtr robot, sdf::ElementPtr sdf) {
     auto base = tbai::fromGlobalConfig<std::string>("base_name");
     baseLinkPtr_ = robot->GetChildLink(base);
     bool found = baseLinkPtr_ != nullptr;
-    TBAI_LOG_INFO("Base link {} found: {}", base, found);
+    TBAI_GLOBAL_LOG_INFO("Base link {} found: {}", base, found);
 
     // get joints; ignore 'universe' and 'root_joint'
     auto jointNames = tbai::fromGlobalConfig<std::vector<std::string>>("joint_names");
     for (int i = 0; i < jointNames.size(); ++i) {
         joints_.push_back(robot->GetJoint(jointNames[i]));
         found = joints_.back() != nullptr;
-        TBAI_LOG_INFO("Joint {} found: {}", jointNames[i], found);
+        TBAI_GLOBAL_LOG_INFO("Joint {} found: {}", jointNames[i], found);
     }
 
     // initialize last publish time
@@ -58,7 +58,7 @@ void StatePublisher::Load(physics::ModelPtr robot, sdf::ElementPtr sdf) {
         contactSubscribers_[i] = nh.subscribe<std_msgs::Bool>(contactTopics[i], 1, callback);
     }
 
-    TBAI_LOG_INFO("Loaded StatePublisher plugin");
+    TBAI_GLOBAL_LOG_INFO("Loaded StatePublisher plugin");
 }  // namespace gazebo
 
 /*********************************************************************************************************************/

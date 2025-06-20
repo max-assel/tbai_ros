@@ -18,12 +18,12 @@ bool JointController::init(hardware_interface::EffortJointInterface *hw, ros::No
     auto jointNames = tbai::fromGlobalConfig<std::vector<std::string>>("joint_names");
 
     // Load joint names
-    TBAI_LOG_INFO("Loading {} joint controllers for joints {}", jointNames.size(), jointNames);
+    TBAI_GLOBAL_LOG_INFO("Loading {} joint controllers for joints {}", jointNames.size(), jointNames);
 
     // Load model URDF
     urdf::Model urdf;
     if (!urdf.initParam("robot_description")) {  // TODO(lnotspotl): Parametrize this
-        TBAI_LOG_FATAL("Could not parse urdf file! Failed to initialize.");
+        TBAI_GLOBAL_LOG_FATAL("Could not parse urdf file! Failed to initialize.");
         return false;
     }
 
@@ -34,7 +34,7 @@ bool JointController::init(hardware_interface::EffortJointInterface *hw, ros::No
         try {
             jointHandles_.push_back(hw->getHandle(jointName));
         } catch (const hardware_interface::HardwareInterfaceException &e) {
-            TBAI_LOG_FATAL("Could not find joint '{}' in hardware interface", jointName);
+            TBAI_GLOBAL_LOG_FATAL("Could not find joint '{}' in hardware interface", jointName);
             return false;
         }
 
@@ -42,7 +42,7 @@ bool JointController::init(hardware_interface::EffortJointInterface *hw, ros::No
         std::pair<tbai::scalar_t, tbai::scalar_t> jointLimit;
         urdf::JointConstSharedPtr jointUrdf = urdf.getJoint(jointName);
         if (!jointUrdf) {
-            TBAI_LOG_FATAL("Could not find joint '{}' in urdf", jointName);
+            TBAI_GLOBAL_LOG_FATAL("Could not find joint '{}' in urdf", jointName);
             return false;
         }
         jointLimit.first = jointUrdf->limits->lower;
@@ -55,13 +55,13 @@ bool JointController::init(hardware_interface::EffortJointInterface *hw, ros::No
         // Get joint index
         jointIndexMap_[jointName] = i;
 
-        TBAI_LOG_INFO("Loaded joint '{}' with limits [{}, {}] and effort limit {}", jointName, jointLimit.first,
+        TBAI_GLOBAL_LOG_INFO("Loaded joint '{}' with limits [{}, {}] and effort limit {}", jointName, jointLimit.first,
                       jointLimit.second, jointUrdf->limits->effort);
     }
 
     // Load command topic
     auto commandTopic = tbai::fromGlobalConfig<std::string>("command_topic");
-    TBAI_LOG_INFO("Subscribing to {} for joint commands", commandTopic);
+    TBAI_GLOBAL_LOG_INFO("Subscribing to {} for joint commands", commandTopic);
 
     // Subscribe to command topic
     ros::NodeHandle nh;

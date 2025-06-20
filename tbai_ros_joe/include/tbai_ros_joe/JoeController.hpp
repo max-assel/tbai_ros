@@ -39,6 +39,7 @@
 
 #include <tbai_core/control/Controllers.hpp>
 #include <tbai_core/Utils.hpp>
+#include <tbai_core/Logging.hpp>
 
 namespace tbai {
 namespace joe {
@@ -223,6 +224,8 @@ class JoeController final : public tbai::Controller {
         scalar_t comHeight = 0.53;
         return {vx, vy, wz, comHeight};
     }
+
+    std::shared_ptr<spdlog::logger> logger_;
 };
 
 /** Torch -> Eigen*/
