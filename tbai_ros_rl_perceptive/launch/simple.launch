@@ -18,6 +18,9 @@
     <!-- Upload config path to ROS param server -->
     <param name="tbai_config_path" type="string" value="$(arg tbai_config_path)"/>
 
+    <!-- Set environment variable for config path -->
+    <env name="TBAI_GLOBAL_CONFIG_PATH" value="$(arg tbai_config_path)"/>
+
     <!-- Launch gazebo -->
     <include file="$(find tbai_ros_gazebo)/launch/world.launch">
         <arg name="controllers_ns" value="$(arg controllers_ns)"/>
@@ -36,11 +39,8 @@
     <!-- Launch simple node -->
     <node name="simple" pkg="tbai_ros_rl_perceptive" type="simple" output="screen"/>
 
-    <!-- Joystick node -->
-    <arg name="joystick_dev" default="/dev/input/js0"/>
-    <node name="joy_node" pkg="joy" type="joy_node" output="screen">
-        <param name="dev" value="$(arg joystick_dev)"/>
-    </node>
+    <!-- Launch virtual joystick -->
+    <node name="virtual_joystick" pkg="tbai_ros_utils" type="virtual_joystick.py" output="screen"/>
 
     <!-- Start Rviz visualizer -->
     <arg name="rvizconfig" default="$(find tbai_ros_rl_perceptive)/launch/rviz/anymal_d.rviz" />
@@ -57,51 +57,13 @@
             filter_limit_min: 0.01
             filter_limit_max: 4.0  <!-- Limit the range of points to forward to 6 meters in viewing direction-->
             filter_limit_negative: False
-            leaf_size: 0.06  <!-- Limit the density to 5 cm-->
-        </rosparam>
-        </node>
-        <!-- Rear camera -->
-        <node pkg="nodelet" type="nodelet" name="voxel_grid1" args="load pcl/VoxelGrid pcl_manager" output="screen">
-      <remap from="~input" to="/rear_camera/depth/points"/>
-        <remap from="~output" to="/rear_camera/depth/points_downsampled"/>
-        <rosparam>
-            filter_field_name: z
-            filter_limit_min: 0.01
-            filter_limit_max: 4.0  <!-- Limit the range of points to forward to 6 meters in viewing direction-->
-            filter_limit_negative: False
-            leaf_size: 0.06  <!-- Limit the density to 5 cm-->
-        </rosparam>
-        </node>
+            leaf_size: 0.06  <!-- Limit the density to 6 cm-->
+      </rosparam>
+    </node>
 
-        <!-- Right camera -->
-        <node pkg="nodelet" type="nodelet" name="voxel_grid2" args="load pcl/VoxelGrid pcl_manager" output="screen">
-      <remap from="~input" to="/right_camera/depth/points"/>
-        <remap from="~output" to="/right_camera/depth/points_downsampled"/>
-        <rosparam>
-            filter_field_name: z
-            filter_limit_min: 0.01
-            filter_limit_max: 4.0  <!-- Limit the range of points to forward to 6 meters in viewing direction-->
-            filter_limit_negative: False
-            leaf_size: 0.06  <!-- Limit the density to 5 cm-->
-        </rosparam>
-        </node>
-
-        <!-- Left camera -->
-        <node pkg="nodelet" type="nodelet" name="voxel_grid3" args="load pcl/VoxelGrid pcl_manager" output="screen">
-      <remap from="~input" to="/left_camera/depth/points"/>
-        <remap from="~output" to="/left_camera/depth/points_downsampled"/>
-        <rosparam>
-            filter_field_name: z
-            filter_limit_min: 0.01
-            filter_limit_max: 4.0  <!-- Limit the range of points to forward to 6 meters in viewing direction-->
-            filter_limit_negative: False
-            leaf_size: 0.06  <!-- Limit the density to 5 cm-->
-        </rosparam>
-        </node>
-
-        <node pkg="elevation_mapping" type="elevation_mapping" name="elevation_mapping" output="screen">
-        <rosparam command="load" file="$(find tbai_ros_gridmap)/config/elevation_mapping.yaml"/>
-        <rosparam command="load" file="$(find tbai_ros_gridmap)/config/post_processing.yaml" />
-        </node>
+    <node pkg="elevation_mapping" type="elevation_mapping" name="elevation_mapping" output="screen">
+      <rosparam command="load" file="$(find tbai_ros_gridmap)/config/elevation_mapping.yaml"/>
+      <rosparam command="load" file="$(find tbai_ros_gridmap)/config/post_processing.yaml" />
+    </node>
 
 </launch>

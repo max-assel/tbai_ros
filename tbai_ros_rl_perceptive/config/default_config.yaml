@@ -56,7 +56,7 @@ bob_controller:
     swing_height: 0.2
 
 reference_generator:
-  type: "joystick"
+  type: "twist"
 
   joystick:
     topic: "joy"
