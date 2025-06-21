@@ -6,6 +6,7 @@
 #include <grid_map_core/GridMap.hpp>
 #include <grid_map_ros/grid_map_ros.hpp>
 #include <ros/callback_queue.h>
+#include <tbai_core/Logging.hpp>
 #include <tbai_core/Types.hpp>
 
 namespace tbai {
@@ -53,13 +54,12 @@ class GridmapInterface {
     inline scalar_t atPosition(scalar_t x, scalar_t y) const {
         grid_map::Position position(x, y);
         if (!(mapPtr_->isInside(position))) {
-            std::cerr << "Position " << x << " " << y << " is outside the map. Returning 0.0" << std::endl;
+            TBAI_GLOBAL_LOG_WARN_THROTTLE(2.0, "Position x: {}, y: {} is outside the map. Returning 0.0", x, y);
             return 0.0;
         }
         auto height = mapPtr_->atPosition(layer_, position);
         if (std::isnan(height) || std::isinf(height)) {
-            std::cerr << "NAN or inf at position " << x << " " << y << " " << height << ". Replacing with 0.0"
-                      << std::endl;
+            TBAI_GLOBAL_LOG_WARN_THROTTLE(2.0, "NAN or inf at position x: {}, y: {}. Replacing with 0.0", x, y);
             return 0.0;
         }
         return height;
