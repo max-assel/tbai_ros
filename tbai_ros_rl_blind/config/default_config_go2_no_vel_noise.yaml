@@ -19,10 +19,10 @@ static_controller:
   stand_controller:
     joint_angles: [0.0, 0.806, -1.802, 0.0, 0.996, -1.802, 0.0, 0.806, -1.802, 0.0, 0.996, -1.802] # LF, LH, RF, RH
   sit_controller:
-    joint_angles: [0.0, 0.806, -1.802, 0.0, 0.996, -1.802, 0.0, 0.806, -1.802, 0.0, 0.996, -1.802] # LF, LH, RF, RH
-  kp: 400
-  kd: 5
-  interpolation_time: 1.0 # s
+    joint_angles: [0.0, 1.36, -2.65, 0.0, 1.36, -2.65, 0.0, 1.36, -2.65, 0.0, 1.36, -2.65] # LF, LH, RF, RH
+  kp: 90
+  kd: 1.5
+  interpolation_time: 1.8 # s
   rate: 50 # Hz
 
 bob_controller:
