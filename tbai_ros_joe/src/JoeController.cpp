@@ -746,7 +746,7 @@ vector_t JoeController::getHeightSamplesObservation(scalar_t currentTime, scalar
     return out;
 }
 
-void JoeController::visualize() {
+void JoeController::visualize(scalar_t currentTime, scalar_t dt) {
     visualizer_->update(generateSystemObservation(), mrt_.getPolicy(), mrt_.getCommand());
 }
 

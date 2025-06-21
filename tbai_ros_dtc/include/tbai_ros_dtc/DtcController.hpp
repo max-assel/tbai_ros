@@ -57,7 +57,7 @@ class DtcController final : public tbai::Controller {
 
     std::vector<MotorCommand> getMotorCommands(scalar_t currentTime, scalar_t dt) override;
 
-    void visualize() override;
+    void visualize(scalar_t currentTime, scalar_t dt) override;
 
     void changeController(const std::string &controllerType, scalar_t currentTime) override;
 

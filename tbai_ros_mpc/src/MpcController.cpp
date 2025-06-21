@@ -136,7 +136,7 @@ bool MpcController::checkStability() const {
     return true;
 }
 
-void MpcController::visualize() {
+void MpcController::visualize(scalar_t currentTime, scalar_t dt) {
     if (timeSinceLastVisualizationUpdate_ >= 1.0 / 15.0) {
         visualizerPtr_->update(generateSystemObservation(), mrt_.getPolicy(), mrt_.getCommand());
         timeSinceLastVisualizationUpdate_ = 0.0;

@@ -732,7 +732,7 @@ vector_t DtcController::getHeightSamplesObservation(scalar_t currentTime, scalar
     return out;
 }
 
-void DtcController::visualize() {
+void DtcController::visualize(scalar_t currentTime, scalar_t dt) {
     visualizer_->update(generateSystemObservation(), mrt_.getPolicy(), mrt_.getCommand());
 }
 

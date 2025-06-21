@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
     const std::string urdfString = nh.param<std::string>("robot_description", "");
 
     // Add all controllers
-    controller.addController(std::make_unique<tbai::static_::StaticController>(controller.getStateSubscriberPtr()));
+    controller.addController(std::make_unique<tbai::static_::RosStaticController>(controller.getStateSubscriberPtr()));
     controller.addController(std::make_unique<tbai::rl::RosBobController>(
         urdfString, controller.getStateSubscriberPtr(), referenceVelocityGenerator));
     controller.addController(std::make_unique<tbai::mpc::MpcController>(controller.getStateSubscriberPtr()));

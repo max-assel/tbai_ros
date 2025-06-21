@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
 
     // Add static controller
     controller.addController(
-        std::make_unique<tbai::static_::StaticController>(controller.getStateSubscriberPtr()));
+        std::make_unique<tbai::static_::RosStaticController>(controller.getStateSubscriberPtr()));
 
     // Add Joe controller
     controller.addController(std::make_unique<tbai::joe::JoeController>(controller.getStateSubscriberPtr()));

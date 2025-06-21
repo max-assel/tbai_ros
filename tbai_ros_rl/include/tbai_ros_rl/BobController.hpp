@@ -32,7 +32,7 @@ class RosBobController : public tbai::BobController {
     RosBobController(const std::string &urdfString, const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
                      const std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> &refVelGenPtr);
 
-    void visualize() override;
+    void visualize(scalar_t currentTime, scalar_t dt) override;
     void changeController(const std::string &controllerType, scalar_t currentTime) override;
     void atPositions(matrix_t &positions) override;
     void stopController() override;
@@ -43,6 +43,8 @@ class RosBobController : public tbai::BobController {
     std::unique_ptr<tbai::gridmap::GridmapInterface> gridmap_;
     StateVisualizer stateVisualizer_;
     HeightsReconstructedVisualizer heightsReconstructedVisualizer_;
+
+    scalar_t timeSinceLastVisualizationUpdate_;
 };
 
 }  // namespace rl

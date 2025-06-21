@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
 
     // Add static controller
     controller.addController(
-        std::make_unique<tbai::static_::StaticController>(controller.getStateSubscriberPtr()));
+        std::make_unique<tbai::static_::RosStaticController>(controller.getStateSubscriberPtr()));
 
     // Add MPC controller
     controller.addController(std::make_unique<tbai::mpc::MpcController>(controller.getStateSubscriberPtr()));
