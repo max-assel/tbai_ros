@@ -5,14 +5,14 @@
 // clang-format on
 
 #include <memory>
-#include <vector>
 #include <string>
+#include <vector>
 
 #include <ocs2_anymal_models/QuadrupedCom.h>
 #include <ocs2_anymal_models/QuadrupedKinematics.h>
+#include <tbai_core/control/Controllers.hpp>
 #include <tbai_ros_mpc/wbc/Task.hpp>
 #include <tbai_ros_msgs/JointCommandArray.h>
-#include <tbai_core/control/Controllers.hpp>
 
 namespace switched_model {
 
@@ -25,10 +25,10 @@ class WbcBase {
     virtual ~WbcBase() = default;
 
     virtual std::vector<tbai::MotorCommand> getMotorCommands(scalar_t currentTime, const vector_t &currentState,
-                                                           const vector_t &currentInput, const size_t currentMode,
-                                                           const vector_t &desiredState, const vector_t &desiredInput,
-                                                           const size_t desiredMode,
-                                                           const vector_t &desiredJointAcceleration) = 0;
+                                                             const vector_t &currentInput, const size_t currentMode,
+                                                             const vector_t &desiredState, const vector_t &desiredInput,
+                                                             const size_t desiredMode,
+                                                             const vector_t &desiredJointAcceleration) = 0;
 
    protected:
     Task createDynamicsTask();

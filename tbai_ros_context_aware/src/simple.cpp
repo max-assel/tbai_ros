@@ -13,10 +13,9 @@
 #include <tbai_core/Utils.hpp>
 #include <tbai_core/config/Config.hpp>
 #include <tbai_core/control/CentralController.hpp>
-#include <tbai_ros_core/Subscribers.hpp>
-#include <tbai_core/Utils.hpp>
 #include <tbai_ros_core/Publishers.hpp>
 #include <tbai_ros_core/Rate.hpp>
+#include <tbai_ros_core/Subscribers.hpp>
 
 int main(int argc, char *argv[]) {
     ros::init(argc, argv, "tbai_ros_context_aware");
@@ -39,17 +38,16 @@ int main(int argc, char *argv[]) {
         std::shared_ptr<tbai::ChangeControllerSubscriber>(
             new tbai::RosChangeControllerSubscriber(nh, changeControllerTopic));
 
-    tbai::CentralController<ros::Rate, tbai::RosTime> controller(stateSubscriber, commandPublisher,
-                                                                 changeControllerSubscriber);
+    tbai::CentralController<ros::Rate, tbai::RosTime> controller(commandPublisher, changeControllerSubscriber);
 
     auto referenceVelocityGenerator = tbai::reference::getReferenceVelocityGeneratorShared(nh);
     const std::string urdfString = nh.param<std::string>("robot_description", "");
 
     // Add all controllers
-    controller.addController(std::make_unique<tbai::static_::RosStaticController>(controller.getStateSubscriberPtr()));
-    controller.addController(std::make_unique<tbai::rl::RosBobController>(
-        urdfString, controller.getStateSubscriberPtr(), referenceVelocityGenerator));
-    controller.addController(std::make_unique<tbai::mpc::MpcController>(controller.getStateSubscriberPtr()));
+    controller.addController(std::make_unique<tbai::static_::RosStaticController>(stateSubscriber));
+    controller.addController(
+        std::make_unique<tbai::rl::RosBobController>(urdfString, stateSubscriber, referenceVelocityGenerator));
+    controller.addController(std::make_unique<tbai::mpc::MpcController>(stateSubscriber));
 
     // Start controller loop
     controller.start();

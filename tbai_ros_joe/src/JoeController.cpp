@@ -21,12 +21,10 @@
 #include <ocs2_switched_model_interface/core/MotionPhaseDefinition.h>
 #include <pinocchio/algorithm/centroidal.hpp>
 #include <pinocchio/parsers/urdf.hpp>
+#include <tbai_core/Logging.hpp>
 #include <tbai_core/Throws.hpp>
 #include <tbai_core/Utils.hpp>
 #include <tbai_core/config/Config.hpp>
-#include <tbai_core/Logging.hpp>
-
-
 
 namespace tbai {
 
@@ -393,7 +391,7 @@ void JoeController::computeBaseKinematicsAndDynamics(scalar_t currentTime, scala
     vector3_t desiredBaseLinearVelocity = rotationWorldBase * baseVelocityOcs2.tail<3>();
     vector3_t desiredBaseAngularVelocity = rotationWorldBase * baseVelocityOcs2.head<3>();
 
-    matrix_t R_base_world = getRotationMatrixBaseWorld(stateSubscriberPtr_->getLatestRbdState());
+    matrix_t R_base_world = getRotationMatrixBaseWorld(state_.x);
     vector3_t desiredBaseLinearAcceleration = rotationWorldBase * (baseAccelerationLocal.tail<3>());
     vector3_t desiredBaseAngularAcceleration = rotationWorldBase * baseAccelerationLocal.head<3>();
 
@@ -407,19 +405,19 @@ void JoeController::computeBaseKinematicsAndDynamics(scalar_t currentTime, scala
 }
 
 vector3_t JoeController::getLinearVelocityObservation(scalar_t currentTime, scalar_t dt) const {
-    const vector_t &rbdState = stateSubscriberPtr_->getLatestRbdState();
+    const vector_t &rbdState = state_.x;
     return (rbdState.segment<3>(9) + (vector_t::Zero(3) * (-0.12))) *
            LIN_VEL_SCALE;  // COM velocity - already expessed in base frame
 }
 
 vector3_t JoeController::getAngularVelocityObservation(scalar_t currentTime, scalar_t dt) const {
-    const vector_t &rbdState = stateSubscriberPtr_->getLatestRbdState();
+    const vector_t &rbdState = state_.x;
     return (rbdState.segment<3>(6) + (vector_t::Zero(3) * (-0.22))) *
            ANG_VEL_SCALE;  // Angular velocity - already expessed in base frame
 }
 
 vector3_t JoeController::getProjectedGravityObservation(scalar_t currentTime, scalar_t dt) const {
-    const vector_t &rbdState = stateSubscriberPtr_->getLatestRbdState();
+    const vector_t &rbdState = state_.x;
     const matrix3_t R_base_world = getRotationMatrixBaseWorld(rbdState);
     return (R_base_world * (vector3_t() << 0.0, 0.0, -1.0).finished() + (vector_t::Zero(3) * (-0.06))) * GRAVITY_SCALE;
 }
@@ -431,13 +429,13 @@ vector3_t JoeController::getCommandObservation(scalar_t currentTime, scalar_t dt
 }
 
 vector_t JoeController::getDofPosObservation(scalar_t currentTime, scalar_t dt) const {
-    const vector_t &rbdState = stateSubscriberPtr_->getLatestRbdState();
+    const vector_t &rbdState = state_.x;
     const vector_t jointAngles = rbdState.segment<12>(12);
     return (jointAngles - defaultJointAngles_ + (vector_t::Zero(12) * (-0.1))) * DOF_POS_SCALE;
 }
 
 vector_t JoeController::getDofVelObservation(scalar_t currentTime, scalar_t dt) const {
-    const vector_t &rbdState = stateSubscriberPtr_->getLatestRbdState();
+    const vector_t &rbdState = state_.x;
     const vector_t jointVelocities = rbdState.segment<12>(24);
     return (jointVelocities + (vector_t::Zero(12) * (-1.5))) * DOF_VEL_SCALE;
 }
@@ -452,7 +450,7 @@ vector_t JoeController::getPlanarFootholdsObservation(scalar_t currentTime, scal
     auto timeLeftInPhase = getTimeLeftInPhase(currentTime, dt);
 
     std::vector<vector3_t> currentFootPositions = getCurrentFeetPositions(currentTime, dt);
-    const auto &rbdState = stateSubscriberPtr_->getLatestRbdState();
+    const auto &rbdState = state_.x;
     vector_t out = vector_t().setZero(8);
 
     for (int legidx = 0; legidx < 4; ++legidx) {
@@ -548,7 +546,7 @@ vector_t JoeController::getDesiredBasePosObservation(scalar_t currentTime, scala
     vector_t baseOrientation;
     computeBaseKinematicsAndDynamics(currentTime, dt, basePos, baseOrientation, baseLinearVelocity, baseAngularVelocity,
                                      baseLinearAcceleration, baseAngularAcceleration);
-    const auto &rbdState = stateSubscriberPtr_->getLatestRbdState();
+    const auto &rbdState = state_.x;
     vector3_t basePosCurrent = rbdState.segment<3>(3);
     vector3_t basePosDesired = basePos;
     matrix3_t R_base_world = getRotationMatrixBaseWorld(rbdState);
@@ -561,7 +559,7 @@ vector_t JoeController::getOrientationDiffObservation(scalar_t currentTime, scal
     vector_t baseOrientation;
     computeBaseKinematicsAndDynamics(currentTime, dt, basePos, baseOrientation, baseLinearVelocity, baseAngularVelocity,
                                      baseLinearAcceleration, baseAngularAcceleration);
-    const auto &rbdState = stateSubscriberPtr_->getLatestRbdState();
+    const auto &rbdState = state_.x;
 
     vector3_t eulerAnglesZyxCurrent = getOcs2ZyxEulerAngles(rbdState);
     quaternion_t quatCurrent = this->getQuaternionFromEulerAnglesZyx(eulerAnglesZyxCurrent);
@@ -593,7 +591,7 @@ vector_t JoeController::getDesiredBaseLinVelObservation(scalar_t currentTime, sc
     vector_t baseOrientation;
     computeBaseKinematicsAndDynamics(currentTime, dt, basePos, baseOrientation, baseLinearVelocity, baseAngularVelocity,
                                      baseLinearAcceleration, baseAngularAcceleration);
-    const auto &rbdState = stateSubscriberPtr_->getLatestRbdState();
+    const auto &rbdState = state_.x;
     matrix3_t R_base_world = getRotationMatrixBaseWorld(rbdState);
     vector3_t baseLinVelDesiredWorld = baseLinearVelocity;
     vector3_t baseLinVelDesiredBase = R_base_world * baseLinVelDesiredWorld;
@@ -605,7 +603,7 @@ vector_t JoeController::getDesiredBaseAngVelObservation(scalar_t currentTime, sc
     vector_t baseOrientation;
     computeBaseKinematicsAndDynamics(currentTime, dt, basePos, baseOrientation, baseLinearVelocity, baseAngularVelocity,
                                      baseLinearAcceleration, baseAngularAcceleration);
-    const auto &rbdState = stateSubscriberPtr_->getLatestRbdState();
+    const auto &rbdState = state_.x;
     matrix3_t R_base_world = getRotationMatrixBaseWorld(rbdState);
     vector3_t baseAngVelDesiredWorld = baseAngularVelocity;
     vector3_t baseAngVelDesiredBase = R_base_world * baseAngVelDesiredWorld;
@@ -617,7 +615,7 @@ vector_t JoeController::getDesiredBaseLinAccObservation(scalar_t currentTime, sc
     vector_t baseOrientation;
     computeBaseKinematicsAndDynamics(currentTime, dt, basePos, baseOrientation, baseLinearVelocity, baseAngularVelocity,
                                      baseLinearAcceleration, baseAngularAcceleration);
-    const auto &rbdState = stateSubscriberPtr_->getLatestRbdState();
+    const auto &rbdState = state_.x;
     matrix3_t R_base_world = getRotationMatrixBaseWorld(rbdState);
     vector3_t baseLinAccDesiredWorld = baseLinearAcceleration;
     vector3_t baseLinAccDesiredBase = R_base_world * baseLinAccDesiredWorld;
@@ -629,7 +627,7 @@ vector_t JoeController::getDesiredBaseAngAccObservation(scalar_t currentTime, sc
     vector_t baseOrientation;
     computeBaseKinematicsAndDynamics(currentTime, dt, basePos, baseOrientation, baseLinearVelocity, baseAngularVelocity,
                                      baseLinearAcceleration, baseAngularAcceleration);
-    const auto &rbdState = stateSubscriberPtr_->getLatestRbdState();
+    const auto &rbdState = state_.x;
     matrix3_t R_base_world = getRotationMatrixBaseWorld(rbdState);
     vector3_t baseAngAccDesiredWorld = baseAngularAcceleration;
     vector3_t baseAngAccDesiredBase = R_base_world * baseAngAccDesiredWorld;
@@ -683,7 +681,7 @@ vector_t JoeController::getDesiredFootPositionsObservation(scalar_t currentTime,
     auto desiredFootPositions = getDesiredFeetPositions(currentTime, dt);
     auto currentFootPositions = getCurrentFeetPositions(currentTime, dt);
 
-    matrix3_t R_base_world = getRotationMatrixBaseWorld(stateSubscriberPtr_->getLatestRbdState());
+    matrix3_t R_base_world = getRotationMatrixBaseWorld(state_.x);
 
     vector_t lf_pos = -R_base_world * (desiredFootPositions[0] - currentFootPositions[0]) + vector_t::Zero(3) * (-0.06);
     vector_t rf_pos = -R_base_world * (desiredFootPositions[1] - currentFootPositions[1]) + vector_t::Zero(3) * (-0.06);
@@ -698,7 +696,7 @@ vector_t JoeController::getDesiredFootVelocitiesObservation(scalar_t currentTime
     auto desiredFootVelocities = getDesiredFeetVelocities(currentTime, dt);
     auto currentFootVelocities = getCurrentFeetVelocities(currentTime, dt);
 
-    matrix3_t R_base_world = getRotationMatrixBaseWorld(stateSubscriberPtr_->getLatestRbdState());
+    matrix3_t R_base_world = getRotationMatrixBaseWorld(state_.x);
 
     vector_t lf_vel =
         -R_base_world * (desiredFootVelocities[0] - currentFootVelocities[0]) + vector_t::Zero(3) * (-0.2);
@@ -746,11 +744,12 @@ vector_t JoeController::getHeightSamplesObservation(scalar_t currentTime, scalar
     return out;
 }
 
-void JoeController::visualize(scalar_t currentTime, scalar_t dt) {
+void JoeController::postStep(scalar_t currentTime, scalar_t dt) {
     visualizer_->update(generateSystemObservation(), mrt_.getPolicy(), mrt_.getCommand());
 }
 
 void JoeController::changeController(const std::string &controllerType, scalar_t currentTime) {
+    preStep(currentTime, 0.0);
     TBAI_LOG_INFO(logger_, "Changing controller");
     resetMpc();
     TBAI_LOG_INFO(logger_, "Controller changed");
@@ -762,7 +761,7 @@ void JoeController::changeController(const std::string &controllerType, scalar_t
 }
 
 bool JoeController::checkStability() const {
-    const auto &state = stateSubscriberPtr_->getLatestRbdState();
+    const auto &state = state_.x;
     scalar_t roll = state[0];
     if (roll >= 1.57 || roll <= -1.57) {
         return false;
@@ -779,14 +778,15 @@ bool JoeController::isSupported(const std::string &controllerType) {
 }
 
 ocs2::SystemObservation JoeController::generateSystemObservation() {
-    const tbai::vector_t &rbdState = stateSubscriberPtr_->getLatestRbdState();
+    State state = stateSubscriberPtr_->getLatestState();
+    const tbai::vector_t &rbdState = state.x;
 
     // Set observation time
     ocs2::SystemObservation observation;
-    observation.time = stateSubscriberPtr_->getLatestRbdStamp() - initTime_;
+    observation.time = state.timestamp - initTime_;
 
     // Set mode
-    auto contactFlags = stateSubscriberPtr_->getContactFlags();
+    std::vector<bool> &contactFlags = state.contactFlags;
     std::array<bool, 4> contactFlagsArray = {contactFlags[0], contactFlags[1], contactFlags[2], contactFlags[3]};
     observation.mode = switched_model::stanceLeg2ModeNumber(contactFlagsArray);
 

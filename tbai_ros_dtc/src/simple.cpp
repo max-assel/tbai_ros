@@ -10,10 +10,9 @@
 #include <tbai_core/Utils.hpp>
 #include <tbai_core/config/Config.hpp>
 #include <tbai_core/control/CentralController.hpp>
-#include <tbai_ros_core/Subscribers.hpp>
-#include <tbai_core/Utils.hpp>
 #include <tbai_ros_core/Publishers.hpp>
 #include <tbai_ros_core/Rate.hpp>
+#include <tbai_ros_core/Subscribers.hpp>
 #include <tbai_ros_dtc/DtcController.hpp>
 #include <tbai_ros_static/StaticController.hpp>
 
@@ -38,14 +37,13 @@ int main(int argc, char *argv[]) {
         std::shared_ptr<tbai::ChangeControllerSubscriber>(
             new tbai::RosChangeControllerSubscriber(nh, changeControllerTopic));
 
-    tbai::CentralController<ros::Rate, tbai::RosTime> controller(stateSubscriber, commandPublisher,
-                                                                 changeControllerSubscriber);
+    tbai::CentralController<ros::Rate, tbai::RosTime> controller(commandPublisher, changeControllerSubscriber);
 
     // Add static controller
-    controller.addController(std::make_unique<tbai::static_::RosStaticController>(controller.getStateSubscriberPtr()));
+    controller.addController(std::make_unique<tbai::static_::RosStaticController>(stateSubscriber));
 
     // Add DTC controller
-    controller.addController(std::make_unique<tbai::dtc::DtcController>(controller.getStateSubscriberPtr()));
+    controller.addController(std::make_unique<tbai::dtc::DtcController>(stateSubscriber));
 
     // Start controller loop
     controller.start();

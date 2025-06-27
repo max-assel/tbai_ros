@@ -4,14 +4,14 @@
 // clang-format on
 
 #include "tbai_ros_mpc/MpcController.hpp"
-#include "tbai_ros_mpc/wbc/Factory.hpp"
 
 #include <string>
 #include <vector>
 
+#include "tbai_ros_mpc/wbc/Factory.hpp"
 #include <ocs2_switched_model_interface/core/MotionPhaseDefinition.h>
-#include <tbai_core/Utils.hpp>
 #include <tbai_core/Throws.hpp>
+#include <tbai_core/Utils.hpp>
 
 namespace tbai {
 namespace mpc {
@@ -92,7 +92,7 @@ std::vector<MotorCommand> MpcController::getMotorCommands(scalar_t currentTime, 
     ocs2::vector_t joint_accelerations = (dummyInput.tail<12>() - desiredInput.tail<12>()) / time_eps;
 
     auto commands = wbcPtr_->getMotorCommands(tNow_, observation.state, observation.input, observation.mode,
-                                                     desiredState, desiredInput, desiredMode, joint_accelerations);
+                                              desiredState, desiredInput, desiredMode, joint_accelerations);
 
     timeSinceLastMpcUpdate_ += dt;
     timeSinceLastVisualizationUpdate_ += dt;
@@ -124,19 +124,18 @@ void MpcController::referenceThread() {
 }
 
 bool MpcController::checkStability() const {
-    const auto &state = stateSubscriberPtr_->getLatestRbdState();
-    scalar_t roll = state[0];
+    scalar_t roll = state_.x[0];
     if (roll >= 1.57 || roll <= -1.57) {
         return false;
     }
-    scalar_t pitch = state[1];
+    scalar_t pitch = state_.x[1];
     if (pitch >= 1.57 || pitch <= -1.57) {
         return false;
     }
     return true;
 }
 
-void MpcController::visualize(scalar_t currentTime, scalar_t dt) {
+void MpcController::postStep(scalar_t currentTime, scalar_t dt) {
     if (timeSinceLastVisualizationUpdate_ >= 1.0 / 15.0) {
         visualizerPtr_->update(generateSystemObservation(), mrt_.getPolicy(), mrt_.getCommand());
         timeSinceLastVisualizationUpdate_ = 0.0;
@@ -144,6 +143,8 @@ void MpcController::visualize(scalar_t currentTime, scalar_t dt) {
 }
 
 void MpcController::changeController(const std::string &controllerType, scalar_t currentTime) {
+    preStep(currentTime, 0.0);
+
     if (!mrt_initialized_ || currentTime + 0.1 > mrt_.getPolicy().timeTrajectory_.back()) {
         resetMpc();
         mrt_initialized_ = true;
@@ -197,14 +198,15 @@ void MpcController::setObservation() {
 }
 
 ocs2::SystemObservation MpcController::generateSystemObservation() const {
-    const tbai::vector_t &rbdState = stateSubscriberPtr_->getLatestRbdState();
+    auto state = stateSubscriberPtr_->getLatestState();
+    const tbai::vector_t &rbdState = state.x;
 
     // Set observation time
     ocs2::SystemObservation observation;
-    observation.time = stateSubscriberPtr_->getLatestRbdStamp() - initTime_;
+    observation.time = state.timestamp - initTime_;
 
     // Set mode
-    auto contactFlags = stateSubscriberPtr_->getContactFlags();
+    const std::vector<bool> &contactFlags = state.contactFlags;
     std::array<bool, 4> contactFlagsArray = {contactFlags[0], contactFlags[1], contactFlags[2], contactFlags[3]};
     observation.mode = switched_model::stanceLeg2ModeNumber(contactFlagsArray);
 

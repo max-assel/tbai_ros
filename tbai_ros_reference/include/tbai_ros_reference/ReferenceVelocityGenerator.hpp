@@ -3,12 +3,12 @@
 #include <memory>
 #include <string>
 
-#include <tbai_reference/ReferenceVelocity.hpp>
-#include <tbai_reference/ReferenceVelocityGenerator.hpp>
 #include <geometry_msgs/Twist.h>
 #include <ros/ros.h>
 #include <sensor_msgs/Joy.h>
 #include <tbai_core/Types.hpp>
+#include <tbai_reference/ReferenceVelocity.hpp>
+#include <tbai_reference/ReferenceVelocityGenerator.hpp>
 
 namespace tbai {
 namespace reference {

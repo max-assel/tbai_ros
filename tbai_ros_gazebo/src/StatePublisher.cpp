@@ -8,12 +8,10 @@
 #include <string>
 
 #include <Eigen/Geometry>
-#include <tbai_core/Rotations.hpp>
- 
-#include <tbai_ros_msgs/RbdState.h>
-
 #include <tbai_core/Logging.hpp>
+#include <tbai_core/Rotations.hpp>
 #include <tbai_core/config/Config.hpp>
+#include <tbai_ros_msgs/RbdState.h>
 
 namespace gazebo {
 

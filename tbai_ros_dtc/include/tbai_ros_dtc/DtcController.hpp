@@ -33,15 +33,13 @@
 #include <ocs2_anymal_models/QuadrupedCom.h>
 #undef private
 #undef protected
+#include <ocs2_anymal_commands/ReferenceExtrapolation.h>
 #include <ocs2_anymal_mpc/AnymalInterface.h>
 #include <ocs2_quadruped_interface/QuadrupedVisualizer.h>
-#include <ocs2_anymal_commands/ReferenceExtrapolation.h>
 #include <ocs2_switched_model_interface/core/Rotations.h>
-
-#include <tbai_core/control/Controllers.hpp>
-#include <tbai_core/Utils.hpp>
 #include <tbai_core/Logging.hpp>
-
+#include <tbai_core/Utils.hpp>
+#include <tbai_core/control/Controllers.hpp>
 
 namespace tbai {
 namespace dtc {
@@ -57,7 +55,7 @@ class DtcController final : public tbai::Controller {
 
     std::vector<MotorCommand> getMotorCommands(scalar_t currentTime, scalar_t dt) override;
 
-    void visualize(scalar_t currentTime, scalar_t dt) override;
+    void postStep(scalar_t currentTime, scalar_t dt) override;
 
     void changeController(const std::string &controllerType, scalar_t currentTime) override;
 
@@ -71,11 +69,20 @@ class DtcController final : public tbai::Controller {
 
     bool ok() const override { return ros::ok(); }
 
-    void triggerCallbacks() override { ros::spinOnce(); }
+    void preStep(scalar_t currentTime, scalar_t dt) override {
+        ros::spinOnce();
+        state_ = stateSubscriberPtr_->getLatestState();
+    }
+
+    void waitTillInitialized() override { stateSubscriberPtr_->waitTillInitialized(); }
+
+    std::string getName() const override { return "DtcController"; }
 
    private:
     // Torchscript model
     torch::jit::script::Module dtcModel_;
+
+    State state_;
 
     ocs2::SystemObservation generateSystemObservation();
 
@@ -195,7 +202,6 @@ class DtcController final : public tbai::Controller {
     std::unique_ptr<switched_model::KinematicsModelBase<scalar_t>> kinematicsModel_;
     std::unique_ptr<switched_model::QuadrupedVisualizer> visualizer_;
 
-
     BaseReferenceHorizon getBaseReferenceHorizon(scalar_t time) { return {0.1, 10}; }
 
     BaseReferenceState getBaseReferenceState(scalar_t time) {
@@ -203,13 +209,13 @@ class DtcController final : public tbai::Controller {
         auto observationTime = currentObservation.time;
 
         Eigen::Vector3d positionInWorld;
-        if(lastTargetTrajectories_.get() == nullptr) {
+        if (lastTargetTrajectories_.get() == nullptr) {
             positionInWorld = currentObservation.state.segment<3>(3);
         } else {
             positionInWorld = lastTargetTrajectories_->getDesiredState(time).segment<3>(3);
 
             auto currentPos = currentObservation.state.segment<3>(3);
-            if((positionInWorld - currentPos).norm() > 0.1) {
+            if ((positionInWorld - currentPos).norm() > 0.1) {
                 positionInWorld = currentPos;
             }
         }

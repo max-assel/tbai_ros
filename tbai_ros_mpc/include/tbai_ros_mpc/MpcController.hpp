@@ -12,12 +12,12 @@
 #include <ros/callback_queue.h>
 #include <ros/ros.h>
 #include <tbai_core/Types.hpp>
+#include <tbai_core/Utils.hpp>
+#include <tbai_core/control/Controllers.hpp>
 #include <tbai_ros_core/Subscribers.hpp>
 #include <tbai_ros_mpc/reference/ReferenceTrajectoryGenerator.hpp>
 #include <tbai_ros_mpc/wbc/WbcBase.hpp>
 #include <tbai_ros_msgs/JointCommandArray.h>
-#include <tbai_core/control/Controllers.hpp>
-#include <tbai_core/Utils.hpp>
 
 namespace tbai {
 
@@ -28,7 +28,9 @@ class MpcController final : public tbai::Controller {
 
     std::vector<MotorCommand> getMotorCommands(scalar_t currentTime, scalar_t dt) override;
 
-    void visualize(scalar_t currentTime, scalar_t dt) override;
+    void postStep(scalar_t currentTime, scalar_t dt) override;
+
+    std::string getName() const override { return "MpcController"; }
 
     void changeController(const std::string &controllerType, scalar_t currentTime) override;
 
@@ -42,7 +44,12 @@ class MpcController final : public tbai::Controller {
 
     bool ok() const override { return ros::ok(); }
 
-    void triggerCallbacks() override { ros::spinOnce(); }
+    void waitTillInitialized() override { stateSubscriberPtr_->waitTillInitialized(); }
+
+    void preStep(scalar_t currentTime, scalar_t dt) override {
+        ros::spinOnce();
+        state_ = stateSubscriberPtr_->getLatestState();
+    }
 
    private:
     std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr_;
@@ -77,6 +84,8 @@ class MpcController final : public tbai::Controller {
     scalar_t mpcRate_ = 30.0;
     scalar_t timeSinceLastMpcUpdate_ = 1e5;
     scalar_t timeSinceLastVisualizationUpdate_ = 1e5;
+
+    State state_;
 };
 
 }  // namespace mpc

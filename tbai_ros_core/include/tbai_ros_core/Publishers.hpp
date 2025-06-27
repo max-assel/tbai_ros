@@ -11,9 +11,12 @@ class RosCommandPublisher : public tbai::CommandPublisher {
         commandPublisher_ = nh.advertise<tbai_ros_msgs::JointCommandArray>(commandTopic, 1);
     }
 
-    virtual void publish(const std::vector<MotorCommand> &commands) override {
+    virtual void publish(std::vector<MotorCommand> commands) override {
+        // Message to be sent to the motor controller
         tbai_ros_msgs::JointCommandArray commandArray;
         commandArray.joint_commands.resize(commands.size());
+
+        // Populate command array
         for (size_t i = 0; i < commands.size(); ++i) {
             tbai_ros_msgs::JointCommand command;
             command.joint_name = commands[i].joint_name;
@@ -25,6 +28,7 @@ class RosCommandPublisher : public tbai::CommandPublisher {
             commandArray.joint_commands[i] = command;
         }
 
+        // Send message
         commandPublisher_.publish(commandArray);
     }
 

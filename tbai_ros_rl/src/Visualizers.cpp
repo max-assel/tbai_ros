@@ -2,11 +2,10 @@
 
 #include <geometry_msgs/TransformStamped.h>
 #include <kdl_parser/kdl_parser.hpp>
+#include <tbai_core/config/Config.hpp>
 #include <urdf/model.h>
 #include <visualization_msgs/Marker.h>
 #include <visualization_msgs/MarkerArray.h>
-
-#include <tbai_core/config/Config.hpp>
 
 namespace tbai {
 
@@ -42,7 +41,7 @@ StateVisualizer::StateVisualizer() {
 /***********************************************************************************************************************/
 /***********************************************************************************************************************/
 /***********************************************************************************************************************/
-void StateVisualizer::visualize(const State &state) {
+void StateVisualizer::visualize(const BobState &state) {
     ros::Time timeStamp = ros::Time::now();
     publishOdomTransform(timeStamp, state);
     publishJointAngles(timeStamp, state);
@@ -51,7 +50,7 @@ void StateVisualizer::visualize(const State &state) {
 /***********************************************************************************************************************/
 /***********************************************************************************************************************/
 /***********************************************************************************************************************/
-void StateVisualizer::publishOdomTransform(const ros::Time &timeStamp, const State &state) {
+void StateVisualizer::publishOdomTransform(const ros::Time &timeStamp, const BobState &state) {
     geometry_msgs::TransformStamped baseToWorldTransform;
     baseToWorldTransform.header.stamp = timeStamp;
     baseToWorldTransform.header.frame_id = odomFrame_;
@@ -72,7 +71,7 @@ void StateVisualizer::publishOdomTransform(const ros::Time &timeStamp, const Sta
 /***********************************************************************************************************************/
 /***********************************************************************************************************************/
 /***********************************************************************************************************************/
-void StateVisualizer::publishJointAngles(const ros::Time &timeStamp, const State &state) {
+void StateVisualizer::publishJointAngles(const ros::Time &timeStamp, const BobState &state) {
     std::map<std::string, double> positions;
     for (int i = 0; i < jointNames_.size(); ++i) {
         positions[jointNames_[i]] = state.jointPositions[i];
@@ -95,7 +94,7 @@ HeightsReconstructedVisualizer::HeightsReconstructedVisualizer() {
 /***********************************************************************************************************************/
 /***********************************************************************************************************************/
 /***********************************************************************************************************************/
-void HeightsReconstructedVisualizer::visualize(const State &state, const matrix_t &sampled,
+void HeightsReconstructedVisualizer::visualize(const BobState &state, const matrix_t &sampled,
                                                const at::Tensor &nnPointsReconstructed) {
     ros::Time timeStamp = ros::Time::now();
 

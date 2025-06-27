@@ -7,10 +7,9 @@
 #include <ocs2_anymal_models/QuadrupedKinematics.h>
 #include <ocs2_core/Types.h>
 #include <ocs2_switched_model_interface/core/SwitchedModel.h>
+#include <tbai_core/control/Controllers.hpp>
 #include <tbai_ros_mpc/wbc/SqpSolver.hpp>
 #include <tbai_ros_mpc/wbc/WbcBase.hpp>
-
-#include <tbai_core/control/Controllers.hpp>
 
 namespace switched_model {
 
@@ -24,10 +23,10 @@ class SqpWbc : public WbcBase {
     }
 
     std::vector<tbai::MotorCommand> getMotorCommands(scalar_t currentTime, const vector_t &currentState,
-                                                   const vector_t &currentInput, const size_t currentMode,
-                                                   const vector_t &desiredState, const vector_t &desiredInput,
-                                                   const size_t desiredMode,
-                                                   const vector_t &desiredJointAcceleration) override;
+                                                     const vector_t &currentInput, const size_t currentMode,
+                                                     const vector_t &desiredState, const vector_t &desiredInput,
+                                                     const size_t desiredMode,
+                                                     const vector_t &desiredJointAcceleration) override;
 
    private:
     void loadSettings(const std::string &configFile);

@@ -6,7 +6,6 @@
 #include <vector>
 
 // Config
- 
 
 // Gazebo
 #include <controller_interface/controller.h>
@@ -17,10 +16,9 @@
 
 // ROS
 #include <ros/ros.h>
+#include <tbai_core/Types.hpp>
 #include <tbai_ros_msgs/JointCommand.h>
 #include <tbai_ros_msgs/JointCommandArray.h>
-
-#include <tbai_core/Types.hpp>
 
 namespace tbai {
 namespace gazebo {

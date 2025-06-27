@@ -5,9 +5,6 @@
 #include <tbai_core/Asserts.hpp>
 #include <tbai_core/config/Config.hpp>
 
- 
- 
-
 namespace tbai {
 namespace gridmap {
 

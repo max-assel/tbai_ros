@@ -39,12 +39,11 @@ RosStaticController::RosStaticController(std::shared_ptr<tbai::StateSubscriber> 
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-void RosStaticController::visualize(scalar_t currentTime, scalar_t dt) {
+void RosStaticController::postStep(scalar_t currentTime, scalar_t dt) {
     if (timeSinceLastVisualizationUpdate_ >= 1.0 / 30.0) {
-        ros::Time currentTime = ros::Time::now();
-        const vector_t &currentState = stateSubscriberPtr_->getLatestRbdState();
-        publishOdomBaseTransforms(currentState, currentTime);
-        publishJointAngles(currentState, currentTime);
+        auto currentRosTime = ros::Time::now();
+        publishOdomBaseTransforms(state_.x, currentRosTime);
+        publishJointAngles(state_.x, currentRosTime);
         timeSinceLastVisualizationUpdate_ = 0.0;
     } else {
         timeSinceLastVisualizationUpdate_ += dt;

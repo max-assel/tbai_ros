@@ -1,9 +1,8 @@
 #include "tbai_ros_gazebo/ContactSensor.hpp"
 
+#include <tbai_core/Logging.hpp>
 #include <tbai_core/Types.hpp>
 #include <tbai_core/config/Config.hpp>
-#include <tbai_core/Logging.hpp>
- 
 
 namespace gazebo {
 GZ_REGISTER_SENSOR_PLUGIN(ContactSensor)

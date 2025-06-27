@@ -6,10 +6,9 @@
 
 #include <robot_state_publisher/robot_state_publisher.h>
 #include <ros/ros.h>
- 
+#include <tbai_bob/BobState.hpp>
 #include <tf/transform_broadcaster.h>
 #include <torch/script.h>
-#include <tbai_bob/State.hpp>
 
 namespace tbai {
 namespace rl {
@@ -29,14 +28,14 @@ class StateVisualizer {
      *
      * @param state : Current state
      */
-    void visualize(const State &state);
+    void visualize(const BobState &state);
 
    private:
     /** Publish odom->base transform */
-    void publishOdomTransform(const ros::Time &timeStamp, const State &state);
+    void publishOdomTransform(const ros::Time &timeStamp, const BobState &state);
 
     /** Publish joint angles via a robot_state_publisher */
-    void publishJointAngles(const ros::Time &timeStamp, const State &state);
+    void publishJointAngles(const ros::Time &timeStamp, const BobState &state);
 
     /** Odom frame name */
     std::string odomFrame_;
@@ -67,7 +66,7 @@ class HeightsReconstructedVisualizer {
      * @param sampled : 3xN matrix, where each column is a point in 3D space
      * @param nnPointsReconstructed : reconstructed tensor from the neural network
      */
-    void visualize(const State &state, const matrix_t &sampled, const at::Tensor &nnPointsReconstructed);
+    void visualize(const BobState &state, const matrix_t &sampled, const at::Tensor &nnPointsReconstructed);
 
    private:
     /** Publish 3d points as RViz markers */

@@ -56,7 +56,7 @@ bool JointController::init(hardware_interface::EffortJointInterface *hw, ros::No
         jointIndexMap_[jointName] = i;
 
         TBAI_GLOBAL_LOG_INFO("Loaded joint '{}' with limits [{}, {}] and effort limit {}", jointName, jointLimit.first,
-                      jointLimit.second, jointUrdf->limits->effort);
+                             jointLimit.second, jointUrdf->limits->effort);
     }
 
     // Load command topic

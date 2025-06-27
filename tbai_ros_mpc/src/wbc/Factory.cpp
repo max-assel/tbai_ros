@@ -1,7 +1,6 @@
 #include "tbai_ros_mpc/wbc/Factory.hpp"
 
 #include <tbai_core/config/Config.hpp>
- 
 
 namespace switched_model {
 

@@ -13,7 +13,7 @@ RosBobController::RosBobController(const std::string &urdfString,
     timeSinceLastVisualizationUpdate_ = 1000.0;
 }
 
-void RosBobController::visualize(scalar_t currentTime, scalar_t dt) {
+void RosBobController::postStep(scalar_t currentTime, scalar_t dt) {
     if (timeSinceLastVisualizationUpdate_ >= 1.0 / 30.0) {
         auto state = getBobnetState();
         stateVisualizer_.visualize(state);
@@ -25,6 +25,7 @@ void RosBobController::visualize(scalar_t currentTime, scalar_t dt) {
 }
 
 void RosBobController::changeController(const std::string &controllerType, scalar_t currentTime) {
+    preStep(currentTime, 0.0);
     if (!blind_) {
         gridmap_->waitTillInitialized();
     }
@@ -42,8 +43,9 @@ bool RosBobController::ok() const {
     return ros::ok();
 }
 
-void RosBobController::triggerCallbacks() {
+void RosBobController::preStep(scalar_t currentTime, scalar_t dt) {
     ros::spinOnce();
+    state_ = stateSubscriberPtr_->getLatestState();
 }
 
 }  // namespace rl

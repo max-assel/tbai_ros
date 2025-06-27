@@ -23,19 +23,12 @@ void RosStateSubscriber::waitTillInitialized() {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-void RosStateSubscriber::updateLatestRbdState() {
-    latestRbdState_ = vector_t(Eigen::Map<vector_t>(stateMessage_->rbd_state.data(), stateMessage_->rbd_state.size()));
-}
-
-/*********************************************************************************************************************/
-/*********************************************************************************************************************/
-/*********************************************************************************************************************/
-const vector_t &RosStateSubscriber::getLatestRbdState() {
-    if (!stateReady_) {
-        updateLatestRbdState();
-        stateReady_ = true;
-    }
-    return latestRbdState_;
+State RosStateSubscriber::getLatestState() {
+    State state;
+    state.x = vector_t(Eigen::Map<vector_t>(stateMessage_->rbd_state.data(), stateMessage_->rbd_state.size()));
+    state.timestamp = stateMessage_->stamp.toSec();
+    state.contactFlags = std::vector<bool>(stateMessage_->contact_flags.begin(), stateMessage_->contact_flags.end());
+    return state;
 }
 
 /*********************************************************************************************************************/
@@ -43,7 +36,6 @@ const vector_t &RosStateSubscriber::getLatestRbdState() {
 /*********************************************************************************************************************/
 void RosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::RbdState::Ptr &msg) {
     stateMessage_ = msg;
-    stateReady_ = false;
 }
 
 }  // namespace tbai

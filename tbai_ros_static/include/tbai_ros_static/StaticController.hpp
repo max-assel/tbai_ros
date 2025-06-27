@@ -21,11 +21,14 @@ class RosStaticController : public tbai::static_::StaticController {
      *
      */
     RosStaticController(std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr);
-    void visualize(scalar_t currentTime, scalar_t dt) override;
+    void postStep(scalar_t currentTime, scalar_t dt) override;
 
     bool ok() const override { return ros::ok(); }
 
-    void triggerCallbacks() override { ros::spinOnce(); }
+    void preStep(scalar_t currentTime, scalar_t dt) override {
+        ros::spinOnce();
+        state_ = stateSubscriberPtr_->getLatestState();
+    }
 
    private:
     /** Publish odom->base transforms */

@@ -8,9 +8,8 @@
 #include <ocs2_switched_model_interface/terrain/PlaneFitting.h>
 #include <ocs2_switched_model_msgs/local_terrain.h>
 #include <tbai_core/Throws.hpp>
-
 #include <tbai_core/config/Config.hpp>
- 
+
 namespace tbai {
 namespace mpc {
 namespace reference {
@@ -90,7 +89,8 @@ ReferenceTrajectoryGenerator::ReferenceTrajectoryGenerator(const std::string &ta
     trajKnots_ = tbai::fromGlobalConfig<size_t>("mpc_controller/reference_trajectory/traj_knots");
 
     // Setup ROS subscribers
-    auto observationTopic = tbai::fromGlobalConfig<std::string>("mpc_controller/reference_trajectory/observation_topic");
+    auto observationTopic =
+        tbai::fromGlobalConfig<std::string>("mpc_controller/reference_trajectory/observation_topic");
     observationSubscriber_ =
         nh.subscribe(observationTopic, 1, &ReferenceTrajectoryGenerator::observationCallback, this);
 

@@ -32,12 +32,12 @@ class RosBobController : public tbai::BobController {
     RosBobController(const std::string &urdfString, const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
                      const std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> &refVelGenPtr);
 
-    void visualize(scalar_t currentTime, scalar_t dt) override;
+    void postStep(scalar_t currentTime, scalar_t dt) override;
     void changeController(const std::string &controllerType, scalar_t currentTime) override;
     void atPositions(matrix_t &positions) override;
     void stopController() override;
     bool ok() const override;
-    void triggerCallbacks() override;
+    void preStep(scalar_t currentTime, scalar_t dt) override;
 
    private:
     std::unique_ptr<tbai::gridmap::GridmapInterface> gridmap_;
