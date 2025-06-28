@@ -39,4 +39,9 @@
     <!-- Launch simple node -->
     <node name="simple" pkg="tbai_ros_static" type="simple" output="screen"/>
 
+    <!-- Start Rviz visualizer -->
+    <arg name="rvizconfig" default="$(find tbai_ros_static)/launch/rviz/anymal_d.rviz" />
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen" />
+
+
 </launch>

@@ -2,4 +2,8 @@
   <class name="tbai_ros_gazebo/JointController" 
          type="tbai::gazebo::JointController"           
          base_class_type="controller_interface::ControllerBase" />
+
+  <class name="tbai_ros_gazebo/RobotStatePublisher"
+         type="gazebo::RobotStatePublisher"
+         base_class_type="gazebo::ModelPlugin" />
 </library>

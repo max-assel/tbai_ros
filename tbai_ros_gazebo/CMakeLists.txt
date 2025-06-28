@@ -43,6 +43,11 @@ add_library(StatePublisher src/StatePublisher.cpp)
 target_link_libraries(StatePublisher ${gazebo_LIBRARIES} ${catkin_LIBRARIES})
 target_compile_options(StatePublisher PRIVATE ${OCS2_CXX_FLAGS})
 
+## Robot state publisher plugin
+add_library(RobotStatePublisher src/RobotStatePublisher.cpp)
+target_link_libraries(RobotStatePublisher ${gazebo_LIBRARIES} ${catkin_LIBRARIES})
+target_compile_options(RobotStatePublisher PRIVATE ${OCS2_CXX_FLAGS})
+
 # Robot contact sensor
 add_library(ContactSensor SHARED src/ContactSensor.cpp)
 target_link_libraries(ContactSensor ${catkin_LIBRARIES} ${gazebo_LIBRARIES})

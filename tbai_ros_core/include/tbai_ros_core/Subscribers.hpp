@@ -1,15 +1,19 @@
 #pragma once
 
 #include <algorithm>
+#include <atomic>
 #include <string>
 #include <vector>
 
 #include "tbai_ros_msgs/RbdState.h"
+#include "tbai_ros_msgs/RobotState.h"
+#include <ros/callback_queue.h>
 #include <ros/ros.h>
 #include <std_msgs/String.h>
+#include <tbai_core/Logging.hpp>
 #include <tbai_core/Types.hpp>
 #include <tbai_core/control/Subscribers.hpp>
-
+#include <tbai_muse/TbaiEstimator.hpp>
 namespace tbai {
 
 class RosStateSubscriber : public tbai::StateSubscriber {
@@ -50,6 +54,39 @@ class RosChangeControllerSubscriber : public ChangeControllerSubscriber {
 
     ros::Subscriber controllerSubscriber_;
     std::string latestControllerType_;
+};
+
+class MuseRosStateSubscriber : public tbai::ThreadedStateSubscriber {
+   public:
+    MuseRosStateSubscriber(ros::NodeHandle &nhtemp, const std::string &stateTopic, const std::string &urdf="");
+    ~MuseRosStateSubscriber() override {
+        stopThreads();
+    }
+    void waitTillInitialized() override;
+
+    void startThreads() override;
+    void stopThreads() override;
+
+   private:
+    /** State message subscriber */
+    ros::Subscriber stateSubscriber_;
+
+    /** State message callback */
+    void stateMessageCallback(const tbai_ros_msgs::RobotState::Ptr &msg);
+
+    void threadFunction();
+    std::thread stateThread_;
+
+    std::atomic_bool isRunning_ = false;
+    std::atomic_bool isInitialized_ = false;
+
+    ros::CallbackQueue thisQueue_;
+    std::unique_ptr<tbai::muse::TbaiEstimator> estimator_;
+
+    std::shared_ptr<spdlog::logger> logger_;
+    ros::Time lastStateTime_;
+    bool firstState_ = true;
+    scalar_t lastYaw_ = 0.0;
 };
 
 }  // namespace tbai
