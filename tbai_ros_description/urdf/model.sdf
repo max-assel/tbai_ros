@@ -1,0 +1,894 @@
+<sdf version='1.7'>
+  <model name='go2'>
+    <link name='base'>
+      <inertial>
+        <pose>0.020153 0 -0.005109 0 -0 0</pose>
+        <mass>7.279</mass>
+        <inertia>
+          <ixx>0.0257376</ixx>
+          <ixy>0.00012166</ixy>
+          <ixz>0.00153424</ixz>
+          <iyy>0.103121</iyy>
+          <iyz>-3.12e-05</iyz>
+          <izz>0.112809</izz>
+        </inertia>
+      </inertial>
+      <collision name='base_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>0.3762 0.0935 0.114</size>
+          </box>
+        </geometry>
+      </collision>
+      <collision name='base_fixed_joint_lump__Head_upper_collision_1'>
+        <pose>0.285 0 0.01 0 -0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.09</length>
+            <radius>0.05</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <collision name='base_fixed_joint_lump__Head_lower_collision_2'>
+        <pose>0.293 0 -0.06 0 -0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.047</radius>
+          </sphere>
+        </geometry>
+      </collision>
+      <visual name='base_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://ocs2_robotic_assets/resources/go2/dae/base.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='LF_HAA' type='revolute'>
+      <pose relative_to='base'>0.1934 0.0465 0 0 -0 0</pose>
+      <parent>base</parent>
+      <child>FL_hip</child>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-1.0472</lower>
+          <upper>1.0472</upper>
+          <effort>23.7</effort>
+          <velocity>30.1</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='FL_hip'>
+      <pose relative_to='LF_HAA'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>-0.004773 0.001697 -9.3e-05 0 -0 0</pose>
+        <mass>0.767</mass>
+        <inertia>
+          <ixx>0.000539992</ixx>
+          <ixy>-2.1221e-06</ixy>
+          <ixz>1.06539e-06</ixz>
+          <iyy>0.000998137</iyy>
+          <iyz>-1.40274e-06</iyz>
+          <izz>0.000658285</izz>
+        </inertia>
+      </inertial>
+      <collision name='FL_hip_collision'>
+        <pose>0 0.08 0 1.5708 -0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.04</length>
+            <radius>0.046</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='FL_hip_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://ocs2_robotic_assets/resources/go2/dae/hip.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='LF_HFE' type='revolute'>
+      <pose relative_to='FL_hip'>0 0.0955 0 0 -0 0</pose>
+      <parent>FL_hip</parent>
+      <child>FL_thigh</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-1.5708</lower>
+          <upper>3.4907</upper>
+          <effort>23.7</effort>
+          <velocity>30.1</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='FL_thigh'>
+      <pose relative_to='LF_HFE'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>-0.003472 -0.023021 -0.030355 0 -0 0</pose>
+        <mass>1.241</mass>
+        <inertia>
+          <ixx>0.00599633</ixx>
+          <ixy>9.03053e-05</ixy>
+          <ixz>-0.000299104</ixz>
+          <iyy>0.00600134</iyy>
+          <iyz>0.000835151</iyz>
+          <izz>0.00109915</izz>
+        </inertia>
+      </inertial>
+      <collision name='FL_thigh_collision'>
+        <pose>0 0 -0.1065 0 1.5708 0</pose>
+        <geometry>
+          <box>
+            <size>0.213 0.0245 0.034</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='FL_thigh_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://ocs2_robotic_assets/resources/go2/dae/thigh.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='LF_KFE' type='revolute'>
+      <pose relative_to='FL_thigh'>0 0 -0.213 0 -0 0</pose>
+      <parent>FL_thigh</parent>
+      <child>FL_calf</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-2.7227</lower>
+          <upper>-0.83776</upper>
+          <effort>45.43</effort>
+          <velocity>15.7</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='FL_calf'>
+      <pose relative_to='LF_KFE'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0.00435 -0.000774 -0.135206 0 -0 0</pose>
+        <mass>0.194</mass>
+        <inertia>
+          <ixx>0.00139458</ixx>
+          <ixy>5.09654e-07</ixy>
+          <ixz>1.47596e-07</ixz>
+          <iyy>0.00141551</iyy>
+          <iyz>1.1314e-05</iyz>
+          <izz>4.34837e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='FL_calf_collision'>
+        <pose>0.008 0 -0.06 0 -0.21 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.12</length>
+            <radius>0.012</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <collision name='FL_calflower_collision_1'>
+        <pose>0.02 0 -0.148 0 0.05 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.065</length>
+            <radius>0.011</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <collision name='FL_calflower1_collision_2'>
+        <pose>0.008013 0 -0.18745 0 0.53 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.03</length>
+            <radius>0.0155</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <collision name='FL_calf_fixed_joint_lump__LF_FOOT_collision_sensor_collision_3'>
+        <pose>-0.002 0 -0.213 0 -0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.022</radius>
+          </sphere>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>100</kd>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>1.85</mu>
+              <mu2>1.85</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='FL_calf_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://ocs2_robotic_assets/resources/go2/dae/calf.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='FL_calf_fixed_joint_lump__LF_FOOT_visual_1'>
+        <pose>0 0 -0.213 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://ocs2_robotic_assets/resources/go2/dae/foot.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <sensor name='lf_foot_contact' type='contact'>
+        <plugin name='lf_contact_plugin' filename='/home/kuba/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libContactSensor.so'/>
+        <contact>
+          <collision>LF_SHANK_fixed_joint_lump__LF_FOOT_collision_sensor_collision_3</collision>
+          <topic>__default_topic__</topic>
+        </contact>
+        <pose>0 0 -0.213 0 -0 0</pose>
+      </sensor>
+    </link>
+    <joint name='LH_HAA' type='revolute'>
+      <pose relative_to='base'>-0.1934 0.0465 0 0 -0 0</pose>
+      <parent>base</parent>
+      <child>RL_hip</child>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-1.0472</lower>
+          <upper>1.0472</upper>
+          <effort>23.7</effort>
+          <velocity>30.1</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='RL_hip'>
+      <pose relative_to='LH_HAA'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0.004773 0.001697 -9.3e-05 0 -0 0</pose>
+        <mass>0.767</mass>
+        <inertia>
+          <ixx>0.000539992</ixx>
+          <ixy>2.1221e-06</ixy>
+          <ixz>-1.06539e-06</ixz>
+          <iyy>0.000998137</iyy>
+          <iyz>-1.40274e-06</iyz>
+          <izz>0.000658285</izz>
+        </inertia>
+      </inertial>
+      <collision name='RL_hip_collision'>
+        <pose>0 0.08 0 1.5708 -0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.04</length>
+            <radius>0.046</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='RL_hip_visual'>
+        <pose>0 0 0 3.14159 9.3e-05 3.14159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://ocs2_robotic_assets/resources/go2/dae/hip.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='LH_HFE' type='revolute'>
+      <pose relative_to='RL_hip'>0 0.0955 0 0 -0 0</pose>
+      <parent>RL_hip</parent>
+      <child>RL_thigh</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-0.5236</lower>
+          <upper>4.5379</upper>
+          <effort>23.7</effort>
+          <velocity>30.1</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='RL_thigh'>
+      <pose relative_to='LH_HFE'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>-0.003472 -0.023021 -0.030355 0 -0 0</pose>
+        <mass>1.241</mass>
+        <inertia>
+          <ixx>0.00599633</ixx>
+          <ixy>9.03053e-05</ixy>
+          <ixz>-0.000299104</ixz>
+          <iyy>0.00600134</iyy>
+          <iyz>0.000835151</iyz>
+          <izz>0.00109915</izz>
+        </inertia>
+      </inertial>
+      <collision name='RL_thigh_collision'>
+        <pose>0 0 -0.1065 0 1.5708 0</pose>
+        <geometry>
+          <box>
+            <size>0.213 0.0245 0.034</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='RL_thigh_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://ocs2_robotic_assets/resources/go2/dae/thigh.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='LH_KFE' type='revolute'>
+      <pose relative_to='RL_thigh'>0 0 -0.213 0 -0 0</pose>
+      <parent>RL_thigh</parent>
+      <child>RL_calf</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-2.7227</lower>
+          <upper>-0.83776</upper>
+          <effort>45.43</effort>
+          <velocity>15.7</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='RL_calf'>
+      <pose relative_to='LH_KFE'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0.00435 -0.000774 -0.135206 0 -0 0</pose>
+        <mass>0.194</mass>
+        <inertia>
+          <ixx>0.00139458</ixx>
+          <ixy>5.09654e-07</ixy>
+          <ixz>1.47596e-07</ixz>
+          <iyy>0.00141551</iyy>
+          <iyz>1.1314e-05</iyz>
+          <izz>4.34837e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='RL_calf_collision'>
+        <pose>0.01 0 -0.06 0 -0.2 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.12</length>
+            <radius>0.013</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <collision name='RL_calf_fixed_joint_lump__LH_FOOT_collision_sensor_collision_1'>
+        <pose>-0.002 0 -0.213 0 -0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.022</radius>
+          </sphere>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>100</kd>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>1.85</mu>
+              <mu2>1.85</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='RL_calflower_collision_2'>
+        <pose>0.02 0 -0.148 0 0.05 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.065</length>
+            <radius>0.011</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <collision name='RL_calflower1_collision_3'>
+        <pose>0.008013 0 -0.18745 0 0.53 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.03</length>
+            <radius>0.0155</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='RL_calf_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://ocs2_robotic_assets/resources/go2/dae/calf.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='RL_calf_fixed_joint_lump__LH_FOOT_visual_1'>
+        <pose>0 0 -0.213 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://ocs2_robotic_assets/resources/go2/dae/foot.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <sensor name='lh_foot_contact' type='contact'>
+        <plugin name='lh_contact_plugin' filename='/home/kuba/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libContactSensor.so'/>
+        <contact>
+          <collision>LH_SHANK_fixed_joint_lump__LH_FOOT_collision_sensor_collision_3</collision>
+          <topic>__default_topic__</topic>
+        </contact>
+        <pose>0 0 -0.213 0 -0 0</pose>
+      </sensor>
+    </link>
+    <joint name='RF_HAA' type='revolute'>
+      <pose relative_to='base'>0.1934 -0.0465 0 0 -0 0</pose>
+      <parent>base</parent>
+      <child>FR_hip</child>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-1.0472</lower>
+          <upper>1.0472</upper>
+          <effort>23.7</effort>
+          <velocity>30.1</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='FR_hip'>
+      <pose relative_to='RF_HAA'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>-0.004773 -0.001697 -9.3e-05 0 -0 0</pose>
+        <mass>0.767</mass>
+        <inertia>
+          <ixx>0.000539992</ixx>
+          <ixy>2.1221e-06</ixy>
+          <ixz>1.06539e-06</ixz>
+          <iyy>0.000998137</iyy>
+          <iyz>1.40274e-06</iyz>
+          <izz>0.000658285</izz>
+        </inertia>
+      </inertial>
+      <collision name='FR_hip_collision'>
+        <pose>0 -0.08 0 1.5708 -0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.04</length>
+            <radius>0.046</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='FR_hip_visual'>
+        <pose>0 0 0 3.1415 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://ocs2_robotic_assets/resources/go2/dae/hip.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='RF_HFE' type='revolute'>
+      <pose relative_to='FR_hip'>0 -0.0955 0 0 -0 0</pose>
+      <parent>FR_hip</parent>
+      <child>FR_thigh</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-1.5708</lower>
+          <upper>3.4907</upper>
+          <effort>23.7</effort>
+          <velocity>30.1</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='FR_thigh'>
+      <pose relative_to='RF_HFE'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>-0.003472 0.023021 -0.030355 0 -0 0</pose>
+        <mass>1.241</mass>
+        <inertia>
+          <ixx>0.00599633</ixx>
+          <ixy>-9.03053e-05</ixy>
+          <ixz>-0.000299104</ixz>
+          <iyy>0.00600134</iyy>
+          <iyz>-0.000835151</iyz>
+          <izz>0.00109915</izz>
+        </inertia>
+      </inertial>
+      <collision name='FR_thigh_collision'>
+        <pose>0 0 -0.1065 0 1.5708 0</pose>
+        <geometry>
+          <box>
+            <size>0.213 0.0245 0.034</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='FR_thigh_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://ocs2_robotic_assets/resources/go2/dae/thigh_mirror.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='RF_KFE' type='revolute'>
+      <pose relative_to='FR_thigh'>0 0 -0.213 0 -0 0</pose>
+      <parent>FR_thigh</parent>
+      <child>FR_calf</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-2.7227</lower>
+          <upper>-0.83776</upper>
+          <effort>45.43</effort>
+          <velocity>15.7</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='FR_calf'>
+      <pose relative_to='RF_KFE'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0.00435 0.000774 -0.135206 0 -0 0</pose>
+        <mass>0.194</mass>
+        <inertia>
+          <ixx>0.00139458</ixx>
+          <ixy>-5.09654e-07</ixy>
+          <ixz>1.47596e-07</ixz>
+          <iyy>0.00141551</iyy>
+          <iyz>-1.1314e-05</iyz>
+          <izz>4.34837e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='FR_calf_collision'>
+        <pose>0.01 0 -0.06 0 -0.2 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.12</length>
+            <radius>0.013</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <collision name='FR_calflower_collision_1'>
+        <pose>0.02 0 -0.148 0 0.05 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.065</length>
+            <radius>0.011</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <collision name='FR_calflower1_collision_2'>
+        <pose>0.008013 0 -0.18745 0 0.53 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.03</length>
+            <radius>0.0155</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <collision name='FR_calf_fixed_joint_lump__RF_FOOT_collision_sensor_collision_3'>
+        <pose>-0.002 0 -0.213 0 -0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.022</radius>
+          </sphere>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>100</kd>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>1.85</mu>
+              <mu2>1.85</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='FR_calf_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://ocs2_robotic_assets/resources/go2/dae/calf_mirror.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='FR_calf_fixed_joint_lump__RF_FOOT_visual_1'>
+        <pose>0 0 -0.213 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://ocs2_robotic_assets/resources/go2/dae/foot.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <sensor name='rf_foot_contact' type='contact'>
+        <plugin name='rf_contact_plugin' filename='/home/kuba/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libContactSensor.so'/>
+        <contact>
+          <collision>RF_SHANK_fixed_joint_lump__RF_FOOT_collision_sensor_collision_3</collision>
+          <topic>__default_topic__</topic>
+        </contact>
+        <pose>0 0 -0.213 0 -0 0</pose>
+      </sensor>
+    </link>
+    <joint name='RH_HAA' type='revolute'>
+      <pose relative_to='base'>-0.1934 -0.0465 0 0 -0 0</pose>
+      <parent>base</parent>
+      <child>RR_hip</child>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-1.0472</lower>
+          <upper>1.0472</upper>
+          <effort>23.7</effort>
+          <velocity>30.1</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='RR_hip'>
+      <pose relative_to='RH_HAA'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0.004773 -0.001697 -9.3e-05 0 -0 0</pose>
+        <mass>0.767</mass>
+        <inertia>
+          <ixx>0.000539992</ixx>
+          <ixy>-2.1221e-06</ixy>
+          <ixz>-1.06539e-06</ixz>
+          <iyy>0.000998137</iyy>
+          <iyz>1.40274e-06</iyz>
+          <izz>0.000658285</izz>
+        </inertia>
+      </inertial>
+      <collision name='RR_hip_collision'>
+        <pose>0 -0.08 0 1.5708 -0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.04</length>
+            <radius>0.046</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='RR_hip_visual'>
+        <pose>0 0 0 -9.3e-05 9.3e-05 3.14159</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://ocs2_robotic_assets/resources/go2/dae/hip.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='RH_HFE' type='revolute'>
+      <pose relative_to='RR_hip'>0 -0.0955 0 0 -0 0</pose>
+      <parent>RR_hip</parent>
+      <child>RR_thigh</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-0.5236</lower>
+          <upper>4.5379</upper>
+          <effort>23.7</effort>
+          <velocity>30.1</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='RR_thigh'>
+      <pose relative_to='RH_HFE'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>-0.003472 0.023021 -0.030355 0 -0 0</pose>
+        <mass>1.241</mass>
+        <inertia>
+          <ixx>0.00599633</ixx>
+          <ixy>-9.03053e-05</ixy>
+          <ixz>-0.000299104</ixz>
+          <iyy>0.00600134</iyy>
+          <iyz>-0.000835151</iyz>
+          <izz>0.00109915</izz>
+        </inertia>
+      </inertial>
+      <collision name='RR_thigh_collision'>
+        <pose>0 0 -0.1065 0 1.5708 0</pose>
+        <geometry>
+          <box>
+            <size>0.213 0.0245 0.034</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='RR_thigh_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://ocs2_robotic_assets/resources/go2/dae/thigh_mirror.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='RH_KFE' type='revolute'>
+      <pose relative_to='RR_thigh'>0 0 -0.213 0 -0 0</pose>
+      <parent>RR_thigh</parent>
+      <child>RR_calf</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-2.7227</lower>
+          <upper>-0.83776</upper>
+          <effort>45.43</effort>
+          <velocity>15.7</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='RR_calf'>
+      <pose relative_to='RH_KFE'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0.00435 0.000774 -0.135206 0 -0 0</pose>
+        <mass>0.194</mass>
+        <inertia>
+          <ixx>0.00139458</ixx>
+          <ixy>-5.09654e-07</ixy>
+          <ixz>1.47596e-07</ixz>
+          <iyy>0.00141551</iyy>
+          <iyz>-1.1314e-05</iyz>
+          <izz>4.34837e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='RR_calf_collision'>
+        <pose>0.01 0 -0.06 0 -0.2 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.12</length>
+            <radius>0.013</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <collision name='RR_calf_fixed_joint_lump__RH_FOOT_collision_sensor_collision_1'>
+        <pose>-0.002 0 -0.213 0 -0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.022</radius>
+          </sphere>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>100</kd>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>1.85</mu>
+              <mu2>1.85</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='RR_calflower_collision_2'>
+        <pose>0.02 0 -0.148 0 0.05 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.065</length>
+            <radius>0.011</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <collision name='RR_calflower1_collision_3'>
+        <pose>0.008013 0 -0.18745 0 0.53 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.03</length>
+            <radius>0.0155</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='RR_calf_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://ocs2_robotic_assets/resources/go2/dae/calf_mirror.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='RR_calf_fixed_joint_lump__RH_FOOT_visual_1'>
+        <pose>0 0 -0.213 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://ocs2_robotic_assets/resources/go2/dae/foot.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <sensor name='rh_foot_contact' type='contact'>
+        <plugin name='rh_contact_plugin' filename='/home/kuba/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libContactSensor.so'/>
+        <contact>
+          <collision>RH_SHANK_fixed_joint_lump__RH_FOOT_collision_sensor_collision_3</collision>
+          <topic>__default_topic__</topic>
+        </contact>
+        <pose>0 0 -0.213 0 -0 0</pose>
+      </sensor>
+    </link>
+    <plugin name='gazebo_ros_control' filename='libgazebo_ros_control.so'>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+      <robotNamespace>/anymal_d</robotNamespace>
+    </plugin>
+    <static>0</static>
+    <plugin name='RobotStatePublisher' filename='/home/kuba/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libRobotStatePublisher.so'/>
+  </model>
+</sdf>

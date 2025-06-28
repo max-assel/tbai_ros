@@ -25,9 +25,10 @@ int main(int argc, char *argv[]) {
     auto stateTopic = tbai::fromGlobalConfig<std::string>("state_topic");
     auto commandTopic = tbai::fromGlobalConfig<std::string>("command_topic");
     auto changeControllerTopic = tbai::fromGlobalConfig<std::string>("change_controller_topic");
+    const std::string urdfString = nh.param<std::string>("robot_description", "");
 
     std::shared_ptr<tbai::StateSubscriber> stateSubscriber =
-        std::shared_ptr<tbai::StateSubscriber>(new tbai::RosStateSubscriber(nh, stateTopic));
+        std::shared_ptr<tbai::StateSubscriber>(new tbai::MuseRosStateSubscriber(nh, stateTopic, urdfString));
 
     std::shared_ptr<tbai::CommandPublisher> commandPublisher =
         std::shared_ptr<tbai::CommandPublisher>(new tbai::RosCommandPublisher(nh, commandTopic));

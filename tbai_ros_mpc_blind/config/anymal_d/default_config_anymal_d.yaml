@@ -54,4 +54,4 @@ reference_generator:
     topic: "cmd_vel"
 
 contact_sensor:
-  update_rate: 20 # Hz
+  update_rate: 400 # Hz

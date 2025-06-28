@@ -76,4 +76,4 @@ anymal_d:
       joints: *jn
 
 contact_sensor:
-  update_rate: 20 # Hz
+  update_rate: 400 # Hz
