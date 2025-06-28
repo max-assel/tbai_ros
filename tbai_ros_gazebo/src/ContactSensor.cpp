@@ -11,6 +11,12 @@ GZ_REGISTER_SENSOR_PLUGIN(ContactSensor)
 /**********************************************************************************************************************/
 /**********************************************************************************************************************/
 void ContactSensor::Load(sensors::SensorPtr sensor, sdf::ElementPtr sdf) {
+    auto enabled = tbai::fromGlobalConfig<bool>("gazebo/contact_sensor/enabled");
+    if (!enabled) {
+        TBAI_GLOBAL_LOG_INFO("Contact sensor disabled.");
+        return;
+    }
+
     this->parentSensor = std::dynamic_pointer_cast<sensors::ContactSensor>(sensor);
 
     if (!this->parentSensor) {
@@ -31,7 +37,7 @@ void ContactSensor::Load(sensors::SensorPtr sensor, sdf::ElementPtr sdf) {
     TBAI_GLOBAL_LOG_INFO("Loading ContactSensor plugin. Publishing on topic /{}", topicName);
 
     // Setup update rate
-    auto updateRate = tbai::fromGlobalConfig<tbai::scalar_t>("contact_sensor/update_rate");
+    auto updateRate = tbai::fromGlobalConfig<tbai::scalar_t>("gazebo/contact_sensor/update_rate");
     this->parentSensor->SetUpdateRate(updateRate);
 
     TBAI_GLOBAL_LOG_INFO("Loaded ContactSensor plugin. Update rate: {} Hz", updateRate);

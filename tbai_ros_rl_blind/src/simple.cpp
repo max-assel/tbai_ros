@@ -37,7 +37,6 @@ int main(int argc, char *argv[]) {
 
     tbai::CentralController<ros::Rate, tbai::RosTime> controller(commandPublisher, changeControllerSubscriber);
 
-
     // Add static controller
     controller.addController(std::make_unique<tbai::static_::RosStaticController>(stateSubscriber));
 

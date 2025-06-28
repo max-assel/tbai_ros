@@ -58,10 +58,8 @@ class RosChangeControllerSubscriber : public ChangeControllerSubscriber {
 
 class MuseRosStateSubscriber : public tbai::ThreadedStateSubscriber {
    public:
-    MuseRosStateSubscriber(ros::NodeHandle &nhtemp, const std::string &stateTopic, const std::string &urdf="");
-    ~MuseRosStateSubscriber() override {
-        stopThreads();
-    }
+    MuseRosStateSubscriber(ros::NodeHandle &nhtemp, const std::string &stateTopic, const std::string &urdf = "");
+    ~MuseRosStateSubscriber() override { stopThreads(); }
     void waitTillInitialized() override;
 
     void startThreads() override;

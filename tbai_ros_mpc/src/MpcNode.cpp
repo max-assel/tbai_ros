@@ -34,8 +34,9 @@ int main(int argc, char *argv[]) {
             anymal::getAnymalInterface(urdfString, switched_model::loadQuadrupedSettings(taskSettingsFile),
                                        anymal::frameDeclarationFromFile(frameDeclarationFile));
     } else if (robotName == "go2") {
-        quadrupedInterface = anymal::getGo2Interface(urdfString, switched_model::loadQuadrupedSettings(taskSettingsFile),
-                                                  anymal::frameDeclarationFromFile(frameDeclarationFile));
+        quadrupedInterface =
+            anymal::getGo2Interface(urdfString, switched_model::loadQuadrupedSettings(taskSettingsFile),
+                                    anymal::frameDeclarationFromFile(frameDeclarationFile));
     } else {
         TBAI_THROW("Robot name not supported: {}", robotName);
     }

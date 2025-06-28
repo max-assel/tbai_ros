@@ -11,9 +11,6 @@ gridmap_layer: "smooth_planar"
 contact_topics: ["/lf_foot_contact", "/rf_foot_contact", "/lh_foot_contact","/rh_foot_contact"] 
 
 
-state_publisher:
-  update_rate: 400 # Hz
-
 static_controller:
   stand_controller:
     joint_angles: [0.0, 0.4, -0.8, 0.0, -0.4, 0.8, 0.0, 0.4, -0.8, 0.0, -0.4, 0.8] # LF, LH, RF, RH
@@ -49,5 +46,17 @@ reference_generator:
   twist:
     topic: "cmd_vel"
 
-contact_sensor:
-  update_rate: 20 # Hz
+estimator_type: "ground_truth"
+
+gazebo:
+  contact_sensor:
+    enabled: false
+    update_rate: 1000 # Hz
+
+  ground_truth_state_publisher:
+    enabled: true
+    update_rate: 400 # Hz
+
+  muse_state_publisher:
+    enabled: false
+    update_rate: 1000 # Hz

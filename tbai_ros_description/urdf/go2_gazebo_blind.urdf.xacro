@@ -35,9 +35,13 @@
   </plugin>
 </gazebo>
 
-<!-- State publisher -->
+<!-- State publisher - enabled or disabled based on the config file -->
 <gazebo>
-  <plugin filename="/home/kuba/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libRobotStatePublisher.so" name="RobotStatePublisher"/>
+  <plugin filename="/home/kuba/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libStatePublisher.so" name="StatePublisher"/>
+</gazebo>
+
+<gazebo>
+  <plugin filename="/home/kuba/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libRobotStatePublisher.so" name="StatePublisher"/>
 </gazebo>
 
 <!-- Add contact sensors -->

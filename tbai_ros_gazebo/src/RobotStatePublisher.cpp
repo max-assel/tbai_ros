@@ -20,6 +20,13 @@ namespace gazebo {
 /*********************************************************************************************************************/
 void RobotStatePublisher::Load(physics::ModelPtr robot, sdf::ElementPtr sdf) {
     TBAI_GLOBAL_LOG_INFO("Loading RobotStatePublisher plugin");
+
+    bool enabled = tbai::fromGlobalConfig<bool>("gazebo/muse_state_publisher/enabled");
+    if (!enabled) {
+        TBAI_GLOBAL_LOG_INFO("Muse state publisher disabled.");
+        return;
+    }
+
     // set Gazebo callback function
     updateConnection_ = event::Events::ConnectWorldUpdateBegin(std::bind(&RobotStatePublisher::OnUpdate, this));
 
@@ -45,7 +52,7 @@ void RobotStatePublisher::Load(physics::ModelPtr robot, sdf::ElementPtr sdf) {
     // initialize last publish time
     lastSimTime_ = robot->GetWorld()->SimTime();
 
-    rate_ = tbai::fromGlobalConfig<double>("state_publisher/update_rate");
+    rate_ = tbai::fromGlobalConfig<double>("gazebo/muse_state_publisher/update_rate");
     period_ = 1.0 / rate_;
 
     // get contact topics
@@ -104,9 +111,9 @@ void RobotStatePublisher::OnUpdate() {
     const Eigen::Vector3d linearVelocityBase = R_base_world * linearVelocityWorld;
 
     // Base linear acceleration in base frame
-    Eigen::Vector3d linearAccelerationBase = (linearVelocityBase - lastVelocityBase_) / dt;
-    linearAccelerationBase.noalias() += R_base_world * (tbai::vector3_t::UnitZ() * 9.81);
-    lastVelocityBase_ = linearVelocityBase;
+    Eigen::Vector3d linearAccelerationWorld = (linearVelocityWorld - lastVelocityBase_) / dt;
+    Eigen::Vector3d linearAccelerationBase = R_base_world * (linearAccelerationWorld + tbai::vector3_t::UnitZ() * 9.81);
+    lastVelocityBase_ = linearVelocityWorld;
 
     // Joint angles
     std::vector<double> jointAngles(joints_.size());

@@ -71,7 +71,7 @@ void MuseRosStateSubscriber::waitTillInitialized() {
     TBAI_THROW_UNLESS(isRunning_, "MuseRosStateSubscriber not running");
     while (!isInitialized_ && ros::ok()) {
         ros::spinOnce();
-        ros::Duration(0.05).sleep();
+        ros::Duration(1.0 / 5.0).sleep();
         TBAI_LOG_INFO(logger_, "Waiting for state message...");
     }
 }

@@ -20,6 +20,13 @@ namespace gazebo {
 /*********************************************************************************************************************/
 void StatePublisher::Load(physics::ModelPtr robot, sdf::ElementPtr sdf) {
     TBAI_GLOBAL_LOG_INFO("Loading StatePublisher plugin");
+
+    bool enabled = tbai::fromGlobalConfig<bool>("gazebo/ground_truth_state_publisher/enabled");
+    if (!enabled) {
+        TBAI_GLOBAL_LOG_INFO("Ground truth state publisher disabled.");
+        return;
+    }
+
     // set Gazebo callback function
     updateConnection_ = event::Events::ConnectWorldUpdateBegin(std::bind(&StatePublisher::OnUpdate, this));
 
@@ -45,7 +52,7 @@ void StatePublisher::Load(physics::ModelPtr robot, sdf::ElementPtr sdf) {
     // initialize last publish time
     lastSimTime_ = robot->GetWorld()->SimTime();
 
-    rate_ = tbai::fromGlobalConfig<double>("state_publisher/update_rate");
+    rate_ = tbai::fromGlobalConfig<double>("gazebo/ground_truth_state_publisher/update_rate");
     period_ = 1.0 / rate_;
 
     // get contact topics

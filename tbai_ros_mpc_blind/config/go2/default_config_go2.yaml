@@ -8,10 +8,6 @@ command_topic: "anymal_d/command"
 change_controller_topic: "anymal_d/change_controller"
 contact_topics: ["/lf_foot_contact", "/rf_foot_contact", "/lh_foot_contact","/rh_foot_contact"] 
 
-
-state_publisher:
-  update_rate: 400 # Hz
-
 static_controller:
   stand_controller:
     joint_angles: [0.0, 0.806, -1.802, 0.0, 0.996, -1.802, 0.0, 0.806, -1.802, 0.0, 0.996, -1.802] # LF, LH, RF, RH
@@ -53,5 +49,17 @@ reference_generator:
   twist:
     topic: "cmd_vel"
 
-contact_sensor:
-  update_rate: 20 # Hz
+estimator_type: "ground_truth"
+
+gazebo:
+  contact_sensor:
+    enabled: true
+    update_rate: 1000 # Hz
+
+  ground_truth_state_publisher:
+    enabled: true
+    update_rate: 400 # Hz
+
+  muse_state_publisher:
+    enabled: false
+    update_rate: 1000 # Hz

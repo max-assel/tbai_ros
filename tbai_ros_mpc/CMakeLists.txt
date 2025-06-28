@@ -61,13 +61,6 @@ target_link_libraries(${PROJECT_NAME}
 )
 target_compile_options(${PROJECT_NAME} PUBLIC ${OCS2_CXX_FLAGS})
 
-add_executable(simple
-    src/simple.cpp
-)
-target_link_libraries(simple
-    ${catkin_LIBRARIES} ${PROJECT_NAME} yaml-cpp
-)
-
 add_executable(anymal_mpc_node
   src/MpcNode.cpp
 )
