@@ -3,15 +3,15 @@
     <!-- Required arguments -->
     <arg name="controllers_ns"      default="anymal_d"/>
     <arg name="controllers_args"    default="joint_controller"/>
-    <arg name="tbai_config_path"    default="$(find tbai_ros_mpc_blind)/config/default_config.yaml"/>
+    <arg name="tbai_config_path"    default="$(find tbai_ros_mpc_blind)/config/go2/default_config_go2.yaml"/>
     <arg name="description_name"    default="robot_description"/>
-    <arg name="description_file"    default="$(find tbai_ros_description)/urdf/anymal_d_gazebo_blind.urdf.xacro"/>
+    <arg name="description_file"    default="$(find tbai_ros_description)/urdf/go2_gazebo_blind.urdf.xacro"/>
 
-    <arg name="sqp_settings_file" default="$(find tbai_ros_mpc_blind)/config/sqp.info"/>
-    <arg name="frame_declaration_file" default="$(find tbai_ros_mpc_blind)/config/frame_declarations.info"/>
-    <arg name="task_settings_file" default="$(find tbai_ros_mpc_blind)/config/task.info"/>
-    <arg name="target_command_config_file" default="$(find tbai_ros_mpc_blind)/config/targetCommand.info"/>
-    <arg name="controller_config_file" default="$(find tbai_ros_mpc_blind)/config/controllers.info"/>
+    <arg name="sqp_settings_file" default="$(find tbai_ros_mpc_blind)/config/go2/sqp.info"/>
+    <arg name="frame_declaration_file" default="$(find tbai_ros_mpc_blind)/config/go2/frame_declarations.info"/>
+    <arg name="task_settings_file" default="$(find tbai_ros_mpc_blind)/config/go2/task.info"/>
+    <arg name="target_command_config_file" default="$(find tbai_ros_mpc_blind)/config/go2/targetCommand.info"/>
+    <arg name="controller_config_file" default="$(find tbai_ros_mpc_blind)/config/go2/controllers.info"/>
 
     <!-- Gazebo parameters -->
     <arg name="gui" default="false"/>
@@ -19,7 +19,7 @@
     <arg name="world" default="normal"/>
     <arg name="x" default="0.0"/>
     <arg name="y" default="0.0"/>
-    <arg name="z" default="3.0"/>
+    <arg name="z" default="5.0"/>
 
     <!-- Upload config path to ROS param server -->
     <param name="tbai_config_path" type="string" value="$(arg tbai_config_path)"/>
