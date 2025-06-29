@@ -57,7 +57,7 @@ MuseRosStateSubscriber::MuseRosStateSubscriber(ros::NodeHandle &nhtemp, const st
     TBAI_LOG_INFO(logger_, "Initialized MuseRosStateSubscriber");
 
     std::vector<std::string> footNames = {"LF_FOOT", "RF_FOOT", "LH_FOOT", "RH_FOOT"};
-    estimator_ = std::make_unique<tbai::muse::TbaiEstimator>(footNames, urdf);
+    estimator_ = std::make_unique<tbai::muse::MuseEstimator>(footNames, urdf);
 }
 
 /*********************************************************************************************************************/

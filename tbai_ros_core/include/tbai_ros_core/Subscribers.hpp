@@ -13,7 +13,7 @@
 #include <tbai_core/Logging.hpp>
 #include <tbai_core/Types.hpp>
 #include <tbai_core/control/Subscribers.hpp>
-#include <tbai_muse/TbaiEstimator.hpp>
+#include <tbai_estim/muse/MuseEstimator.hpp>
 namespace tbai {
 
 class RosStateSubscriber : public tbai::StateSubscriber {
@@ -79,7 +79,7 @@ class MuseRosStateSubscriber : public tbai::ThreadedStateSubscriber {
     std::atomic_bool isInitialized_ = false;
 
     ros::CallbackQueue thisQueue_;
-    std::unique_ptr<tbai::muse::TbaiEstimator> estimator_;
+    std::unique_ptr<tbai::muse::MuseEstimator> estimator_;
 
     std::shared_ptr<spdlog::logger> logger_;
     ros::Time lastStateTime_;
