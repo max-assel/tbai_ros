@@ -33,7 +33,7 @@ visibility_cleanup_rate:                    1.0
 scanning_duration:                          1.0
 
 # Init submap
-initialize_elevation_map:                   true
+initialize_elevation_map:                   false
 initialization_method:                      0
 length_in_x_init_submap:                    3.0
 length_in_y_init_submap:                    3.0
