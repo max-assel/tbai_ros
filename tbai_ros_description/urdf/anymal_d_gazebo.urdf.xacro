@@ -169,7 +169,7 @@
           <stddev>0.05</stddev>
         </noise>
     </camera>
-    <plugin name="camera_controller" filename="/home/user/.micromamba/envs/ros_env/lib/libgazebo_ros_openni_kinect.so">
+    <plugin name="camera_controller" filename="/home/user/.micromamba/envs/ros1/lib/libgazebo_ros_openni_kinect.so">
     <baseline>0.2</baseline>
     <alwaysOn>true</alwaysOn>
     <updateRate>0.0</updateRate>
