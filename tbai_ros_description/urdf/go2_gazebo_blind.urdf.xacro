@@ -37,17 +37,17 @@
 
 <!-- State publisher - enabled or disabled based on the config file -->
 <gazebo>
-  <plugin filename="/home/kuba/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libStatePublisher.so" name="StatePublisher"/>
+  <plugin filename="/home/user/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libStatePublisher.so" name="StatePublisher"/>
 </gazebo>
 
 <gazebo>
-  <plugin filename="/home/kuba/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libRobotStatePublisher.so" name="StatePublisher"/>
+  <plugin filename="/home/user/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libRobotStatePublisher.so" name="StatePublisher"/>
 </gazebo>
 
 <!-- Add contact sensors -->
 <gazebo reference="LF_FOOT">
     <sensor name="lf_foot_contact" type="contact">
-    <plugin name="lf_contact_plugin" filename="/home/kuba/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libContactSensor.so"/>
+    <plugin name="lf_contact_plugin" filename="/home/user/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libContactSensor.so"/>
     <contact>
         <collision>FL_calf_fixed_joint_lump__LF_FOOT_collision_sensor_collision_3</collision>
     </contact>
@@ -56,7 +56,7 @@
 
 <gazebo reference="RF_FOOT">
     <sensor name="rf_foot_contact" type="contact">
-    <plugin name="rf_contact_plugin" filename="/home/kuba/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libContactSensor.so"/>
+    <plugin name="rf_contact_plugin" filename="/home/user/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libContactSensor.so"/>
     <contact>
         <collision>FR_calf_fixed_joint_lump__RF_FOOT_collision_sensor_collision_3</collision>
     </contact>
@@ -65,7 +65,7 @@
 
 <gazebo reference="LH_FOOT">
     <sensor name="lh_foot_contact" type="contact">
-    <plugin name="lh_contact_plugin" filename="/home/kuba/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libContactSensor.so"/>
+    <plugin name="lh_contact_plugin" filename="/home/user/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libContactSensor.so"/>
     <contact>
         <collision>RL_calf_fixed_joint_lump__LH_FOOT_collision_sensor_collision_1</collision>
     </contact>
@@ -74,7 +74,7 @@
 
 <gazebo reference="RH_FOOT">
     <sensor name="rh_foot_contact" type="contact">
-    <plugin name="rh_contact_plugin" filename="/home/kuba/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libContactSensor.so"/>
+    <plugin name="rh_contact_plugin" filename="/home/user/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libContactSensor.so"/>
     <contact>
         <collision>RR_calf_fixed_joint_lump__RH_FOOT_collision_sensor_collision_1</collision>
     </contact>

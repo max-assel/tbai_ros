@@ -316,7 +316,6 @@ void InekfRosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::RobotSta
 
     // Base position
     state.x.segment<3>(3) = estimator_->getBasePosition();
-    TBAI_LOG_INFO(logger_, "Base position: {}", state.x.segment<3>(3).transpose());
 
     // Base angular velocity
     state.x.segment<3>(6) = baseAngVel;
