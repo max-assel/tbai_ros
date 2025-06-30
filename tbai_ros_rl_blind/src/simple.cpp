@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
     const std::string urdfString = nh.param<std::string>("robot_description", "");
 
     std::shared_ptr<tbai::StateSubscriber> stateSubscriber =
-        std::shared_ptr<tbai::StateSubscriber>(new tbai::MuseRosStateSubscriber(nh, stateTopic, urdfString));
+        std::shared_ptr<tbai::StateSubscriber>(new tbai::InekfRosStateSubscriber(nh, stateTopic, urdfString));
 
     std::shared_ptr<tbai::CommandPublisher> commandPublisher =
         std::shared_ptr<tbai::CommandPublisher>(new tbai::RosCommandPublisher(nh, commandTopic));
