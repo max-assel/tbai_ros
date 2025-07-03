@@ -3,7 +3,7 @@
     <!-- Required arguments -->
     <arg name="controllers_ns"      default="anymal_d"/>
     <arg name="controllers_args"    default="joint_controller"/>
-    <arg name="tbai_config_path"    default="$(find tbai_ros_static)/config/default_config.yaml"/>
+    <arg name="tbai_config_path"    default="$(find tbai_ros_static)/config/default_config_go2_deploy.yaml"/>
     <arg name="description_name"    default="robot_description"/>
     <arg name="description_file"    default="$(find ocs2_robotic_assets)/resources/go2/urdf/go2_description.urdf"/>
 
@@ -33,5 +33,7 @@
     <arg name="rvizconfig" default="$(find tbai_ros_static)/launch/rviz/anymal_d.rviz" />
     <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen" />
 
+    <!-- Launch virtual joystick -->
+    <node name="virtual_joystick" pkg="tbai_ros_utils" type="virtual_joystick.py" output="screen"/>
 
 </launch>

@@ -10,11 +10,11 @@ contact_topics: ["/lf_foot_contact", "/rf_foot_contact", "/lh_foot_contact","/rh
 
 static_controller:
   stand_controller:
-    joint_angles: [0.0, 0.4, -0.8, 0.0, -0.4, 0.8, 0.0, 0.4, -0.8, 0.0, -0.4, 0.8] # LF, LH, RF, RH
+    joint_angles: [0.0, 0.806, -1.802, 0.0, 0.996, -1.802, 0.0, 0.806, -1.802, 0.0, 0.996, -1.802] # LF, LH, RF, RH
   sit_controller:
-    joint_angles: [0.0, 1.5, -2.6, 0.0, -1.5, 2.6, 0.0, 1.5, -2.6, 0.0, -1.5, 2.6] # LF, LH, RF, RH
-  kp: 400
-  kd: 5
+    joint_angles: [0.0, 1.36, -2.65, 0.0, 1.36, -2.65, 0.0, 1.36, -2.65, 0.0, 1.36, -2.65] # LF, LH, RF, RH
+  kp: 90
+  kd: 0.5
   interpolation_time: 1.0 # s
   rate: 50 # Hz
 
