@@ -37,12 +37,21 @@ class RosStaticController : public tbai::static_::StaticController {
     /** Publish joint angles */
     void publishJointAngles(const vector_t &currentState, const ros::Time &currentTime);
 
+    void setupPinocchioModel();
+
+    void visualizeContactPoints(const vector_t &currentState, const std::vector<bool> &contacts, const ros::Time &currentTime);
+
     /** Visualization */
     tf::TransformBroadcaster tfBroadcaster_;
     std::unique_ptr<robot_state_publisher::RobotStatePublisher> robotStatePublisherPtr_;
 
     /** Time since last visualization step */
     scalar_t timeSinceLastVisualizationUpdate_;
+
+    pinocchio::Model model_;
+    pinocchio::Data data_;
+    ros::Publisher contactPointPublisher_;
+    std::vector<std::string> footFrameNames_;
 };
 
 }  // namespace static_

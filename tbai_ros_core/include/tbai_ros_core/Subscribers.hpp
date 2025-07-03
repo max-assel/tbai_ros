@@ -104,6 +104,11 @@ class InekfRosStateSubscriber : public tbai::ThreadedStateSubscriber {
     /** State message callback */
     void stateMessageCallback(const tbai_ros_msgs::RobotState::Ptr &msg);
 
+    void enable() override { enable_ = true; }
+    void disable() override { enable_ = false; }
+
+    bool enable_ = false;
+
     void threadFunction();
     std::thread stateThread_;
 

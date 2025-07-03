@@ -42,6 +42,13 @@ target_link_libraries(simple
     ${catkin_LIBRARIES} ${PROJECT_NAME} yaml-cpp
 )
 
+add_executable(simple_deploy_go2
+    src/simple_deploy_go2.cpp
+)
+target_link_libraries(simple_deploy_go2
+    ${catkin_LIBRARIES} ${PROJECT_NAME} yaml-cpp
+)
+
 install(
   DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}

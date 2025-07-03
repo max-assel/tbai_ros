@@ -301,8 +301,9 @@ void InekfRosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::RobotSta
     baseAngVel[2] = msg->ang_vel[2];
 
 
+    constexpr bool rectifyOrientation = false;
     estimator_->update(currentTime, dt, baseOrientation, jointAngles, jointVelocities, baseAcc, baseAngVel,
-                       contactFlags);
+                       contactFlags, rectifyOrientation, enable_);
 
     // Base orientation - Euler zyx as {roll, pitch, yaw}
     auto orientation_rot = estimator_->getBaseOrientation();
