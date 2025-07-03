@@ -5,6 +5,7 @@ import rospy
 import tkinter as tk
 from tkinter import ttk
 from geometry_msgs.msg import Twist
+from std_msgs.msg import String
 
 
 class VirtualJoystick(tk.Frame):
@@ -121,7 +122,32 @@ class UIController:
         self.right_joystick.pack()
         self.right_joystick.set_command_callback(self.publish_x_yaw_velocity)
 
+        button_frame = ttk.Frame(main_frame)
+        button_frame.pack(pady=(20, 0))
+
+        button_title = ttk.Label(button_frame, text="Controller", font=("Arial", 12, "bold"))
+        button_title.pack(pady=(0, 10))
+
+        button_grid = ttk.Frame(button_frame)
+        button_grid.pack()
+
+        row1_frame = ttk.Frame(button_grid)
+        row1_frame.pack()
+
+        self.stand_button = ttk.Button(row1_frame, text="STAND", command=lambda: self.publish_controller_change("STAND"))
+        self.stand_button.pack(side=tk.LEFT, padx=5)
+
+        self.sit_button = ttk.Button(row1_frame, text="SIT", command=lambda: self.publish_controller_change("SIT"))
+        self.sit_button.pack(side=tk.LEFT, padx=5)
+
+        self.bob_button = ttk.Button(row1_frame, text="BOB", command=lambda: self.publish_controller_change("BOB"))
+        self.bob_button.pack(side=tk.LEFT, padx=5)
+
+        self.wbc_button = ttk.Button(row1_frame, text="WBC", command=lambda: self.publish_controller_change("WBC"))
+        self.wbc_button.pack(side=tk.LEFT, padx=5)
+
         self.velocity_pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
+        self.controller_pub = rospy.Publisher("/anymal_d/change_controller", String, queue_size=10)
 
         self.linear_x = 0.0
         self.linear_y = 0.0
@@ -159,6 +185,13 @@ class UIController:
         twist.angular.z = self.angular_z
 
         self.velocity_pub.publish(twist)
+
+    def publish_controller_change(self, controller_name):
+        """Publish controller change command"""
+        msg = String()
+        msg.data = controller_name
+        self.controller_pub.publish(msg)
+        rospy.loginfo(f"Published controller change: {controller_name}")
 
     def update_gui(self):
         """Update GUI periodically"""
