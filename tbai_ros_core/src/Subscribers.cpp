@@ -190,10 +190,9 @@ void MuseRosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::RobotStat
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-
 InekfRosStateSubscriber::InekfRosStateSubscriber(ros::NodeHandle &nhtemp, const std::string &stateTopic,
                                                  const std::string &urdf) {
-    logger_ = tbai::getLogger("InekfRosStateSubscriber");
+    logger_ = tbai::getLogger("inekf_ros_state_subscriber");
 
     ros::NodeHandle nh;
     nh.setCallbackQueue(&thisQueue_);
