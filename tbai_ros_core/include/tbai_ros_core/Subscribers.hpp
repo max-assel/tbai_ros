@@ -13,8 +13,8 @@
 #include <tbai_core/Logging.hpp>
 #include <tbai_core/Types.hpp>
 #include <tbai_core/control/Subscribers.hpp>
-#include <tbai_estim/muse/MuseEstimator.hpp>
 #include <tbai_estim/inekf/InEKFEstimator.hpp>
+#include <tbai_estim/muse/MuseEstimator.hpp>
 namespace tbai {
 
 class RosStateSubscriber : public tbai::StateSubscriber {

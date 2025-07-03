@@ -7,17 +7,15 @@
 #include <Eigen/Core>
 #include <geometry_msgs/TransformStamped.h>
 #include <kdl_parser/kdl_parser.hpp>
+#include <pinocchio/algorithm/frames.hpp>
+#include <pinocchio/algorithm/kinematics.hpp>
+#include <pinocchio/parsers/urdf.hpp>
 #include <ros/package.h>
 #include <tbai_core/Rotations.hpp>
 #include <tbai_core/Types.hpp>
 #include <tbai_core/config/Config.hpp>
 #include <urdf/model.h>
 #include <visualization_msgs/MarkerArray.h>
-
-#include <pinocchio/parsers/urdf.hpp>
-#include <pinocchio/algorithm/kinematics.hpp>
-#include <pinocchio/algorithm/frames.hpp>
-
 
 namespace tbai {
 namespace static_ {
@@ -62,7 +60,6 @@ void RosStaticController::setupPinocchioModel() {
     pinocchio::urdf::buildModelFromXML(urdfString, pinocchio::JointModelFreeFlyer(), model_);
     data_ = pinocchio::Data(model_);
 }
-
 
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
@@ -120,11 +117,11 @@ void RosStaticController::publishJointAngles(const vector_t &currentState, const
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-void RosStaticController::visualizeContactPoints(const vector_t &currentState, const std::vector<bool> &contacts, const ros::Time &currentTime) {
-
+void RosStaticController::visualizeContactPoints(const vector_t &currentState, const std::vector<bool> &contacts,
+                                                 const ros::Time &currentTime) {
     vector_t q = vector_t::Zero(model_.nq);
-    q.head<3>() = currentState.segment<3>(3); // Position
-    q.segment<4>(3) = tbai::ocs2rpy2quat(currentState.head<3>()).coeffs(); // Orientation
+    q.head<3>() = currentState.segment<3>(3);                               // Position
+    q.segment<4>(3) = tbai::ocs2rpy2quat(currentState.head<3>()).coeffs();  // Orientation
     q.tail(12) = currentState.segment<12>(3 + 3 + 3 + 3);
     pinocchio::forwardKinematics(model_, data_, q);
     pinocchio::updateFramePlacements(model_, data_);
@@ -132,27 +129,27 @@ void RosStaticController::visualizeContactPoints(const vector_t &currentState, c
     // publish sphere markers for each contact point
     visualization_msgs::MarkerArray markerArray;
     for (size_t i = 0; i < footFrameNames_.size(); ++i) {
-            visualization_msgs::Marker marker;
-            marker.header.stamp = currentTime;
-            marker.header.frame_id = "odom";
-            marker.id = i;
-            marker.type = visualization_msgs::Marker::SPHERE;
-            marker.action = contacts[i] ? visualization_msgs::Marker::ADD : visualization_msgs::Marker::DELETE;
-            marker.pose.position.x = data_.oMf[model_.getFrameId(footFrameNames_[i])].translation()[0];
-            marker.pose.position.y = data_.oMf[model_.getFrameId(footFrameNames_[i])].translation()[1];
-            marker.pose.position.z = data_.oMf[model_.getFrameId(footFrameNames_[i])].translation()[2];
-            marker.pose.orientation.x = 0.0;
-            marker.pose.orientation.y = 0.0;
-            marker.pose.orientation.z = 0.0;
-            marker.pose.orientation.w = 1.0;
-            marker.scale.x = 0.07;
-            marker.scale.y = 0.07;
-            marker.scale.z = 0.07;
-            marker.color.r = 1.0;
-            marker.color.g = 0.0;
-            marker.color.b = 0.0;
-            marker.color.a = 1.0;
-            markerArray.markers.push_back(marker);
+        visualization_msgs::Marker marker;
+        marker.header.stamp = currentTime;
+        marker.header.frame_id = "odom";
+        marker.id = i;
+        marker.type = visualization_msgs::Marker::SPHERE;
+        marker.action = contacts[i] ? visualization_msgs::Marker::ADD : visualization_msgs::Marker::DELETE;
+        marker.pose.position.x = data_.oMf[model_.getFrameId(footFrameNames_[i])].translation()[0];
+        marker.pose.position.y = data_.oMf[model_.getFrameId(footFrameNames_[i])].translation()[1];
+        marker.pose.position.z = data_.oMf[model_.getFrameId(footFrameNames_[i])].translation()[2];
+        marker.pose.orientation.x = 0.0;
+        marker.pose.orientation.y = 0.0;
+        marker.pose.orientation.z = 0.0;
+        marker.pose.orientation.w = 1.0;
+        marker.scale.x = 0.07;
+        marker.scale.y = 0.07;
+        marker.scale.z = 0.07;
+        marker.color.r = 1.0;
+        marker.color.g = 0.0;
+        marker.color.b = 0.0;
+        marker.color.a = 1.0;
+        markerArray.markers.push_back(marker);
     }
     contactPointPublisher_.publish(markerArray);
 }

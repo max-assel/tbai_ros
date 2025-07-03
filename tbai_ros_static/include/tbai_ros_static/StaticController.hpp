@@ -39,7 +39,8 @@ class RosStaticController : public tbai::static_::StaticController {
 
     void setupPinocchioModel();
 
-    void visualizeContactPoints(const vector_t &currentState, const std::vector<bool> &contacts, const ros::Time &currentTime);
+    void visualizeContactPoints(const vector_t &currentState, const std::vector<bool> &contacts,
+                                const ros::Time &currentTime);
 
     /** Visualization */
     tf::TransformBroadcaster tfBroadcaster_;

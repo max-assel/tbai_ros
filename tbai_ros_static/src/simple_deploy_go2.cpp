@@ -7,10 +7,10 @@
 #include <tbai_core/Utils.hpp>
 #include <tbai_core/config/Config.hpp>
 #include <tbai_core/control/CentralController.hpp>
+#include <tbai_deploy_go2/Go2RobotInterface.hpp>
 #include <tbai_ros_core/Publishers.hpp>
 #include <tbai_ros_core/Rate.hpp>
 #include <tbai_ros_core/Subscribers.hpp>
-#include <tbai_deploy_go2/Go2RobotInterface.hpp>
 
 int main(int argc, char *argv[]) {
     ros::init(argc, argv, "tbai_ros_static");
@@ -20,8 +20,8 @@ int main(int argc, char *argv[]) {
     tbai::writeInitTime(tbai::RosTime::rightNow());
 
     // Initialize Go2RobotInterface
-    std::shared_ptr<tbai::Go2RobotInterface> go2RobotInterface =
-        std::shared_ptr<tbai::Go2RobotInterface>(new tbai::Go2RobotInterface(tbai::Go2RobotInterfaceArgs().networkInterface("enp3s0")));
+    std::shared_ptr<tbai::Go2RobotInterface> go2RobotInterface = std::shared_ptr<tbai::Go2RobotInterface>(
+        new tbai::Go2RobotInterface(tbai::Go2RobotInterfaceArgs().networkInterface("enp3s0")));
 
     std::shared_ptr<tbai::StateSubscriber> stateSubscriber = go2RobotInterface;
     std::shared_ptr<tbai::CommandPublisher> commandPublisher = go2RobotInterface;

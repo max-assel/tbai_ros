@@ -192,7 +192,7 @@ void MuseRosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::RobotStat
 /*********************************************************************************************************************/
 
 InekfRosStateSubscriber::InekfRosStateSubscriber(ros::NodeHandle &nhtemp, const std::string &stateTopic,
-                                               const std::string &urdf) {
+                                                 const std::string &urdf) {
     logger_ = tbai::getLogger("InekfRosStateSubscriber");
 
     ros::NodeHandle nh;
@@ -284,7 +284,6 @@ void InekfRosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::RobotSta
         jointAngles[i] = msg->joint_angles[i];
     }
 
-
     vector_t jointVelocities = vector_t::Zero(12);
     for (int i = 0; i < 12; i++) {
         jointVelocities[i] = msg->joint_velocities[i];
@@ -299,7 +298,6 @@ void InekfRosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::RobotSta
     baseAngVel[0] = msg->ang_vel[0];
     baseAngVel[1] = msg->ang_vel[1];
     baseAngVel[2] = msg->ang_vel[2];
-
 
     constexpr bool rectifyOrientation = false;
     estimator_->update(currentTime, dt, baseOrientation, jointAngles, jointVelocities, baseAcc, baseAngVel,
