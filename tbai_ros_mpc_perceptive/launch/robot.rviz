@@ -11,7 +11,7 @@ Panels:
         - /GridMap1
         - /MarkerArray1
       Splitter Ratio: 0.5
-    Tree Height: 1178
+    Tree Height: 354
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -64,104 +64,96 @@ Visualization Manager:
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
+        FL_calf:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        FL_calf_rotor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        FL_calflower:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        FL_calflower1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        FL_hip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        FL_hip_rotor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        FL_thigh:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        FL_thigh_rotor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        FR_calf:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        FR_calf_rotor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        FR_calflower:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        FR_calflower1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        FR_hip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        FR_hip_rotor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        FR_thigh:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        FR_thigh_rotor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        Head_lower:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Head_upper:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         LF_FOOT:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        LF_HAA_drive:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        LF_HFE_drive:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        LF_HFE_output:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        LF_HIP:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        LF_KFE_drive:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        LF_SHANK:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        LF_THIGH:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        LF_hip_fixed:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        LF_shank_fixed:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        LF_thigh_fixed:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         LH_FOOT:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        LH_HAA_drive:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        LH_HFE_drive:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        LH_HFE_output:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        LH_HIP:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        LH_KFE_drive:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        LH_SHANK:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        LH_THIGH:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        LH_hip_fixed:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        LH_shank_fixed:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        LH_thigh_fixed:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -172,122 +164,86 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        RF_HAA_drive:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        RF_HFE_drive:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        RF_HFE_output:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        RF_HIP:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        RF_KFE_drive:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        RF_SHANK:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        RF_THIGH:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        RF_hip_fixed:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        RF_shank_fixed:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        RF_thigh_fixed:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         RH_FOOT:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        RH_HAA_drive:
+        RL_calf:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        RH_HFE_drive:
+        RL_calf_rotor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        RL_calflower:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        RH_HFE_output:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        RH_HIP:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        RH_KFE_drive:
+        RL_calflower1:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        RH_SHANK:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        RH_THIGH:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        RH_hip_fixed:
+        RL_hip:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        RH_shank_fixed:
+        RL_hip_rotor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        RL_thigh:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        RH_thigh_fixed:
+        RL_thigh_rotor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        RR_calf:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
+        RR_calf_rotor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        RR_calflower:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        RR_calflower1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        RR_hip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        RR_hip_rotor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        RR_thigh:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        RR_thigh_rotor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         base:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        base_inertia:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        battery:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        body_top:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        bottom_shell:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -312,180 +268,15 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        depth_camera_front_lower_camera:
+        front_camera:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        depth_camera_front_lower_camera_parent:
+        imu:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        depth_camera_front_lower_depth_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_front_lower_depth_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_front_upper_camera:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_front_upper_camera_parent:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_front_upper_depth_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_front_upper_depth_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_left_camera:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_left_camera_parent:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_left_depth_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_left_depth_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_rear_camera:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_rear_camera_parent:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_rear_color_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_rear_color_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_rear_depth_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_rear_lower_camera:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_rear_lower_camera_parent:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_rear_lower_depth_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_rear_lower_depth_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_rear_upper_camera:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_rear_upper_camera_parent:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_rear_upper_depth_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_rear_upper_depth_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_right_camera:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_right_camera_parent:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_right_depth_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        depth_camera_right_depth_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        docking_socket:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        face_front:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        face_rear:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        face_shell_front:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        face_shell_rear:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        hbc_receiver:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        imu_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        lidar:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        lidar_parent:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        top_shell:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        wide_angle_camera_front_camera:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        wide_angle_camera_front_camera_parent:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        wide_angle_camera_rear_camera:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        wide_angle_camera_rear_camera_parent:
+        radar:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -532,7 +323,7 @@ Visualization Manager:
       Marker Topic: /ocs2_anymal/swing_planner/trajectory_LF
       Name: MarkerArray
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
@@ -540,7 +331,7 @@ Visualization Manager:
       Marker Topic: /ocs2_anymal/swing_planner/trajectory_LH
       Name: MarkerArray
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
@@ -548,7 +339,7 @@ Visualization Manager:
       Marker Topic: /ocs2_anymal/swing_planner/trajectory_RF
       Name: MarkerArray
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
@@ -556,7 +347,7 @@ Visualization Manager:
       Marker Topic: /ocs2_anymal/swing_planner/trajectory_RH
       Name: MarkerArray
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
@@ -564,7 +355,7 @@ Visualization Manager:
       Marker Topic: /ocs2_anymal/desiredVelTrajectory
       Name: MarkerArray
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
@@ -603,7 +394,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 21.151317596435547
+      Distance: 9.944278717041016
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -611,17 +402,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -8.492439270019531
-        Y: 7.611386775970459
-        Z: 1.550620675086975
+        X: -1.789154052734375
+        Y: 2.298610210418701
+        Z: -1.605212926864624
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.4503985345363617
+      Pitch: 0.4953988194465637
       Target Frame: <Fixed Frame>
-      Yaw: 2.3285632133483887
+      Yaw: 5.451747894287109
     Saved: ~
 Window Geometry:
   Displays:
