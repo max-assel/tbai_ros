@@ -6,6 +6,7 @@ import tkinter as tk
 from tkinter import ttk
 from geometry_msgs.msg import Twist
 from std_msgs.msg import String
+from std_srvs.srv import Empty
 
 
 class VirtualJoystick(tk.Frame):
@@ -146,6 +147,13 @@ class UIController:
         self.wbc_button = ttk.Button(row1_frame, text="WBC", command=lambda: self.publish_controller_change("WBC"))
         self.wbc_button.pack(side=tk.LEFT, padx=5)
 
+        # Second row for additional buttons
+        row2_frame = ttk.Frame(button_grid)
+        row2_frame.pack(pady=(5, 0))
+
+        self.clear_map_button = ttk.Button(row2_frame, text="Clear Map", command=self.clear_elevation_map)
+        self.clear_map_button.pack(side=tk.LEFT, padx=5)
+
         self.velocity_pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
         self.controller_pub = rospy.Publisher("/anymal_d/change_controller", String, queue_size=10)
 
@@ -192,6 +200,18 @@ class UIController:
         msg.data = controller_name
         self.controller_pub.publish(msg)
         rospy.loginfo(f"Published controller change: {controller_name}")
+
+    def clear_elevation_map(self):
+        """Call ROS service to clear elevation map"""
+        try:
+            rospy.wait_for_service('/elevation_mapping/clear_map', timeout=1.0)
+            clear_map_service = rospy.ServiceProxy('/elevation_mapping/clear_map', Empty)
+            response = clear_map_service()
+            rospy.loginfo("Elevation map cleared successfully")
+        except rospy.ServiceException as e:
+            rospy.logerr(f"Service call failed: {e}")
+        except rospy.ROSException as e:
+            rospy.logerr(f"Service not available: {e}")
 
     def update_gui(self):
         """Update GUI periodically"""
