@@ -7,6 +7,7 @@
 #include <visualization_msgs/Marker.h>
 #include <visualization_msgs/MarkerArray.h>
 
+
 namespace tbai {
 
 namespace rl {
@@ -157,6 +158,66 @@ void HeightsReconstructedVisualizer::publishMarkers(const ros::Time &timeStamp, 
     }
 
     markerPublisher_.publish(markerArray);
+}
+
+/***********************************************************************************************************************/
+/***********************************************************************************************************************/
+/***********************************************************************************************************************/
+ContactVisualizer::ContactVisualizer() {
+    ros::NodeHandle nh;
+    contactPublisher_ = nh.advertise<visualization_msgs::MarkerArray>("/contact_points", 1);
+
+    odomFrame_ = tbai::fromGlobalConfig<std::string>("odom_frame");
+    footFrameNames_ = {"LF_FOOT", "LH_FOOT", "RF_FOOT", "RH_FOOT"};
+
+    // Setup Pinocchio model
+    std::string urdfString;
+    if (!ros::param::get("/robot_description", urdfString)) {
+        throw std::runtime_error("Failed to get param /robot_description");
+    }
+
+    pinocchio::urdf::buildModelFromXML(urdfString, pinocchio::JointModelFreeFlyer(), model_);
+    data_ = pinocchio::Data(model_);
+}
+
+/***********************************************************************************************************************/
+/***********************************************************************************************************************/
+/***********************************************************************************************************************/
+void ContactVisualizer::visualize(const vector_t &currentState, const std::vector<bool> &contacts) {
+    ros::Time timeStamp = ros::Time::now();
+
+    vector_t q = vector_t::Zero(model_.nq);
+    q.head<3>() = currentState.segment<3>(3);                               // Position
+    q.segment<4>(3) = tbai::ocs2rpy2quat(currentState.head<3>()).coeffs();  // Orientation
+    q.tail(12) = currentState.segment<12>(3 + 3 + 3 + 3);
+    pinocchio::forwardKinematics(model_, data_, q);
+    pinocchio::updateFramePlacements(model_, data_);
+
+    visualization_msgs::MarkerArray markerArray;
+    for (size_t i = 0; i < footFrameNames_.size(); ++i) {
+        visualization_msgs::Marker marker;
+        marker.header.stamp = timeStamp;
+        marker.header.frame_id = odomFrame_;
+        marker.id = i;
+        marker.type = visualization_msgs::Marker::SPHERE;
+        marker.action = contacts[i] ? visualization_msgs::Marker::ADD : visualization_msgs::Marker::DELETE;
+        marker.pose.position.x = data_.oMf[model_.getFrameId(footFrameNames_[i])].translation()[0];
+        marker.pose.position.y = data_.oMf[model_.getFrameId(footFrameNames_[i])].translation()[1];
+        marker.pose.position.z = data_.oMf[model_.getFrameId(footFrameNames_[i])].translation()[2];
+        marker.pose.orientation.x = 0.0;
+        marker.pose.orientation.y = 0.0;
+        marker.pose.orientation.z = 0.0;
+        marker.pose.orientation.w = 1.0;
+        marker.scale.x = 0.07;
+        marker.scale.y = 0.07;
+        marker.scale.z = 0.07;
+        marker.color.r = 1.0;
+        marker.color.g = 0.0;
+        marker.color.b = 0.0;
+        marker.color.a = 1.0;
+        markerArray.markers.push_back(marker);
+    }
+    contactPublisher_.publish(markerArray);
 }
 
 }  // namespace rl

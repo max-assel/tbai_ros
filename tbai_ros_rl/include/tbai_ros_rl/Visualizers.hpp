@@ -1,8 +1,21 @@
+#pragma once
+
+// clang-format off
+#include <pinocchio/fwd.hpp>
+// clang-format on
+
 
 
 #include <memory>
 #include <string>
 #include <vector>
+
+#include <tbai_core/Rotations.hpp>
+#include <pinocchio/multibody/model.hpp>
+#include <pinocchio/multibody/data.hpp>
+#include <pinocchio/algorithm/kinematics.hpp>
+#include <pinocchio/algorithm/frames.hpp>
+#include <pinocchio/parsers/urdf.hpp>
 
 #include <robot_state_publisher/robot_state_publisher.h>
 #include <ros/ros.h>
@@ -81,6 +94,25 @@ class HeightsReconstructedVisualizer {
 
     /** Whether or not the robot is blind */
     bool blind_;
+};
+
+class ContactVisualizer {
+   public:
+    ContactVisualizer();
+    void visualize(const vector_t &currentState, const std::vector<bool> &contacts);
+
+   private:
+    /** Odom frame name */
+    std::string odomFrame_;
+
+    /** Base frame name */
+    ros::Publisher contactPublisher_;
+
+    /** List of foot frame names */
+    std::vector<std::string> footFrameNames_;
+
+    pinocchio::Model model_;
+    pinocchio::Data data_;
 };
 
 }  // namespace rl

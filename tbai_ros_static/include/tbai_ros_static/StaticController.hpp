@@ -37,8 +37,10 @@ class RosStaticController : public tbai::static_::StaticController {
     /** Publish joint angles */
     void publishJointAngles(const vector_t &currentState, const ros::Time &currentTime);
 
+    /** Setup Pinocchio model */
     void setupPinocchioModel();
 
+    /** Visualize contact points */
     void visualizeContactPoints(const vector_t &currentState, const std::vector<bool> &contacts,
                                 const ros::Time &currentTime);
 

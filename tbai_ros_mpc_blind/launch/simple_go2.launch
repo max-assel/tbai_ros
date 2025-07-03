@@ -62,7 +62,7 @@
           output="screen" launch-prefix="gnome-terminal --"/>
 
     <!-- Start Rviz visualizer -->
-    <arg name="rvizconfig" default="$(find tbai_ros_mpc_blind)/launch/anymal_d.rviz" />
+    <arg name="rvizconfig" default="$(find tbai_ros_mpc_blind)/launch/robot.rviz" />
     <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen" />
 
 </launch>

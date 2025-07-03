@@ -43,6 +43,7 @@ class RosBobController : public tbai::BobController {
     std::unique_ptr<tbai::gridmap::GridmapInterface> gridmap_;
     StateVisualizer stateVisualizer_;
     HeightsReconstructedVisualizer heightsReconstructedVisualizer_;
+    ContactVisualizer contactVisualizer_;
 
     scalar_t timeSinceLastVisualizationUpdate_;
 };

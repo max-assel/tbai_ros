@@ -2,15 +2,15 @@ sqpWbc
 {
   ; Task weights
   weightBaseTracking            1.0
-  weightSwingLeg                30.0
+  weightSwingLeg                200.0
   weightContactForce            0.001
 
   ; Friction cone parameters
   frictionCoefficient     0.5
 
   ; Swing leg kp and kd (in cartesian space - ee tracking)
-  swingKp                 120.0
-  swingKd                 2.0
+  swingKp                 550.0
+  swingKd                 50.0
 
   ; Base position kp and kd 
   baseKp                  1.0
@@ -21,15 +21,15 @@ sqpWbc
   eulerKd                 0.1
 
   ; Joint swing leg kp and kd
-  jointSwingKp            20.0
-  jointSwingKd            0.2
+  jointSwingKp            50.0
+  jointSwingKd            5.0
 
   ; Joint stance leg kp and kd
-  jointStanceKp            20.0
-  jointStanceKd            0.2
+  jointStanceKp            50.0
+  jointStanceKd            5.2
 
   ; Joint torque limit
-  torqueLimit              30.0
+  torqueLimit              80.0
 }
 
 hqpWbc
@@ -38,8 +38,8 @@ hqpWbc
   frictionCoefficient     0.5
 
   ; Swing leg kp and kd (in cartesian space - ee tracking)
-  swingKp                 120.0
-  swingKd                 2.0
+  swingKp                 550.0
+  swingKd                 50.0
 
   ; Base position kp and kd 
   baseKp                  1.0
@@ -50,17 +50,16 @@ hqpWbc
   eulerKd                 0.1
 
   ; Joint swing leg kp and kd
-  jointSwingKp            5.0
-  jointSwingKd            0.2
+  jointSwingKp            50.0
+  jointSwingKd            5.0
 
   ; Joint stance leg kp and kd
-  jointStanceKp            5.0
-  jointStanceKd            0.2
+  jointStanceKp            50.0
+  jointStanceKd            5.2
 
   ; Joint torque limit
   torqueLimit              80.0
 }
-
 StaticController 
 {
   ; Joint kp and kd and interpolation time

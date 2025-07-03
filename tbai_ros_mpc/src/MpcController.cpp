@@ -5,6 +5,15 @@
 
 #include "tbai_ros_mpc/MpcController.hpp"
 
+#include <tbai_core/Rotations.hpp>
+#include <tbai_core/config/Config.hpp>
+
+#include <pinocchio/multibody/model.hpp>
+#include <pinocchio/multibody/data.hpp>
+#include <pinocchio/algorithm/kinematics.hpp>
+#include <pinocchio/algorithm/frames.hpp>
+#include <pinocchio/parsers/urdf.hpp>
+
 #include <string>
 #include <vector>
 
@@ -12,6 +21,9 @@
 #include <ocs2_switched_model_interface/core/MotionPhaseDefinition.h>
 #include <tbai_core/Throws.hpp>
 #include <tbai_core/Utils.hpp>
+
+#include <visualization_msgs/Marker.h>
+#include <visualization_msgs/MarkerArray.h>
 
 namespace tbai {
 namespace mpc {
@@ -54,6 +66,7 @@ MpcController::MpcController(const std::shared_ptr<tbai::StateSubscriber> &state
     visualizerPtr_ = std::make_unique<switched_model::QuadrupedVisualizer>(quadrupedInterfacePtr_->getKinematicModel(),
                                                                            quadrupedInterfacePtr_->getJointNames(),
                                                                            quadrupedInterfacePtr_->getBaseName(), nh);
+    contactVisualizerPtr_ = std::make_unique<ContactVisualizer>();
 
     wbcPtr_ = switched_model::getWbcUnique(controllerConfigFile, urdfString, quadrupedInterfacePtr_->getComModel(),
                                            quadrupedInterfacePtr_->getKinematicModel(),
@@ -138,6 +151,7 @@ bool MpcController::checkStability() const {
 void MpcController::postStep(scalar_t currentTime, scalar_t dt) {
     if (timeSinceLastVisualizationUpdate_ >= 1.0 / 15.0) {
         visualizerPtr_->update(generateSystemObservation(), mrt_.getPolicy(), mrt_.getCommand());
+        contactVisualizerPtr_->visualize(state_.x, state_.contactFlags);
         timeSinceLastVisualizationUpdate_ = 0.0;
     }
 }
@@ -228,6 +242,66 @@ ocs2::SystemObservation MpcController::generateSystemObservation() const {
     std::swap(observation.input(12 + 5), observation.input(12 + 8));
 
     return observation;
+}
+
+/***********************************************************************************************************************/
+/***********************************************************************************************************************/
+/***********************************************************************************************************************/
+ContactVisualizer::ContactVisualizer() {
+    ros::NodeHandle nh;
+    contactPublisher_ = nh.advertise<visualization_msgs::MarkerArray>("/contact_points", 1);
+
+    odomFrame_ = "odom";
+    footFrameNames_ = {"LF_FOOT", "LH_FOOT", "RF_FOOT", "RH_FOOT"};
+
+    // Setup Pinocchio model
+    std::string urdfString;
+    if (!ros::param::get("/robot_description", urdfString)) {
+        throw std::runtime_error("Failed to get param /robot_description");
+    }
+
+    pinocchio::urdf::buildModelFromXML(urdfString, pinocchio::JointModelFreeFlyer(), model_);
+    data_ = pinocchio::Data(model_);
+}
+
+/***********************************************************************************************************************/
+/***********************************************************************************************************************/
+/***********************************************************************************************************************/
+void ContactVisualizer::visualize(const vector_t &currentState, const std::vector<bool> &contacts) {
+    ros::Time timeStamp = ros::Time::now();
+
+    vector_t q = vector_t::Zero(model_.nq);
+    q.head<3>() = currentState.segment<3>(3);                               // Position
+    q.segment<4>(3) = tbai::ocs2rpy2quat(currentState.head<3>()).coeffs();  // Orientation
+    q.tail(12) = currentState.segment<12>(3 + 3 + 3 + 3);
+    pinocchio::forwardKinematics(model_, data_, q);
+    pinocchio::updateFramePlacements(model_, data_);
+
+    visualization_msgs::MarkerArray markerArray;
+    for (size_t i = 0; i < footFrameNames_.size(); ++i) {
+        visualization_msgs::Marker marker;
+        marker.header.stamp = timeStamp;
+        marker.header.frame_id = odomFrame_;
+        marker.id = i;
+        marker.type = visualization_msgs::Marker::SPHERE;
+        marker.action = contacts[i] ? visualization_msgs::Marker::ADD : visualization_msgs::Marker::DELETE;
+        marker.pose.position.x = data_.oMf[model_.getFrameId(footFrameNames_[i])].translation()[0];
+        marker.pose.position.y = data_.oMf[model_.getFrameId(footFrameNames_[i])].translation()[1];
+        marker.pose.position.z = data_.oMf[model_.getFrameId(footFrameNames_[i])].translation()[2];
+        marker.pose.orientation.x = 0.0;
+        marker.pose.orientation.y = 0.0;
+        marker.pose.orientation.z = 0.0;
+        marker.pose.orientation.w = 1.0;
+        marker.scale.x = 0.07;
+        marker.scale.y = 0.07;
+        marker.scale.z = 0.07;
+        marker.color.r = 1.0;
+        marker.color.g = 0.0;
+        marker.color.b = 0.0;
+        marker.color.a = 1.0;
+        markerArray.markers.push_back(marker);
+    }
+    contactPublisher_.publish(markerArray);
 }
 
 }  // namespace mpc

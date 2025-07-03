@@ -19,9 +19,35 @@
 #include <tbai_ros_mpc/wbc/WbcBase.hpp>
 #include <tbai_ros_msgs/JointCommandArray.h>
 
+#include <pinocchio/multibody/model.hpp>
+#include <pinocchio/multibody/data.hpp>
+#include <pinocchio/algorithm/kinematics.hpp>
+#include <pinocchio/algorithm/frames.hpp>
+#include <pinocchio/parsers/urdf.hpp>
+
 namespace tbai {
 
 namespace mpc {
+
+class ContactVisualizer {
+   public:
+    ContactVisualizer();
+    void visualize(const vector_t &currentState, const std::vector<bool> &contacts);
+
+   private:
+    /** Odom frame name */
+    std::string odomFrame_;
+
+    /** Base frame name */
+    ros::Publisher contactPublisher_;
+
+    /** List of foot frame names */
+    std::vector<std::string> footFrameNames_;
+
+    pinocchio::Model model_;
+    pinocchio::Data data_;
+};
+
 class MpcController final : public tbai::Controller {
    public:
     MpcController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr);
@@ -56,6 +82,7 @@ class MpcController final : public tbai::Controller {
 
     std::unique_ptr<switched_model::QuadrupedInterface> quadrupedInterfacePtr_;
     std::unique_ptr<switched_model::QuadrupedVisualizer> visualizerPtr_;
+    std::unique_ptr<ContactVisualizer> contactVisualizerPtr_;
     std::unique_ptr<switched_model::WbcBase> wbcPtr_;
     std::unique_ptr<reference::ReferenceTrajectoryGenerator> referenceTrajectoryGeneratorPtr_;
 

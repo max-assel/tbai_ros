@@ -18,6 +18,7 @@ void RosBobController::postStep(scalar_t currentTime, scalar_t dt) {
         auto state = getBobnetState();
         stateVisualizer_.visualize(state);
         heightsReconstructedVisualizer_.visualize(state, sampled_, hidden_);
+        contactVisualizer_.visualize(state_.x, state_.contactFlags);
         timeSinceLastVisualizationUpdate_ = 0.0;
     } else {
         timeSinceLastVisualizationUpdate_ += dt;
