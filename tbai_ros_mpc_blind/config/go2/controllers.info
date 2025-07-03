@@ -29,7 +29,7 @@ sqpWbc
   jointStanceKd            5.2
 
   ; Joint torque limit
-  torqueLimit              80.0
+  torqueLimit              27.0
 }
 
 hqpWbc
@@ -58,7 +58,7 @@ hqpWbc
   jointStanceKd            5.2
 
   ; Joint torque limit
-  torqueLimit              80.0
+  torqueLimit              27.0
 }
 StaticController 
 {

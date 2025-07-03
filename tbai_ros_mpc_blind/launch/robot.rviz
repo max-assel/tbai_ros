@@ -7,6 +7,7 @@ Panels:
         - /Global Options1
         - /Status1
         - /Grid1
+        - /RobotModel1
         - /MarkerArray1
       Splitter Ratio: 0.5
     Tree Height: 1178
@@ -53,7 +54,7 @@ Visualization Manager:
       Plane Cell Count: 500
       Reference Frame: <Fixed Frame>
       Value: true
-    - Alpha: 1
+    - Alpha: 0.30000001192092896
       Class: rviz/RobotModel
       Collision Enabled: false
       Enabled: true
@@ -328,6 +329,14 @@ Visualization Manager:
         "": true
       Queue Size: 100
       Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /ocs2_anymal/desiredVelTrajectory
+      Name: MarkerArray
+      Namespaces:
+        "": true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 255; 255; 255
@@ -356,7 +365,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 5.9822258949279785
+      Distance: 6.231380462646484
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -364,17 +373,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.013724718242883682
-        Y: -0.19946888089179993
-        Z: 0.7302030920982361
+        X: -3.4570980072021484
+        Y: -2.565197467803955
+        Z: 0.17402203381061554
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.26039841771125793
+      Pitch: 0.2903982102870941
       Target Frame: <Fixed Frame>
-      Yaw: 5.863569736480713
+      Yaw: 5.028565883636475
     Saved: ~
 Window Geometry:
   Displays:

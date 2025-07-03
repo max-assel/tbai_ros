@@ -91,7 +91,7 @@ joint_lower_limits
   swing_trajectory_settings
   {
     liftOffVelocity               0.2
-    touchDownVelocity            -0.05
+    touchDownVelocity            -0.4
     swingHeight                   0.08
     touchdownAfterHorizon         0.2
     errorGain                     0.0

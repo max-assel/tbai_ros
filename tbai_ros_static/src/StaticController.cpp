@@ -38,7 +38,7 @@ RosStaticController::RosStaticController(std::shared_ptr<tbai::StateSubscriber> 
 
     // Setup pinocchio model
     setupPinocchioModel();
-    footFrameNames_ = {"LF_FOOT", "LH_FOOT", "RF_FOOT", "RH_FOOT"};
+    footFrameNames_ = {"LF_FOOT", "RF_FOOT", "LH_FOOT", "RH_FOOT"};
 
     // Some dummy value
     timeSinceLastVisualizationUpdate_ = 1000.0;

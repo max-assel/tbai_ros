@@ -168,7 +168,7 @@ ContactVisualizer::ContactVisualizer() {
     contactPublisher_ = nh.advertise<visualization_msgs::MarkerArray>("/contact_points", 1);
 
     odomFrame_ = tbai::fromGlobalConfig<std::string>("odom_frame");
-    footFrameNames_ = {"LF_FOOT", "LH_FOOT", "RF_FOOT", "RH_FOOT"};
+    footFrameNames_ = {"LF_FOOT", "RF_FOOT", "LH_FOOT", "RH_FOOT"};
 
     // Setup Pinocchio model
     std::string urdfString;
