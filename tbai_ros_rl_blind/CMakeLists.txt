@@ -29,3 +29,10 @@ add_executable(simple
 target_link_libraries(simple
     ${catkin_LIBRARIES} yaml-cpp
 )
+
+add_executable(simple_deploy_go2
+    src/simple_deploy_go2.cpp
+)
+target_link_libraries(simple_deploy_go2
+    ${catkin_LIBRARIES} yaml-cpp
+)
