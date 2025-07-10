@@ -25,5 +25,5 @@ find_package(catkin REQUIRED)
 file(MAKE_DIRECTORY ${CATKIN_DEVEL_PREFIX}/include)
 catkin_package(
   INCLUDE_DIRS ${CATKIN_DEVEL_PREFIX}/include
-  LIBRARIES tbai_core tbai_bob tbai_static tbai_estim torch torch_cpu c10 spdlog fmt tbai_deploy_go2 unitree_sdk2
+  LIBRARIES tbai_core tbai_bob tbai_np3o tbai_static tbai_estim torch torch_cpu c10 spdlog fmt tbai_deploy_go2 unitree_sdk2
 )
