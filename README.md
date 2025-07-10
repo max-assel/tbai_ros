@@ -8,7 +8,7 @@
  ┣ 📂tbai_ros_mpc                  # NMPC controller (both perceptive and blind versions) [1]
  ┣ 📂tbai_ros_bob                  # RL walking controller, based on the wild-Anymal paper (both perceptive and blind versions) [2]
  ┣ 📂tbai_ros_dtc                  # DTC controller (perceptive) [3]
- ┣ 📂tbai_ros_joe                  # Perceptive NMPC controller with NN-based tracking controller [1],[3]
+ ┣ 📂tbai_ros_joe                  # Perceptive NMPC controller with NN-based tracking controller [1], [3]
 
  [1] Perceptive Locomotion through Nonlinear Model Predictive Control
      https://arxiv.org/abs/2208.08373
@@ -36,7 +36,7 @@ https://github.com/lnotspotl/tbai/assets/82883398/1bf86da1-a3d4-44db-88c4-877ec7
 
 
 
-## Perceptive RL
+## Perceptive Bob
 
 
 
@@ -45,7 +45,7 @@ https://github.com/lnotspotl/tbai/assets/82883398/7f6bdefa-4299-454b-a0ef-55e463
 
 
 
-## Blind RL
+## Blind Bob
 
 
 https://github.com/lnotspotl/tbai/assets/82883398/ebc2d90d-5c03-4207-a868-2e9436c140d4
@@ -100,7 +100,7 @@ git clone git@github.com:lnotspotl/tbai.git --recursive
 cd .. && rosdep install --from-paths src --ignore-src -r -y && cd src/tbai
 
 # Build tbai
-catkin config -DCMAKE_BUILD_TYPE=Release
+catkin config -DCMAKE_BUILD_TYPE=Release # -DTBAI_DEVELOP_PATH=/path/to/tbai2 
 bash ./tbai.bash --build  # This will only build the necessary packages
 
 # Source tbai
@@ -124,6 +124,10 @@ Here are a couple that most inspiration was drawn from and that were instrumenta
 - https://x-io.co.uk/open-source-imu-and-ahrs-algorithms/
 - https://github.com/mayataka/robotoc
 - https://github.com/mayataka/legged_state_estimator
+- https://github.com/RossHartley/invariant-ekf
+- https://github.com/dfki-ric-underactuated-lab/dfki-quad
+- https://github.com/iit-DLSLab/muse
+- https://github.com/zeonsunlightyu/LocomotionWithNP3O
 - hundreds of others ...
 
 Thank you all 🤗
