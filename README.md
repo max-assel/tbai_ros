@@ -5,10 +5,8 @@
 ```
 📦tbai
  ┣ 📂tbai_ros_static               # Static (high gain PD) controller
- ┣ 📂tbai_ros_mpc_perceptive       # Perceptive NMPC controller [1]
- ┣ 📂tbai_ros_mpc_blind            # Blind NMPC controller [1]
- ┣ 📂tbai_ros_rl_perceptive        # Perceptive RL controller [2]
- ┣ 📂tbai_ros_rl_blind             # Blind RL controller [2]
+ ┣ 📂tbai_ros_mpc                  # NMPC controller (both perceptive and blind versions) [1]
+ ┣ 📂tbai_ros_bob                  # RL walking controller, based on the wild-Anymal paper (both perceptive and blind versions) [2]
  ┣ 📂tbai_ros_dtc                  # DTC controller (perceptive) [3]
  ┣ 📂tbai_ros_joe                  # Perceptive NMPC controller with NN-based tracking controller [1],[3]
 
@@ -76,7 +74,7 @@ https://github.com/lnotspotl/tbai/assets/82883398/e3455dd3-10e8-41da-bb02-87fbdf
 ![mpc_03](https://github.com/lnotspotl/tbai/assets/82883398/daabb2c2-8ced-4ffd-956e-35279b78563b)
 
 
-## Rl (Bob)
+## Bob
 
 ![bob_03](https://github.com/lnotspotl/tbai/assets/82883398/3ea71f1c-b58c-4028-93d3-971592aa364d)
 
