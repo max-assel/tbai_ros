@@ -27,6 +27,34 @@ np3o:
   kd: 1.0
   use_action_filter: true
 
+bob_controller:
+  blind: true
+  kp: 30.0
+  kd: 0.5
+
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "go2_blind.pt"
+  
+  action_scale: 0.25
+  lin_vel_scale: 2.0
+
+  default_stance: [
+    [ 0.025,  0.096, -0.263],
+    [-0.025,  0.096, -0.263],
+    [ 0.025, -0.096, -0.263],
+    [-0.025, -0.096, -0.263],
+  ]
+
+  ik:
+    d2: 0.0955
+    a3: 0.213
+    a4: 0.213
+
+  cpg:
+    period: 0.6
+    time_offsets: [0.0, 0.3, 0.3, 0.0]  # LF, LH, RF, RH
+    swing_height: 0.1
+
 reference_generator:
   type: "twist"
 

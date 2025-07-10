@@ -147,6 +147,9 @@ class UIController:
         self.wbc_button = ttk.Button(row1_frame, text="WBC", command=lambda: self.publish_controller_change("WBC"))
         self.wbc_button.pack(side=tk.LEFT, padx=5)
 
+        self.np3o_button = ttk.Button(row1_frame, text="NP3O", command=lambda: self.publish_controller_change("NP3O"))
+        self.np3o_button.pack(side=tk.LEFT, padx=5)
+
         # Second row for additional buttons
         row2_frame = ttk.Frame(button_grid)
         row2_frame.pack(pady=(5, 0))
