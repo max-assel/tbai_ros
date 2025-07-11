@@ -128,7 +128,7 @@ Here are a couple that most inspiration was drawn from and that were instrumenta
 - https://github.com/dfki-ric-underactuated-lab/dfki-quad
 - https://github.com/iit-DLSLab/muse
 - https://github.com/zeonsunlightyu/LocomotionWithNP3O
-- https://www.michaelsebek.cz/
+- http://www.michaelsebek.cz/cs
 - hundreds of others ...
 
 Thank you all 🤗
