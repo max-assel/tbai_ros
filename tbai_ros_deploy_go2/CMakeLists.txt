@@ -28,7 +28,7 @@ target_link_libraries(deploy_go2_static
 )
 target_include_directories(deploy_go2_static
     PRIVATE
-    "${catkin_INCLUDE_DIRS}"
+    "${catkin_INCLUDE_DIRS}" include
 )
 
 add_executable(deploy_go2_np3o
@@ -39,7 +39,7 @@ target_link_libraries(deploy_go2_np3o
 )
 target_include_directories(deploy_go2_np3o 
     PRIVATE
-    "${catkin_INCLUDE_DIRS}"
+    "${catkin_INCLUDE_DIRS}" include
 )
 
 
@@ -51,7 +51,7 @@ target_link_libraries(deploy_go2_bob_blind
 )
 target_include_directories(deploy_go2_bob_blind
     PRIVATE
-    "${catkin_INCLUDE_DIRS}"
+    "${catkin_INCLUDE_DIRS}" include
 )
 
 add_executable(deploy_go2_mpc_blind
@@ -62,5 +62,5 @@ target_link_libraries(deploy_go2_mpc_blind
 )
 target_include_directories(deploy_go2_mpc_blind
     PRIVATE
-    "${catkin_INCLUDE_DIRS}"
+    "${catkin_INCLUDE_DIRS}" include
 )

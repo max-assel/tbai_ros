@@ -13,6 +13,7 @@
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
 #include <tbai_ros_static/StaticController.hpp>
 #include <tbai_deploy_go2/Go2RobotInterface.hpp>
+#include <tbai_ros_deploy_go2/Go2Joystick.hpp>
 
 int main(int argc, char *argv[]) {
     ros::init(argc, argv, "tbai_ros_bob_blind");
@@ -45,9 +46,13 @@ int main(int argc, char *argv[]) {
         throw std::runtime_error("Failed to get param /robot_description");
     }
 
+    auto joystick = tbai::reference::getGo2JoystickShared(nh);
+    joystick->Start();
+    std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> joystick_ptr = joystick;
+
     // Add Bob controller
     controller.addController(std::make_unique<tbai::rl::RosBobController>(
-        urdfString, stateSubscriber, tbai::reference::getReferenceVelocityGeneratorShared(nh)));
+        urdfString, stateSubscriber, joystick_ptr));
 
     // Start controller loop
     controller.start();
