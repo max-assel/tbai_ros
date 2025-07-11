@@ -18,7 +18,7 @@ class HqpSolver {
     HqpSolver() = default;
 
     /** Solve given Hierarchical Quadratic Program */
-    vector_t solveHqp(std::vector<Task *> &tasks);  // NOLINT
+    vector_t solveHqp(std::vector<Task *> &tasks, bool &isStable);  // NOLINT
 
    private:
     /** Number of slack variables for inequality constraints */
@@ -84,7 +84,7 @@ class HqpSolver {
     void generate_f_vector();
 
     /** Solve current QP */
-    void solveQp();
+    void solveQp(bool &isStable);
 
     /** Update accumulation variables and Zp nullspace matrix */
     void updateSolver();

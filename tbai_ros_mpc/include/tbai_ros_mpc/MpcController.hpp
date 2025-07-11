@@ -52,7 +52,8 @@ class ContactVisualizer {
 
 class MpcController final : public tbai::Controller {
    public:
-    MpcController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr);
+    MpcController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+                  std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGeneratorPtr);
 
     std::vector<MotorCommand> getMotorCommands(scalar_t currentTime, scalar_t dt) override;
 
@@ -113,6 +114,8 @@ class MpcController final : public tbai::Controller {
     scalar_t mpcRate_ = 30.0;
     scalar_t timeSinceLastMpcUpdate_ = 1e5;
     scalar_t timeSinceLastVisualizationUpdate_ = 1e5;
+
+    bool isStable_ = true;
 
     State state_;
 

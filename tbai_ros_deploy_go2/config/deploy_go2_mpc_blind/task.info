@@ -26,72 +26,72 @@ model_settings
 
 joint_lower_limits
   {
-     (0,0)  -10.70       ; LF_HAA
-     (1,0)  -1e30       ; LF_HFE
-     (2,0)  -12.70       ; LF_KFE
-     (3,0)  -1e30       ; RF_HAA
-     (4,0)  -1e30       ; RF_HFE
-     (5,0)  -12.70       ; RF_KFE
-     (6,0)  -10.70       ; LH_HAA
-     (7,0)  -1e30       ; LH_HFE
-     (8,0)   -10.00       ; LH_KFE
-     (9,0)  -1e30       ; RH_HAA
-     (10,0) -1e30       ; RH_HFE
-     (11,0)  -10.00       ; RH_KFE
+     (0,0)  -0.4       ; LF_HAA
+     (1,0)   -2       ; LF_HFE
+     (2,0)  -3       ; LF_KFE
+     (3,0)  -0.4       ; RF_HAA
+     (4,0)  -2       ; RF_HFE
+     (5,0)  -3       ; RF_KFE
+     (6,0)  -0.4       ; LH_HAA
+     (7,0)  -2       ; LH_HFE
+     (8,0)   -3       ; LH_KFE
+     (9,0)  -0.4       ; RH_HAA
+     (10,0) -2       ; RH_HFE
+     (11,0)  -3.0       ; RH_KFE
   }
 
   joint_upper_limits
   {
-     (0,0)   1e30       ; LF_HAA
-     (1,0)   1e30       ; LF_HFE
-     (2,0)  10.00       ; LF_KFE
-     (3,0)   10.70       ; RF_HAA
-     (4,0)   1e30       ; RF_HFE
-     (5,0)  10.00       ; RF_KFE
-     (6,0)   1e30       ; LH_HAA
-     (7,0)   1e30       ; LH_HFE
-     (8,0)   12.70       ; LH_KFE
-     (9,0)   10.70       ; RH_HAA
-     (10,0)  1e30       ; RH_HFE
-     (11,0)  12.70       ; RH_KFE
+     (0,0)   0.4       ; LF_HAA
+     (1,0)   2       ; LF_HFE
+     (2,0)   3       ; LF_KFE
+     (3,0)   0.4       ; RF_HAA
+     (4,0)   2.0      ; RF_HFE
+     (5,0)   3.0       ; RF_KFE
+     (6,0)   0.4      ; LH_HAA
+     (7,0)   2.0      ; LH_HFE
+     (8,0)   3.0       ; LH_KFE
+     (9,0)   0.4       ; RH_HAA
+     (10,0)  2.0      ; RH_HFE
+     (11,0)  3.0       ; RH_KFE
   }
 
   joint_velocity_limits
   {
-     (0,0)    7.0       ; LF_HAA
-     (1,0)    7.0       ; LF_HFE
-     (2,0)    7.0       ; LF_KFE
-     (3,0)    7.0       ; RF_HAA
-     (4,0)    7.0       ; RF_HFE
-     (5,0)    7.0       ; RF_KFE
-     (6,0)    7.0       ; LH_HAA
-     (7,0)    7.0       ; LH_HFE
-     (8,0)    7.0       ; LH_KFE
-     (9,0)    7.0       ; RH_HAA
-     (10,0)   7.0       ; RH_HFE
-     (11,0)   7.0       ; RH_KFE
+     (0,0)    7.1       ; LF_HAA
+     (1,0)    7.1       ; LF_HFE
+     (2,0)    7.1       ; LF_KFE
+     (3,0)    7.1       ; RF_HAA
+     (4,0)    7.1       ; RF_HFE
+     (5,0)    7.1       ; RF_KFE
+     (6,0)    7.1       ; LH_HAA
+     (7,0)    7.1       ; LH_HFE
+     (8,0)    7.1       ; LH_KFE
+     (9,0)    7.1       ; RH_HAA
+     (10,0)   7.1       ; RH_HFE
+     (11,0)   7.1       ; RH_KFE
   }
 
   joint_torque_limits
   {
-     (0,0)   150.0       ; LF_HAA
-     (1,0)   150.0       ; LF_HFE
-     (2,0)   150.0       ; LF_KFE
-     (3,0)   150.0       ; RF_HAA
-     (4,0)   150.0       ; RF_HFE
-     (5,0)   150.0       ; RF_KFE
-     (6,0)   150.0       ; LH_HAA
-     (7,0)   150.0       ; LH_HFE
-     (8,0)   150.0       ; LH_KFE
-     (9,0)   150.0       ; RH_HAA
-     (10,0)  150.0       ; RH_HFE
-     (11,0)  150.0       ; RH_KFE
+     (0,0)   20.0       ; LF_HAA
+     (1,0)   20.0       ; LF_HFE
+     (2,0)   20.0       ; LF_KFE
+     (3,0)   20.0       ; RF_HAA
+     (4,0)   20.0       ; RF_HFE
+     (5,0)   20.0       ; RF_KFE
+     (6,0)   20.0       ; LH_HAA
+     (7,0)   20.0       ; LH_HFE
+     (8,0)   20.0       ; LH_KFE
+     (9,0)   20.0       ; RH_HAA
+     (10,0)  20.0       ; RH_HFE
+     (11,0)  20.0       ; RH_KFE
   }
 
   swing_trajectory_settings
   {
-    liftOffVelocity               0.2
-    touchDownVelocity            -0.4
+    liftOffVelocity               0.02
+    touchDownVelocity            -0.02
     swingHeight                   0.08
     touchdownAfterHorizon         0.2
     errorGain                     0.0
@@ -193,7 +193,7 @@ mpc
 
   debugPrint                      false
 
-  mpcDesiredFrequency             30  ; [Hz]
+  mpcDesiredFrequency             60  ; [Hz]
   mrtDesiredFrequency             400 ; [Hz]
 }
 

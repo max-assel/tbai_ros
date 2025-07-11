@@ -30,24 +30,31 @@ class Go2Joystick : public ::tbai::reference::ReferenceVelocityGenerator, public
         changeControllerPublisher_.publish(msg);
     }
 
-    virtual void onPressB() {
+    virtual void onPressB() override {
         TBAI_LOG_WARN(logger_, "B pressed: Changing controller to BOB");
         std_msgs::String msg;
         msg.data = "BOB";
         changeControllerPublisher_.publish(msg);
     }
 
-    virtual void onPressX() {
+    virtual void onPressX() override {
         TBAI_LOG_WARN(logger_, "X pressed: Changing controller to STAND");
         std_msgs::String msg;
         msg.data = "STAND";
         changeControllerPublisher_.publish(msg);
     }
 
-    virtual void onPressY() {
+    virtual void onPressY() override {
         TBAI_LOG_WARN(logger_, "Y pressed: Changing controller to NP3O");
         std_msgs::String msg;
         msg.data = "NP3O";
+        changeControllerPublisher_.publish(msg);
+    }
+
+    virtual void onPressR1() override {
+        TBAI_LOG_WARN(logger_, "R1 pressed: Changing controller to WBC");
+        std_msgs::String msg;
+        msg.data = "WBC";
         changeControllerPublisher_.publish(msg);
     }
 

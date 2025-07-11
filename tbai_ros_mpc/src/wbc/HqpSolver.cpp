@@ -3,7 +3,7 @@
 #include <qpOASES.hpp>
 
 namespace switched_model {
-vector_t HqpSolver::solveHqp(std::vector<Task *> &tasks) {
+vector_t HqpSolver::solveHqp(std::vector<Task *> &tasks, bool &isStable) {
     firstTask_ = true;
 
     const size_t lastTaskIndex = tasks.size() - 1;
@@ -21,7 +21,11 @@ vector_t HqpSolver::solveHqp(std::vector<Task *> &tasks) {
         generate_f_vector();
 
         // Solve QP using the with the generated inputs above
-        solveQp();
+        solveQp(isStable);
+
+        if (!isStable) {
+            return vector_t::Zero(nDecisionVariables_);
+        }
 
         // Update optimal solution
         updateXstar();
@@ -188,7 +192,7 @@ void HqpSolver::generate_f_vector() {
     this->hfpp1 = hfpp1;
 }
 
-void HqpSolver::solveQp() {
+void HqpSolver::solveQp(bool &isStable) {
     const size_t nQpDecisionVariables = nDecisionVariables_ + nSlackVariables_;
     const size_t nQpConstraints = hfpp1.size();
 
@@ -205,13 +209,28 @@ void HqpSolver::solveQp() {
     int nWSR = 50;
 
     // Initialize QP problem
-    qpProblem.init(Hpp1.data(), cpp1.data(), hDpp1.data(), nullptr, nullptr, nullptr, hfpp1.data(), nWSR);
+    qpOASES::returnValue qp_status = qpProblem.init(Hpp1.data(), cpp1.data(), hDpp1.data(), nullptr, nullptr, nullptr, hfpp1.data(), nWSR);
+
+    if (qp_status != qpOASES::SUCCESSFUL_RETURN) {
+        isStable = false;
+        solution = vector_t::Zero(nQpDecisionVariables);
+        return;
+    }
 
     // Allocate memory for solution
     solution = vector_t(nQpDecisionVariables);
 
     // Solve QP and store the solution in 'solution'
-    qpProblem.getPrimalSolution(solution.data());
+    qpOASES::returnValue sol_status = qpProblem.getPrimalSolution(solution.data());
+
+    if (sol_status != qpOASES::SUCCESSFUL_RETURN) {
+        isStable = false;
+        solution = vector_t::Zero(nQpDecisionVariables);
+        return;
+    }
+
+    // Check stability (errors) and write to isStable
+    isStable = (qp_status == qpOASES::SUCCESSFUL_RETURN) && (sol_status == qpOASES::SUCCESSFUL_RETURN);
 }
 
 void HqpSolver::updateSolver() {

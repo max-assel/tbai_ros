@@ -14,7 +14,7 @@ std::vector<tbai::MotorCommand> SqpWbc::getMotorCommands(scalar_t currentTime, c
                                                          const vector_t &currentInput, const size_t currentMode,
                                                          const vector_t &desiredState, const vector_t &desiredInput,
                                                          const size_t desiredMode,
-                                                         const vector_t &desiredJointAcceleration) {
+                                                         const vector_t &desiredJointAcceleration, bool &isStable) {
     // Update state information
     updateContactFlags(currentMode, desiredMode);
     updateMeasuredState(currentState, currentInput.tail<12>());
@@ -32,7 +32,7 @@ std::vector<tbai::MotorCommand> SqpWbc::getMotorCommands(scalar_t currentTime, c
         createSwingFootAccelerationTask(currentState, currentInput, desiredState, desiredInput) * weightSwingLeg_;
 
     // solve QP
-    vector_t sqpSolution = sqpSolver_.solveSqp(weightedTasks, constraints);
+    vector_t sqpSolution = sqpSolver_.solveSqp(weightedTasks, constraints, isStable);
 
     // Generalized accelerations
     const vector_t &udot = sqpSolution.segment(0, nGeneralizedCoordinates_);

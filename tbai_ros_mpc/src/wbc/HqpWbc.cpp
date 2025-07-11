@@ -14,7 +14,7 @@ std::vector<tbai::MotorCommand> HqpWbc::getMotorCommands(scalar_t currentTime, c
                                                          const vector_t &currentInput, const size_t currentMode,
                                                          const vector_t &desiredState, const vector_t &desiredInput,
                                                          const size_t desiredMode,
-                                                         const vector_t &desiredJointAcceleration) {
+                                                         const vector_t &desiredJointAcceleration, bool &isStable) {
     // Update state information
     updateContactFlags(currentMode, desiredMode);
     updateMeasuredState(currentState, currentInput.tail<12>());
@@ -28,7 +28,7 @@ std::vector<tbai::MotorCommand> HqpWbc::getMotorCommands(scalar_t currentTime, c
         Task task2 = createBaseAccelerationTask(currentState, desiredState, desiredInput, desiredJointAcceleration);
         Task task3 = createContactForceMinimizationTask(desiredInput);
         std::vector<Task *> tasks = {&task1, &task2, &task3};
-        hqpSolution = hqpSolver_.solveHqp(tasks);
+        hqpSolution = hqpSolver_.solveHqp(tasks, isStable);
     } else {
         Task task1 =
             createDynamicsTask() + createStanceFootNoMotionTask() + createContactForceTask() + createTorqueLimitTask();
@@ -36,7 +36,7 @@ std::vector<tbai::MotorCommand> HqpWbc::getMotorCommands(scalar_t currentTime, c
         Task task3 = createBaseAccelerationTask(currentState, desiredState, desiredInput, desiredJointAcceleration);
         Task task4 = createContactForceMinimizationTask(desiredInput);
         std::vector<Task *> tasks = {&task1, &task2, &task3, &task4};
-        hqpSolution = hqpSolver_.solveHqp(tasks);
+        hqpSolution = hqpSolver_.solveHqp(tasks, isStable);
     }
 
     // Generalized accelerations

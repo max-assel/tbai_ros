@@ -4,7 +4,7 @@
 
 namespace switched_model {
 
-vector_t SqpSolver::solveSqp(const Task &weightedTasks, const Task &constraints) {
+vector_t SqpSolver::solveSqp(const Task &weightedTasks, const Task &constraints, bool &isStable) {
     // Number of decision variables
     const size_t nDecisionVariables = weightedTasks.A.cols();
 
@@ -29,11 +29,25 @@ vector_t SqpSolver::solveSqp(const Task &weightedTasks, const Task &constraints)
     options.printLevel = qpOASES::PL_LOW;
     qp_problem.setOptions(options);
     int nWsr = 20;
-    qp_problem.init(H.data(), g.data(), A.data(), nullptr, nullptr, lbA.data(), ubA.data(), nWsr);
+    qpOASES::returnValue qp_status = qp_problem.init(H.data(), g.data(), A.data(), nullptr, nullptr, lbA.data(), ubA.data(), nWsr);
+
+    // Check if QP initialization was successful
+    if (qp_status != qpOASES::SUCCESSFUL_RETURN) {
+        isStable = false;
+        return vector_t::Zero(nDecisionVariables);
+    }
 
     // Solve QP problem
     vector_t solution(nDecisionVariables);
-    qp_problem.getPrimalSolution(solution.data());
+    qpOASES::returnValue sol_status = qp_problem.getPrimalSolution(solution.data());
+
+    // Check if solution was successful
+    if (sol_status != qpOASES::SUCCESSFUL_RETURN) {
+        isStable = false;
+        return vector_t::Zero(nDecisionVariables);
+    }
+
+    isStable = true;
     return solution;
 }
 

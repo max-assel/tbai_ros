@@ -26,7 +26,7 @@ class HqpWbc : public WbcBase {
                                                      const vector_t &currentInput, const size_t currentMode,
                                                      const vector_t &desiredState, const vector_t &desiredInput,
                                                      const size_t desiredMode,
-                                                     const vector_t &desiredJointAcceleration) override;
+                                                     const vector_t &desiredJointAcceleration, bool &isStable) override;
 
    private:
     void loadSettings(const std::string &configFile);

@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     controller.addController(std::make_unique<tbai::static_::RosStaticController>(stateSubscriber));
     controller.addController(
         std::make_unique<tbai::rl::RosBobController>(urdfString, stateSubscriber, referenceVelocityGenerator));
-    controller.addController(std::make_unique<tbai::mpc::MpcController>(stateSubscriber));
+    controller.addController(std::make_unique<tbai::mpc::MpcController>(stateSubscriber, referenceVelocityGenerator));
 
     // Start controller loop
     controller.start();

@@ -9,8 +9,8 @@ sqpWbc
   frictionCoefficient     0.5
 
   ; Swing leg kp and kd (in cartesian space - ee tracking)
-  swingKp                 550.0
-  swingKd                 50.0
+  swingKp                 200.0
+  swingKd                 20.0
 
   ; Base position kp and kd 
   baseKp                  1.0
@@ -21,15 +21,15 @@ sqpWbc
   eulerKd                 0.1
 
   ; Joint swing leg kp and kd
-  jointSwingKp            50.0
-  jointSwingKd            5.0
+  jointSwingKp            2.0
+  jointSwingKd            0.1
 
   ; Joint stance leg kp and kd
-  jointStanceKp            50.0
-  jointStanceKd            5.2
+  jointStanceKp            0.1
+  jointStanceKd            0.2
 
   ; Joint torque limit
-  torqueLimit              27.0
+  torqueLimit             15
 }
 
 hqpWbc
@@ -58,7 +58,7 @@ hqpWbc
   jointStanceKd            5.2
 
   ; Joint torque limit
-  torqueLimit              27.0
+  torqueLimit              15.0
 }
 StaticController 
 {

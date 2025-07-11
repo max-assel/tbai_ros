@@ -5,30 +5,28 @@
 
 #include "tbai_ros_mpc/MpcController.hpp"
 
-#include <tbai_core/Rotations.hpp>
-#include <tbai_core/config/Config.hpp>
-
-#include <pinocchio/multibody/model.hpp>
-#include <pinocchio/multibody/data.hpp>
-#include <pinocchio/algorithm/kinematics.hpp>
-#include <pinocchio/algorithm/frames.hpp>
-#include <pinocchio/parsers/urdf.hpp>
-
 #include <string>
 #include <vector>
 
 #include "tbai_ros_mpc/wbc/Factory.hpp"
 #include <ocs2_switched_model_interface/core/MotionPhaseDefinition.h>
+#include <pinocchio/algorithm/frames.hpp>
+#include <pinocchio/algorithm/kinematics.hpp>
+#include <pinocchio/multibody/data.hpp>
+#include <pinocchio/multibody/model.hpp>
+#include <pinocchio/parsers/urdf.hpp>
+#include <tbai_core/Rotations.hpp>
 #include <tbai_core/Throws.hpp>
 #include <tbai_core/Utils.hpp>
-
+#include <tbai_core/config/Config.hpp>
 #include <visualization_msgs/Marker.h>
 #include <visualization_msgs/MarkerArray.h>
 
 namespace tbai {
 namespace mpc {
 
-MpcController::MpcController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr)
+MpcController::MpcController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
+                             std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGeneratorPtr)
     : stateSubscriberPtr_(stateSubscriberPtr), mrt_("anymal"), stopReferenceThread_(false) {
     initTime_ = tbai::readInitTime();
 
@@ -75,7 +73,8 @@ MpcController::MpcController(const std::shared_ptr<tbai::StateSubscriber> &state
                                            quadrupedInterfacePtr_->getJointNames());
 
     referenceThreadNodeHandle_.setCallbackQueue(&referenceThreadCallbackQueue_);
-    referenceTrajectoryGeneratorPtr_ = reference::getReferenceTrajectoryGeneratorUnique(referenceThreadNodeHandle_);
+    referenceTrajectoryGeneratorPtr_ =
+        reference::getReferenceTrajectoryGeneratorUnique(referenceThreadNodeHandle_, velocityGeneratorPtr);
 
     mrt_.launchNodes(nh);
     tNow_ = 0.0;
@@ -107,7 +106,7 @@ std::vector<MotorCommand> MpcController::getMotorCommands(scalar_t currentTime, 
     ocs2::vector_t joint_accelerations = (dummyInput.tail<12>() - desiredInput.tail<12>()) / time_eps;
 
     auto commands = wbcPtr_->getMotorCommands(tNow_, observation.state, observation.input, observation.mode,
-                                              desiredState, desiredInput, desiredMode, joint_accelerations);
+                                              desiredState, desiredInput, desiredMode, joint_accelerations, isStable_);
 
     timeSinceLastMpcUpdate_ += dt;
     timeSinceLastVisualizationUpdate_ += dt;
@@ -139,6 +138,11 @@ void MpcController::referenceThread() {
 }
 
 bool MpcController::checkStability() const {
+    if (!isStable_) {
+        TBAI_LOG_ERROR(logger_, "Mpc is unstable");
+        return false;
+    }
+
     scalar_t roll = state_.x[0];
     if (roll >= 1.57 || roll <= -1.57) {
         return false;

@@ -3,15 +3,15 @@
     <!-- Required arguments -->
     <arg name="controllers_ns"      default="anymal_d"/>
     <arg name="controllers_args"    default="joint_controller"/>
-    <arg name="tbai_config_path"    default="$(find tbai_ros_deploy_go2)/config/go2/blind/default_config_go2.yaml"/>
+    <arg name="tbai_config_path"    default="$(find tbai_ros_deploy_go2)/config/deploy_go2_mpc_blind/default_config_go2.yaml"/>
     <arg name="description_name"    default="robot_description"/>
     <arg name="description_file"    default="$(find ocs2_robotic_assets)/resources/go2/urdf/go2_description.urdf"/>
 
-    <arg name="sqp_settings_file" default="$(find tbai_ros_deploy_go2)/config/deploy_go2_mpc_blind/blind/sqp.info"/>
-    <arg name="frame_declaration_file" default="$(find tbai_ros_deploy_go2)/config/deploy_go2_mpc_blind/blind/frame_declarations.info"/>
-    <arg name="task_settings_file" default="$(find tbai_ros_deploy_go2)/config/deploy_go2_mpc_blind/blind/task.info"/>
-    <arg name="target_command_config_file" default="$(find tbai_ros_deploy_go2)/config/deploy_go2_mpc_blind/blind/targetCommand.info"/>
-    <arg name="controller_config_file" default="$(find tbai_ros_deploy_go2)/config/deploy_go2_mpc_blind/blind/controllers.info"/>
+    <arg name="sqp_settings_file" default="$(find tbai_ros_deploy_go2)/config/deploy_go2_mpc_blind/sqp.info"/>
+    <arg name="frame_declaration_file" default="$(find tbai_ros_deploy_go2)/config/deploy_go2_mpc_blind/frame_declarations.info"/>
+    <arg name="task_settings_file" default="$(find tbai_ros_deploy_go2)/config/deploy_go2_mpc_blind/task.info"/>
+    <arg name="target_command_config_file" default="$(find tbai_ros_deploy_go2)/config/deploy_go2_mpc_blind/targetCommand.info"/>
+    <arg name="controller_config_file" default="$(find tbai_ros_deploy_go2)/config/deploy_go2_mpc_blind/controllers.info"/>
 
     <!-- Gazebo parameters -->
     <arg name="gui" default="false"/>
@@ -42,7 +42,7 @@
     <param name="controller_config_file" type="string" value="$(arg controller_config_file)"/>
 
     <!-- Launch simple node -->
-    <node name="simple_go2_deploy_blind" pkg="tbai_ros_deploy_go2" type="simple_go2_deploy_blind" output="screen"/>
+    <node name="deploy_go2_mpc_blind" pkg="tbai_ros_deploy_go2" type="deploy_go2_mpc_blind" output="screen"/>
 
     <!-- Launch MPC node -->
     <node pkg="tbai_ros_mpc" type="anymal_mpc_node" name="anymal_mpc_node" output="screen"/>

@@ -49,7 +49,8 @@ class LocalTerrainEstimator {
 
 class ReferenceTrajectoryGenerator {
    public:
-    ReferenceTrajectoryGenerator(const std::string &targetCommandFile, ros::NodeHandle &nh);
+    ReferenceTrajectoryGenerator(const std::string &targetCommandFile, ros::NodeHandle &nh,
+                                 std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGeneratorPtr);
     void publishReferenceTrajectory();
     void reset() { firstObservationReceived_ = false; }
 
@@ -64,7 +65,7 @@ class ReferenceTrajectoryGenerator {
 
     void loadSettings(const std::string &targetCommandFile);
 
-    std::unique_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGeneratorPtr_;
+    std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGeneratorPtr_;
 
     LocalTerrainEstimator localTerrainEstimator_;
     ros::Publisher terrainPublisher_;
@@ -92,9 +93,9 @@ class ReferenceTrajectoryGenerator {
     bool blind_;
 };
 
-std::unique_ptr<ReferenceTrajectoryGenerator> getReferenceTrajectoryGeneratorUnique(ros::NodeHandle &nh);
+std::unique_ptr<ReferenceTrajectoryGenerator> getReferenceTrajectoryGeneratorUnique(ros::NodeHandle &nh, std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGeneratorPtr);
 
-std::shared_ptr<ReferenceTrajectoryGenerator> getReferenceTrajectoryGeneratorShared(ros::NodeHandle &nh);
+std::shared_ptr<ReferenceTrajectoryGenerator> getReferenceTrajectoryGeneratorShared(ros::NodeHandle &nh, std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGeneratorPtr);
 
 }  // namespace reference
 }  // namespace mpc
