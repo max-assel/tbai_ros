@@ -10,6 +10,7 @@
 #include <tbai_ros_core/Publishers.hpp>
 #include <tbai_ros_core/Rate.hpp>
 #include <tbai_ros_core/Subscribers.hpp>
+#include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
 #include <tbai_ros_static/StaticController.hpp>
 
 int main(int argc, char *argv[]) {
@@ -22,9 +23,10 @@ int main(int argc, char *argv[]) {
     auto stateTopic = tbai::fromGlobalConfig<std::string>("state_topic");
     auto commandTopic = tbai::fromGlobalConfig<std::string>("command_topic");
     auto changeControllerTopic = tbai::fromGlobalConfig<std::string>("change_controller_topic");
+    const std::string urdfString = nh.param<std::string>("robot_description", "");
 
     std::shared_ptr<tbai::StateSubscriber> stateSubscriber =
-        std::shared_ptr<tbai::StateSubscriber>(new tbai::RosStateSubscriber(nh, stateTopic));
+        std::shared_ptr<tbai::StateSubscriber>(new tbai::InekfRosStateSubscriber(nh, stateTopic, urdfString));
 
     std::shared_ptr<tbai::CommandPublisher> commandPublisher =
         std::shared_ptr<tbai::CommandPublisher>(new tbai::RosCommandPublisher(nh, commandTopic));
@@ -34,8 +36,6 @@ int main(int argc, char *argv[]) {
             new tbai::RosChangeControllerSubscriber(nh, changeControllerTopic));
 
     tbai::CentralController<ros::Rate, tbai::RosTime> controller(commandPublisher, changeControllerSubscriber);
-
-    const std::string urdfString = nh.param<std::string>("robot_description", "");
 
     // Add static controller
     controller.addController(std::make_unique<tbai::static_::RosStaticController>(stateSubscriber));

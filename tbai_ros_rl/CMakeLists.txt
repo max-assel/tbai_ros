@@ -47,3 +47,24 @@ target_link_libraries(${PROJECT_NAME}
     ${pinocchio_LIBRARIES}
     spdlog
 )
+
+add_executable(simple_blind
+    src/simple_blind.cpp
+)
+target_link_libraries(simple_blind
+    ${catkin_LIBRARIES} yaml-cpp ${PROJECT_NAME}
+)
+
+add_executable(simple_perceptive
+    src/simple_perceptive.cpp
+)
+target_link_libraries(simple_perceptive
+    ${catkin_LIBRARIES} yaml-cpp ${PROJECT_NAME}
+)
+
+add_executable(simple_blind_deploy_go2
+    src/simple_blind_deploy_go2.cpp
+)
+target_link_libraries(simple_blind_deploy_go2
+    ${catkin_LIBRARIES} yaml-cpp ${PROJECT_NAME}
+)
