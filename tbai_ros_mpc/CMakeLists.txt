@@ -82,10 +82,3 @@ add_executable(simple_perceptive
 target_link_libraries(simple_perceptive
     ${catkin_LIBRARIES} yaml-cpp ${PROJECT_NAME}
 )
-
-add_executable(simple_go2_deploy_blind
-    src/simple_go2_deploy_blind.cpp
-)
-target_link_libraries(simple_go2_deploy_blind
-    ${catkin_LIBRARIES} yaml-cpp ${PROJECT_NAME}
-)
