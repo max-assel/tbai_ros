@@ -11,7 +11,7 @@
   <buildtool_depend>catkin</buildtool_depend>
   <depend>roscpp</depend>
   <depend>tbai_ros_mpc</depend>
-  <depend>tbai_ros_rl</depend>
+  <depend>tbai_ros_bob</depend>
   <depend>tbai_ros_core</depend>
   <depend>tbai_ros_msgs</depend>
   <depend>tbai_ros_static</depend>

@@ -6,7 +6,7 @@
 // clang-format on
 
 #include "tbai_ros_mpc/MpcController.hpp"
-#include "tbai_ros_rl/BobController.hpp"
+#include "tbai_ros_bob/BobController.hpp"
 #include "tbai_ros_static/StaticController.hpp"
 #include <ros/ros.h>
 #include <tbai_core/Logging.hpp>

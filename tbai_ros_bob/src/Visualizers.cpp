@@ -1,4 +1,4 @@
-#include "tbai_ros_rl/Visualizers.hpp"
+#include "tbai_ros_bob/Visualizers.hpp"
 
 #include <geometry_msgs/TransformStamped.h>
 #include <kdl_parser/kdl_parser.hpp>

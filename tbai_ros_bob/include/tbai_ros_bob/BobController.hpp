@@ -17,7 +17,7 @@
 #include <tbai_ros_core/Subscribers.hpp>
 #include <tbai_ros_gridmap/GridmapInterface.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
-#include <tbai_ros_rl/Visualizers.hpp>
+#include <tbai_ros_bob/Visualizers.hpp>
 #include <torch/script.h>
 
 namespace tbai {

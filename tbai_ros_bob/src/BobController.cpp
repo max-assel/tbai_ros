@@ -1,4 +1,4 @@
-#include "tbai_ros_rl/BobController.hpp"
+#include "tbai_ros_bob/BobController.hpp"
 
 namespace tbai {
 namespace rl {

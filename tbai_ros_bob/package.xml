@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>tbai_ros_rl</name>
+  <name>tbai_ros_bob</name>
   <version>0.0.0</version>
-  <description>The tbai_ros_rl package</description>
+  <description>The tbai_ros_bob package</description>
 
   <maintainer email="lnotspotl@gmail.com">lnotspotl</maintainer>
 

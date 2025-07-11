@@ -18,7 +18,7 @@
 
 
 int main(int argc, char *argv[]) {
-    ros::init(argc, argv, "tbai_ros_rl_blind");
+    ros::init(argc, argv, "tbai_ros_bob_blind");
     ros::NodeHandle nh;
 
     // Set zero time

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(tbai_ros_rl)
+project(tbai_ros_bob)
 
 ## C++17 is a requirement
 add_compile_options(-std=c++17)
