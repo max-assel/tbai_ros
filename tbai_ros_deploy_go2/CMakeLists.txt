@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(tbai_ros_go2_deploy)
+project(tbai_ros_deploy_go2)
 
 ## C++17 is a requirement
 add_compile_options(-std=c++17)
