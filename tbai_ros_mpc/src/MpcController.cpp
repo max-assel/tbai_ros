@@ -32,6 +32,8 @@ MpcController::MpcController(const std::shared_ptr<tbai::StateSubscriber> &state
     : stateSubscriberPtr_(stateSubscriberPtr), mrt_("anymal"), stopReferenceThread_(false) {
     initTime_ = tbai::readInitTime();
 
+    logger_ = tbai::getLogger("mpc_controller");
+
     const std::string robotName = "anymal";
     ros::NodeHandle nh;
 
@@ -130,7 +132,7 @@ void MpcController::referenceThread() {
     ros::Rate rate(5.0);
     while (ros::ok() && !stopReferenceThread_) {
         spinOnceReferenceThread();
-        ROS_INFO_STREAM_THROTTLE(5.0, "[MpcController] Publishing reference");
+        TBAI_LOG_INFO_THROTTLE(logger_, 5.0, "Publishing reference");
         referenceTrajectoryGeneratorPtr_->publishReferenceTrajectory();
         rate.sleep();
     }
@@ -195,7 +197,7 @@ void MpcController::resetMpc() {
     mrt_.resetMpcNode(initTargetTrajectories);
 
     while (!mrt_.initialPolicyReceived() && ros::ok()) {
-        ROS_INFO("Waiting for initial policy...");
+        TBAI_LOG_INFO(logger_, "Waiting for initial policy...");
         ros::spinOnce();
         mrt_.spinMRT();
         initialObservation = generateSystemObservation();
@@ -203,7 +205,7 @@ void MpcController::resetMpc() {
         ros::Duration(0.1).sleep();
     }
 
-    ROS_INFO("Initial policy received.");
+    TBAI_LOG_INFO(logger_, "Initial policy received.");
 }
 
 void MpcController::setObservation() {

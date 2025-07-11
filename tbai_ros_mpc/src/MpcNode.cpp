@@ -7,6 +7,8 @@
 #include <tbai_core/Throws.hpp>
 #include <tbai_core/config/Config.hpp>
 
+#include <tbai_core/Logging.hpp>
+
 int main(int argc, char *argv[]) {
     // Initialize ros node
     ros::init(argc, argv, "mpc_node");
@@ -45,7 +47,7 @@ int main(int argc, char *argv[]) {
     const auto mpcSettings = ocs2::mpc::loadSettings(taskSettingsFile);
 
     if (quadrupedInterface->modelSettings().algorithm_ == switched_model::Algorithm::SQP) {
-        ROS_INFO_STREAM("[MpcNode] Using SQP MPC");
+        TBAI_GLOBAL_LOG_INFO("Using SQP MPC");
         std::string sqpSettingsFile;
         TBAI_THROW_UNLESS(nodeHandle.getParam("/sqp_settings_file", sqpSettingsFile),
                           "Failed to get parameter /sqp_settings_file");
@@ -55,7 +57,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (quadrupedInterface->modelSettings().algorithm_ == switched_model::Algorithm::DDP) {
-        ROS_INFO_STREAM("[MpcNode] Using DDP MPC");
+        TBAI_GLOBAL_LOG_INFO("Using DDP MPC");
         const auto ddpSettings = ocs2::ddp::loadSettings(taskSettingsFile);
         auto mpcPtr = switched_model::getDdpMpc(*quadrupedInterface, mpcSettings, ddpSettings);
         switched_model::quadrupedMpcNode(nodeHandle, *quadrupedInterface, std::move(mpcPtr));

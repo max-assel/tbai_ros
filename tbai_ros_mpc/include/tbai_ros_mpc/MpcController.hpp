@@ -25,6 +25,8 @@
 #include <pinocchio/algorithm/frames.hpp>
 #include <pinocchio/parsers/urdf.hpp>
 
+#include <tbai_core/Logging.hpp>
+
 namespace tbai {
 
 namespace mpc {
@@ -113,6 +115,8 @@ class MpcController final : public tbai::Controller {
     scalar_t timeSinceLastVisualizationUpdate_ = 1e5;
 
     State state_;
+
+    std::shared_ptr<spdlog::logger> logger_;
 };
 
 }  // namespace mpc
