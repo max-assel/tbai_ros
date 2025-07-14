@@ -100,7 +100,7 @@ DtcController::DtcController(const std::shared_ptr<tbai::StateSubscriber> &state
                                                               quadrupedInterface.getBaseName(), nh));
 
     TBAI_LOG_INFO(logger_, "Initialization done");
-    TBAI_LOG_INFO(logger_, "Default joint angles: {}", defaultJointAngles_.transpose());
+    TBAI_LOG_INFO(logger_, "Default joint angles: {}", (std::stringstream() << defaultJointAngles_.transpose()).str());
 }
 
 void DtcController::publishReference(const TargetTrajectories &targetTrajectories) {

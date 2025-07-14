@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
 
     // Initialize Go2RobotInterface
     std::shared_ptr<tbai::Go2RobotInterface> go2RobotInterface = std::shared_ptr<tbai::Go2RobotInterface>(
-        new tbai::Go2RobotInterface(tbai::Go2RobotInterfaceArgs().networkInterface("enp3s0")));
+        new tbai::Go2RobotInterface(tbai::Go2RobotInterfaceArgs().networkInterface("eth0")));
 
     std::shared_ptr<tbai::StateSubscriber> stateSubscriber = go2RobotInterface;
     std::shared_ptr<tbai::CommandPublisher> commandPublisher = go2RobotInterface;

@@ -29,8 +29,6 @@ catkin_package(
   DEPENDS
 )
 
-find_package(spdlog REQUIRED)
-
 ## Build
 include_directories(
     include
@@ -45,7 +43,6 @@ add_library(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
     ${pinocchio_LIBRARIES}
-    spdlog
 )
 
 add_executable(simple
