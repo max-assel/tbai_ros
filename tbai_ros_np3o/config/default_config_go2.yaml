@@ -27,6 +27,9 @@ np3o:
   kd: 1.0
   use_action_filter: true
 
+  hf_repo: "kubjonai/tbai-models"
+  hf_model: "np3o_model3_put_feet_higher.pt" #  np3o_model_1_original.pt, np3o_model_2_higher_action_rate_cost.pt, np3o_model3_put_feet_higher.pt
+
 bob_controller:
   blind: true
   kp: 30.0
