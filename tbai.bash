@@ -22,14 +22,20 @@ function format() {
 }
 
 function build() {
-    folders=$(ls -d */| grep -v dependencies)
     ros_packages=""
-    # in each folder check whether package.xml and CMakeLists.txt exist
-    for folder in $folders; do
-        if [[ -f $folder/CMakeLists.txt ]] && [[ -f $folder/package.xml ]]; then
-            package=$(basename $folder)
-            ros_packages+=" $package"
-        fi
+    # Look for ROS packages in the root and tbai_ros_deploy_go2 folders
+    search_dirs=(./ tbai_ros_deploy_go2/)
+    for search_dir in "${search_dirs[@]}"; do
+        # Only look for immediate subdirectories
+        for folder in "$search_dir"*/; do
+            # Remove trailing slash for consistency
+            folder=${folder%/}
+            # Check if both CMakeLists.txt and package.xml exist in the folder
+            if [[ -f "$folder/CMakeLists.txt" ]] && [[ -f "$folder/package.xml" ]]; then
+                package=$(basename "$folder")
+                ros_packages+=" $package"
+            fi
+        done
     done
     echo "[TBAI] Building ROS packages: $ros_packages"
     catkin build $ros_packages

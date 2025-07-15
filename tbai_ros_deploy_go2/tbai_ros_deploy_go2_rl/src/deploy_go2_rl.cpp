@@ -1,7 +1,13 @@
+// clang-format off
+#include <tbai_ros_bob/BobController.hpp>
+#include <tbai_ros_np3o/Np3oController.hpp>
+// clang-format on
+
 #include <iostream>
 #include <memory>
 
 #include <ros/ros.h>
+#include <tbai_core/Env.hpp>
 #include <tbai_core/Logging.hpp>
 #include <tbai_core/Utils.hpp>
 #include <tbai_core/config/Config.hpp>
@@ -10,8 +16,7 @@
 #include <tbai_ros_core/Publishers.hpp>
 #include <tbai_ros_core/Rate.hpp>
 #include <tbai_ros_core/Subscribers.hpp>
-#include <tbai_ros_deploy_go2/Go2Joystick.hpp>
-#include <tbai_ros_np3o/Np3oController.hpp>
+#include <tbai_ros_deploy_go2_rl/Go2Joystick.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
 #include <tbai_ros_static/StaticController.hpp>
 
@@ -24,7 +29,8 @@ int main(int argc, char *argv[]) {
 
     // Initialize Go2RobotInterface
     std::shared_ptr<tbai::Go2RobotInterface> go2RobotInterface = std::shared_ptr<tbai::Go2RobotInterface>(
-        new tbai::Go2RobotInterface(tbai::Go2RobotInterfaceArgs().networkInterface("eth0")));
+        new tbai::Go2RobotInterface(tbai::Go2RobotInterfaceArgs().networkInterface(
+            tbai::getEnvAs<std::string>("TBAI_GO2_NETWORK_INTERFACE", true, "eth0"))));
 
     std::shared_ptr<tbai::StateSubscriber> stateSubscriber = go2RobotInterface;
     std::shared_ptr<tbai::CommandPublisher> commandPublisher = go2RobotInterface;
@@ -46,13 +52,29 @@ int main(int argc, char *argv[]) {
         throw std::runtime_error("Failed to get param /robot_description");
     }
 
-    auto joystick = tbai::reference::getGo2JoystickShared(nh);
-    joystick->Start();
-    std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> joystick_ptr = joystick;
+    auto referenceGeneratorType = tbai::fromGlobalConfig<std::string>("reference_generator/type");
+
+    std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> referenceVelocityPtr;
+    if (referenceGeneratorType == "go2_joystick") {
+        auto joystick = tbai::reference::getGo2JoystickShared(nh);
+        joystick->Start();
+        referenceVelocityPtr = joystick;
+    } else if (referenceGeneratorType == "joystick") {
+        referenceVelocityPtr = tbai::reference::getReferenceVelocityGeneratorUnique(nh);
+    } else if (referenceGeneratorType == "twist") {
+        referenceVelocityPtr = tbai::reference::getReferenceVelocityGeneratorUnique(nh);
+    } else {
+        TBAI_THROW("Invalid reference generator type: {}. Supported types are: go2_joystick, joystick, twist",
+                   referenceGeneratorType);
+    }
 
     // Add NP3O controller
     controller.addController(
-        std::make_unique<tbai::np3o::RosNp3oController>(urdfString, stateSubscriber, joystick_ptr));
+        std::make_unique<tbai::np3o::RosNp3oController>(urdfString, stateSubscriber, referenceVelocityPtr));
+
+    // Add Bob controller
+    controller.addController(
+        std::make_unique<tbai::rl::RosBobController>(urdfString, stateSubscriber, referenceVelocityPtr));
 
     // Start controller loop
     controller.start();

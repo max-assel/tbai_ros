@@ -16,12 +16,12 @@
 </node>
 
 <node pkg="elevation_mapping" type="elevation_mapping" name="elevation_mapping" output="screen">
-<rosparam command="load" file="$(find tbai_ros_deploy_go2)/config/elevation_mapping.yaml"/>
+<rosparam command="load" file="$(find tbai_ros_deploy_go2_rl)/config/elevation_mapping.yaml"/>
 </node>
 
-<node pkg="tbai_ros_deploy_go2" type="dummy_mapping.py" name="dummy_mapping" output="screen"/>
+<node pkg="tbai_ros_deploy_go2_rl" type="dummy_mapping.py" name="dummy_mapping" output="screen"/>
 
-<node pkg="rviz" type="rviz" name="rviz" args="-d $(find tbai_ros_deploy_go2)/config/vis.rviz" output="screen"/>
+<node pkg="rviz" type="rviz" name="rviz" args="-d $(find tbai_ros_deploy_go2_rl)/config/vis.rviz" output="screen"/>
 
 
 </launch>

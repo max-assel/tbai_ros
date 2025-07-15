@@ -13,7 +13,6 @@ find_package(catkin REQUIRED COMPONENTS
   realtime_tools
   tbai_ros_msgs
   tbai_ros_core
-  ocs2_robotic_tools
   std_msgs
   tbai
 )

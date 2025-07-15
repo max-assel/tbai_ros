@@ -51,13 +51,6 @@ class Go2Joystick : public ::tbai::reference::ReferenceVelocityGenerator, public
         changeControllerPublisher_.publish(msg);
     }
 
-    virtual void onPressR1() override {
-        TBAI_LOG_WARN(logger_, "R1 pressed: Changing controller to WBC");
-        std_msgs::String msg;
-        msg.data = "WBC";
-        changeControllerPublisher_.publish(msg);
-    }
-
    private:
     ros::Publisher changeControllerPublisher_;
     ros::NodeHandle nh_;

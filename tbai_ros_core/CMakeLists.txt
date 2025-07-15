@@ -10,14 +10,13 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   roscpp
   roslib
-  ocs2_robotic_tools
   tbai
 )
 
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES  ${PROJECT_NAME}
-  CATKIN_DEPENDS roscpp roslib tbai_ros_msgs ocs2_robotic_tools
+  CATKIN_DEPENDS roscpp roslib tbai_ros_msgs
 )
 
 ## Build

@@ -15,12 +15,12 @@ RosBobController::RosBobController(const std::string &urdfString,
     }
     timeSinceLastVisualizationUpdate_ = 1000.0;
 
-    publishState_ = tbai::fromGlobalConfig<bool>("bob/publish_state", false);
+    publishState_ = tbai::fromGlobalConfig<bool>("bob_controller/publish_state", false);
     TBAI_LOG_INFO(logger_, "Controller state publishing is {}", publishState_ ? "enabled" : "disabled");
 
     if (publishState_) {
         statePublisher_ = ros::NodeHandle().advertise<tbai_ros_msgs::EstimatedState>(
-            tbai::fromGlobalConfig<std::string>("bob/state_topic", "estimated_state"), 10);
+            tbai::fromGlobalConfig<std::string>("bob_controller/state_topic", "estimated_state"), 10);
     }
 }
 
@@ -30,6 +30,7 @@ void RosBobController::postStep(scalar_t currentTime, scalar_t dt) {
         stateVisualizer_.visualize(state);
         heightsReconstructedVisualizer_.visualize(state, sampled_, hidden_);
         contactVisualizer_.visualize(state_.x, state_.contactFlags);
+        publishEstimatedState();
         timeSinceLastVisualizationUpdate_ = 0.0;
     } else {
         timeSinceLastVisualizationUpdate_ += dt;
