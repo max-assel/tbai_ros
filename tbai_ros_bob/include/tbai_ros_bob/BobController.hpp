@@ -14,10 +14,10 @@
 #include <pinocchio/multibody/data.hpp>
 #include <pinocchio/multibody/model.hpp>
 #include <tbai_bob/BobController.hpp>
+#include <tbai_ros_bob/Visualizers.hpp>
 #include <tbai_ros_core/Subscribers.hpp>
 #include <tbai_ros_gridmap/GridmapInterface.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
-#include <tbai_ros_bob/Visualizers.hpp>
 #include <torch/script.h>
 
 namespace tbai {
@@ -46,6 +46,11 @@ class RosBobController : public tbai::BobController {
     ContactVisualizer contactVisualizer_;
 
     scalar_t timeSinceLastVisualizationUpdate_;
+
+    bool publishState_;
+    ros::Publisher statePublisher_;
+
+    void publishEstimatedState();
 };
 
 }  // namespace rl

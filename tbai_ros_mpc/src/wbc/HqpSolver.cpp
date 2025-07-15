@@ -209,7 +209,8 @@ void HqpSolver::solveQp(bool &isStable) {
     int nWSR = 50;
 
     // Initialize QP problem
-    qpOASES::returnValue qp_status = qpProblem.init(Hpp1.data(), cpp1.data(), hDpp1.data(), nullptr, nullptr, nullptr, hfpp1.data(), nWSR);
+    qpOASES::returnValue qp_status =
+        qpProblem.init(Hpp1.data(), cpp1.data(), hDpp1.data(), nullptr, nullptr, nullptr, hfpp1.data(), nWSR);
 
     if (qp_status != qpOASES::SUCCESSFUL_RETURN) {
         isStable = false;

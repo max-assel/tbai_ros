@@ -4,10 +4,9 @@
 #include <ocs2_quadruped_interface/QuadrupedMpc.h>
 #include <ocs2_quadruped_interface/QuadrupedMpcNode.h>
 #include <ros/init.h>
+#include <tbai_core/Logging.hpp>
 #include <tbai_core/Throws.hpp>
 #include <tbai_core/config/Config.hpp>
-
-#include <tbai_core/Logging.hpp>
 
 int main(int argc, char *argv[]) {
     // Initialize ros node

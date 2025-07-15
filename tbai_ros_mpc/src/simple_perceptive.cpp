@@ -53,7 +53,8 @@ int main(int argc, char *argv[]) {
     controller.addController(std::make_unique<tbai::static_::RosStaticController>(stateSubscriber));
 
     // Add MPC controller
-    controller.addController(std::make_unique<tbai::mpc::MpcController>(stateSubscriber, tbai::reference::getReferenceVelocityGeneratorShared(nh)));
+    controller.addController(std::make_unique<tbai::mpc::MpcController>(
+        stateSubscriber, tbai::reference::getReferenceVelocityGeneratorShared(nh)));
 
     // Start controller loop
     controller.start();

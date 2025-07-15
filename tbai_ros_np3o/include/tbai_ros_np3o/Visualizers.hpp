@@ -4,21 +4,18 @@
 #include <pinocchio/fwd.hpp>
 // clang-format on
 
-
-
 #include <memory>
 #include <string>
 #include <vector>
 
-#include <tbai_core/Rotations.hpp>
-#include <pinocchio/multibody/model.hpp>
-#include <pinocchio/multibody/data.hpp>
-#include <pinocchio/algorithm/kinematics.hpp>
 #include <pinocchio/algorithm/frames.hpp>
+#include <pinocchio/algorithm/kinematics.hpp>
+#include <pinocchio/multibody/data.hpp>
+#include <pinocchio/multibody/model.hpp>
 #include <pinocchio/parsers/urdf.hpp>
-
 #include <robot_state_publisher/robot_state_publisher.h>
 #include <ros/ros.h>
+#include <tbai_core/Rotations.hpp>
 #include <tbai_np3o/State.hpp>
 #include <tf/transform_broadcaster.h>
 #include <torch/script.h>

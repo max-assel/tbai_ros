@@ -1,19 +1,19 @@
 #include <iostream>
 #include <memory>
 
-#include <tbai_ros_np3o/Np3oController.hpp>
 #include <ros/ros.h>
 #include <tbai_core/Logging.hpp>
 #include <tbai_core/Utils.hpp>
 #include <tbai_core/config/Config.hpp>
 #include <tbai_core/control/CentralController.hpp>
+#include <tbai_deploy_go2/Go2RobotInterface.hpp>
 #include <tbai_ros_core/Publishers.hpp>
 #include <tbai_ros_core/Rate.hpp>
 #include <tbai_ros_core/Subscribers.hpp>
+#include <tbai_ros_deploy_go2/Go2Joystick.hpp>
+#include <tbai_ros_np3o/Np3oController.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
 #include <tbai_ros_static/StaticController.hpp>
-#include <tbai_deploy_go2/Go2RobotInterface.hpp>
-#include <tbai_ros_deploy_go2/Go2Joystick.hpp>
 
 int main(int argc, char *argv[]) {
     ros::init(argc, argv, "tbai_ros_np3o");
@@ -51,8 +51,8 @@ int main(int argc, char *argv[]) {
     std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> joystick_ptr = joystick;
 
     // Add NP3O controller
-    controller.addController(std::make_unique<tbai::np3o::RosNp3oController>(
-        urdfString, stateSubscriber, joystick_ptr));
+    controller.addController(
+        std::make_unique<tbai::np3o::RosNp3oController>(urdfString, stateSubscriber, joystick_ptr));
 
     // Start controller loop
     controller.start();

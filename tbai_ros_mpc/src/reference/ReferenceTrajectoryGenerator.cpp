@@ -269,15 +269,18 @@ void ReferenceTrajectoryGenerator::terrainCallback(const grid_map_msgs::GridMap 
     }
 }
 
-std::unique_ptr<ReferenceTrajectoryGenerator> getReferenceTrajectoryGeneratorUnique(ros::NodeHandle &nh, std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGeneratorPtr) {
+std::unique_ptr<ReferenceTrajectoryGenerator> getReferenceTrajectoryGeneratorUnique(
+    ros::NodeHandle &nh, std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGeneratorPtr) {
     std::string configPath;
     TBAI_THROW_UNLESS(nh.getParam("target_command_config_file", configPath),
                       "Failed to get config file path from parameter server.");
     return std::make_unique<ReferenceTrajectoryGenerator>(configPath, nh, velocityGeneratorPtr);
 }
 
-std::shared_ptr<ReferenceTrajectoryGenerator> getReferenceTrajectoryGeneratorShared(ros::NodeHandle &nh, std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGeneratorPtr) {
-    return std::shared_ptr<ReferenceTrajectoryGenerator>(getReferenceTrajectoryGeneratorUnique(nh, velocityGeneratorPtr).release());
+std::shared_ptr<ReferenceTrajectoryGenerator> getReferenceTrajectoryGeneratorShared(
+    ros::NodeHandle &nh, std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGeneratorPtr) {
+    return std::shared_ptr<ReferenceTrajectoryGenerator>(
+        getReferenceTrajectoryGeneratorUnique(nh, velocityGeneratorPtr).release());
 }
 
 }  // namespace reference

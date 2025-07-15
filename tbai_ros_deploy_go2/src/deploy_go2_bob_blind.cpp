@@ -7,13 +7,13 @@
 #include <tbai_core/Utils.hpp>
 #include <tbai_core/config/Config.hpp>
 #include <tbai_core/control/CentralController.hpp>
+#include <tbai_deploy_go2/Go2RobotInterface.hpp>
 #include <tbai_ros_core/Publishers.hpp>
 #include <tbai_ros_core/Rate.hpp>
 #include <tbai_ros_core/Subscribers.hpp>
+#include <tbai_ros_deploy_go2/Go2Joystick.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
 #include <tbai_ros_static/StaticController.hpp>
-#include <tbai_deploy_go2/Go2RobotInterface.hpp>
-#include <tbai_ros_deploy_go2/Go2Joystick.hpp>
 
 int main(int argc, char *argv[]) {
     ros::init(argc, argv, "tbai_ros_bob_blind");
@@ -51,8 +51,7 @@ int main(int argc, char *argv[]) {
     std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> joystick_ptr = joystick;
 
     // Add Bob controller
-    controller.addController(std::make_unique<tbai::rl::RosBobController>(
-        urdfString, stateSubscriber, joystick_ptr));
+    controller.addController(std::make_unique<tbai::rl::RosBobController>(urdfString, stateSubscriber, joystick_ptr));
 
     // Start controller loop
     controller.start();

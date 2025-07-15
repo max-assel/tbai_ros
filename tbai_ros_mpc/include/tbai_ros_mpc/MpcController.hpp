@@ -9,8 +9,14 @@
 #include <ocs2_mpc/SystemObservation.h>
 #include <ocs2_quadruped_interface/QuadrupedVisualizer.h>
 #include <ocs2_ros_interfaces/mrt/MRT_ROS_Interface.h>
+#include <pinocchio/algorithm/frames.hpp>
+#include <pinocchio/algorithm/kinematics.hpp>
+#include <pinocchio/multibody/data.hpp>
+#include <pinocchio/multibody/model.hpp>
+#include <pinocchio/parsers/urdf.hpp>
 #include <ros/callback_queue.h>
 #include <ros/ros.h>
+#include <tbai_core/Logging.hpp>
 #include <tbai_core/Types.hpp>
 #include <tbai_core/Utils.hpp>
 #include <tbai_core/control/Controllers.hpp>
@@ -18,14 +24,6 @@
 #include <tbai_ros_mpc/reference/ReferenceTrajectoryGenerator.hpp>
 #include <tbai_ros_mpc/wbc/WbcBase.hpp>
 #include <tbai_ros_msgs/JointCommandArray.h>
-
-#include <pinocchio/multibody/model.hpp>
-#include <pinocchio/multibody/data.hpp>
-#include <pinocchio/algorithm/kinematics.hpp>
-#include <pinocchio/algorithm/frames.hpp>
-#include <pinocchio/parsers/urdf.hpp>
-
-#include <tbai_core/Logging.hpp>
 
 namespace tbai {
 

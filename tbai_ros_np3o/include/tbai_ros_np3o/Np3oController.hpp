@@ -16,8 +16,8 @@
 #include <tbai_np3o/Np3oController.hpp>
 #include <tbai_ros_core/Subscribers.hpp>
 #include <tbai_ros_gridmap/GridmapInterface.hpp>
-#include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
 #include <tbai_ros_np3o/Visualizers.hpp>
+#include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
 #include <torch/script.h>
 
 namespace tbai {
@@ -30,7 +30,7 @@ using torch::jit::script::Module;
 class RosNp3oController : public tbai::Np3oController {
    public:
     RosNp3oController(const std::string &urdfString, const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
-                     const std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> &refVelGenPtr);
+                      const std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> &refVelGenPtr);
 
     void postStep(scalar_t currentTime, scalar_t dt) override;
     void changeController(const std::string &controllerType, scalar_t currentTime) override;
@@ -41,6 +41,10 @@ class RosNp3oController : public tbai::Np3oController {
    private:
     StateVisualizer stateVisualizer_;
     ContactVisualizer contactVisualizer_;
+    ros::Publisher statePublisher_;
+    bool publishState_;
+
+    void publishEstimatedState();
 
     scalar_t timeSinceLastVisualizationUpdate_;
 };

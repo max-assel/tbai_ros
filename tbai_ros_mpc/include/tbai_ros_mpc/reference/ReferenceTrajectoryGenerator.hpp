@@ -93,9 +93,11 @@ class ReferenceTrajectoryGenerator {
     bool blind_;
 };
 
-std::unique_ptr<ReferenceTrajectoryGenerator> getReferenceTrajectoryGeneratorUnique(ros::NodeHandle &nh, std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGeneratorPtr);
+std::unique_ptr<ReferenceTrajectoryGenerator> getReferenceTrajectoryGeneratorUnique(
+    ros::NodeHandle &nh, std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGeneratorPtr);
 
-std::shared_ptr<ReferenceTrajectoryGenerator> getReferenceTrajectoryGeneratorShared(ros::NodeHandle &nh, std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGeneratorPtr);
+std::shared_ptr<ReferenceTrajectoryGenerator> getReferenceTrajectoryGeneratorShared(
+    ros::NodeHandle &nh, std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGeneratorPtr);
 
 }  // namespace reference
 }  // namespace mpc

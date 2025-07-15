@@ -29,7 +29,8 @@ vector_t SqpSolver::solveSqp(const Task &weightedTasks, const Task &constraints,
     options.printLevel = qpOASES::PL_LOW;
     qp_problem.setOptions(options);
     int nWsr = 20;
-    qpOASES::returnValue qp_status = qp_problem.init(H.data(), g.data(), A.data(), nullptr, nullptr, lbA.data(), ubA.data(), nWsr);
+    qpOASES::returnValue qp_status =
+        qp_problem.init(H.data(), g.data(), A.data(), nullptr, nullptr, lbA.data(), ubA.data(), nWsr);
 
     // Check if QP initialization was successful
     if (qp_status != qpOASES::SUCCESSFUL_RETURN) {

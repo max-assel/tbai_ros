@@ -25,8 +25,8 @@ class SqpWbc : public WbcBase {
     std::vector<tbai::MotorCommand> getMotorCommands(scalar_t currentTime, const vector_t &currentState,
                                                      const vector_t &currentInput, const size_t currentMode,
                                                      const vector_t &desiredState, const vector_t &desiredInput,
-                                                     const size_t desiredMode,
-                                                     const vector_t &desiredJointAcceleration, bool &isStable) override;
+                                                     const size_t desiredMode, const vector_t &desiredJointAcceleration,
+                                                     bool &isStable) override;
 
    private:
     void loadSettings(const std::string &configFile);
