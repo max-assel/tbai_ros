@@ -115,6 +115,9 @@ class InekfRosStateSubscriber : public tbai::ThreadedStateSubscriber {
     std::atomic_bool isRunning_ = false;
     std::atomic_bool isInitialized_ = false;
 
+    bool rectifyOrientation_ = true;
+    bool removeGyroscopeBias_ = true;
+
     ros::CallbackQueue thisQueue_;
     std::unique_ptr<tbai::inekf::InEKFEstimator> estimator_;
 

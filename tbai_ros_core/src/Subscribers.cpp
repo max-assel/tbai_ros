@@ -1,7 +1,10 @@
 #include "tbai_ros_core/Subscribers.hpp"
 
+#include <mutex>
+
 #include <tbai_core/Rotations.hpp>
 #include <tbai_core/Throws.hpp>
+#include <tbai_core/config/Config.hpp>
 
 namespace tbai {
 
@@ -193,17 +196,20 @@ void MuseRosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::RobotStat
 InekfRosStateSubscriber::InekfRosStateSubscriber(ros::NodeHandle &nhtemp, const std::string &stateTopic,
                                                  const std::string &urdf) {
     logger_ = tbai::getLogger("inekf_ros_state_subscriber");
+    TBAI_LOG_INFO(logger_, "Initializing InekfRosStateSubscriber");
 
     ros::NodeHandle nh;
     nh.setCallbackQueue(&thisQueue_);
-
-    TBAI_LOG_INFO(logger_, "Initializing InekfRosStateSubscriber");
     stateSubscriber_ = nh.subscribe(stateTopic, 1, &InekfRosStateSubscriber::stateMessageCallback, this);
 
-    TBAI_LOG_INFO(logger_, "Initialized InekfRosStateSubscriber");
-
     std::vector<std::string> footNames = {"LF_FOOT", "RF_FOOT", "LH_FOOT", "RH_FOOT"};
+    TBAI_LOG_INFO(logger_, "Creating InEKFEstimator, foot frames: {}", footNames);
     estimator_ = std::make_unique<tbai::inekf::InEKFEstimator>(footNames, urdf);
+
+    rectifyOrientation_ = tbai::fromGlobalConfig<bool>("inekf_estimator/rectify_orientation", true);
+    removeGyroscopeBias_ = tbai::fromGlobalConfig<bool>("inekf_estimator/remove_gyroscope_bias", true);
+    TBAI_LOG_INFO(logger_, "Rectify orientation: {}", rectifyOrientation_);
+    TBAI_LOG_INFO(logger_, "Remove gyroscope bias: {}", removeGyroscopeBias_);
 }
 
 /*********************************************************************************************************************/
@@ -298,26 +304,29 @@ void InekfRosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::RobotSta
     baseAngVel[1] = msg->ang_vel[1];
     baseAngVel[2] = msg->ang_vel[2];
 
-    constexpr bool rectifyOrientation = false;
     estimator_->update(currentTime, dt, baseOrientation, jointAngles, jointVelocities, baseAcc, baseAngVel,
-                       contactFlags, rectifyOrientation, enable_);
+                       contactFlags, rectifyOrientation_, enable_);
 
     // Base orientation - Euler zyx as {roll, pitch, yaw}
-    auto orientation_rot = estimator_->getBaseOrientation();
-    const quaternion_t baseQuaternion(orientation_rot);
+    const quaternion_t baseQuaternion =
+        rectifyOrientation_ ? quaternion_t(baseOrientation) : quaternion_t(estimator_->getBaseOrientation());
     const tbai::matrix3_t R_world_base = baseQuaternion.toRotationMatrix();
     const tbai::matrix3_t R_base_world = R_world_base.transpose();
     const tbai::vector_t rpy = tbai::mat2oc2rpy(R_world_base, lastYaw_);
     lastYaw_ = rpy[2];
 
+    // Base orientation - Euler zyx as {roll, pitch, yaw}
     state.x.segment<3>(0) = rpy;
 
     // Base position
     state.x.segment<3>(3) = estimator_->getBasePosition();
 
     // Base angular velocity
-    state.x.segment<3>(6) = baseAngVel;
-    // state.x.segment<3>(6) = baseAngVel - estimator_->getGyroscopeBias();
+    if (removeGyroscopeBias_) {
+        state.x.segment<3>(6) = baseAngVel - estimator_->getGyroscopeBias();
+    } else {
+        state.x.segment<3>(6) = baseAngVel;
+    }
 
     // Base linear velocity
     state.x.segment<3>(9) = R_base_world * estimator_->getBaseVelocity();
