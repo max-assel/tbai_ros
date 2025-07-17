@@ -25,3 +25,6 @@
 [submodule "dependencies/grid_map"]
 	path = dependencies/grid_map
 	url = git@github.com:lnotspotl/grid_map.git
+[submodule "dependencies/pybind11_catkin"]
+	path = dependencies/pybind11_catkin
+	url = git@github.com:wxmerkt/pybind11_catkin.git

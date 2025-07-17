@@ -65,3 +65,14 @@ ros_build_go2 = { cmd = "catkin build tbai_ros_deploy_go2_rl" }
 fresh_build_go2 = { cmd = "echo finished ", depends-on = ["clean", "clone_tbai", "build_tbai", "ros_build_go2"] }
 
 fresh_build_all = { cmd = "echo finished " , depends-on = ["clean", "clone_tbai", "build_tbai", "ros_build_all"] }
+
+[dependencies]
+python = ">=3.11.8,<3.14"
+cuda-version = "12.8.*"
+cupy = ">=13.5.1,<14"
+
+[pypi-dependencies]
+simple-parsing = ">=0.1.7, <0.2"
+ruamel-yaml = ">=0.18.14, <0.19"
+shapely = ">=2.1.1, <3"
+torch = ">=2.7.1, <3"
