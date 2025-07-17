@@ -19,6 +19,8 @@ find_package(catkin REQUIRED COMPONENTS
     tbai
 )
 
+find_package(spdlog REQUIRED)
+
 catkin_package(
   INCLUDE_DIRS 
   LIBRARIES  
@@ -33,5 +35,6 @@ add_executable(simple
     src/simple.cpp
 )
 target_link_libraries(simple
-    ${catkin_LIBRARIES} yaml-cpp
+    PUBLIC
+    ${catkin_LIBRARIES} yaml-cpp spdlog::spdlog
 )

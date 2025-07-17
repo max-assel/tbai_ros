@@ -78,7 +78,9 @@ void RosStaticController::postStep(scalar_t currentTime, scalar_t dt) {
         publishOdomBaseTransforms(state_.x, currentRosTime);
         publishJointAngles(state_.x, currentRosTime);
         visualizeContactPoints(state_.x, state_.contactFlags, currentRosTime);
-        publishEstimatedState();
+        if (publishState_) {
+            publishEstimatedState();
+        }
         timeSinceLastVisualizationUpdate_ = 0.0;
     } else {
         timeSinceLastVisualizationUpdate_ += dt;

@@ -39,6 +39,7 @@ catkin_package(
 )
 
 find_package(pinocchio REQUIRED)
+find_package(spdlog REQUIRED)
 
 ## Build
 include_directories(
@@ -50,7 +51,8 @@ add_library(${PROJECT_NAME}
   src/DtcController.cpp
 )
 target_link_libraries(${PROJECT_NAME}
-    ${catkin_LIBRARIES}
+    PUBLIC
+    ${catkin_LIBRARIES} spdlog::spdlog
     ${pinocchio_LIBRARIES}
 )
 target_compile_options(${PROJECT_NAME} PUBLIC ${OCS2_CXX_FLAGS})

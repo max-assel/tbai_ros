@@ -1,29 +1,12 @@
 cmake_minimum_required(VERSION 3.19.0)
 project(tbai CXX)
 
-include(ExternalProject)
-if(DEFINED TBAI_DEVELOP_PATH)
-  message(STATUS "Using local tbai2 path: ${TBAI_DEVELOP_PATH}")
-  ExternalProject_Add(
-    tbai2
-    SOURCE_DIR ${TBAI_DEVELOP_PATH}
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CATKIN_DEVEL_PREFIX} -DBUILD_SHARED_LIBS=ON
-    UPDATE_COMMAND "echo"
-  )
-else()
-  message(STATUS "Using remote tbai2")
-  ExternalProject_Add(
-    tbai2
-    GIT_REPOSITORY git@github.com:lnotspotl/tbai2.git
-    GIT_TAG main
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CATKIN_DEVEL_PREFIX} -DBUILD_SHARED_LIBS=ON
-    UPDATE_COMMAND ""
-  )
-endif()
 find_package(catkin REQUIRED)
+find_package(tbai REQUIRED)
+find_package(Eigen3 REQUIRED)
 
 file(MAKE_DIRECTORY ${CATKIN_DEVEL_PREFIX}/include)
 catkin_package(
-  INCLUDE_DIRS ${CATKIN_DEVEL_PREFIX}/include
-  LIBRARIES tbai_core tbai_bob tbai_np3o tbai_static tbai_estim torch torch_cpu c10 spdlog fmt tbai_deploy_go2 unitree_sdk2
+  INCLUDE_DIRS ${CATKIN_DEVEL_PREFIX}/include ${EIGEN3_INCLUDE_DIRS}
+  LIBRARIES tbai_core tbai_bob tbai_np3o tbai_static tbai_estim tbai_deploy_go2 unitree_sdk2
 )

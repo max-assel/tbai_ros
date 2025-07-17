@@ -31,6 +31,8 @@ find_package(catkin REQUIRED COMPONENTS
   tbai
 )
 
+find_package(spdlog REQUIRED)
+
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES  ${PROJECT_NAME}
@@ -50,7 +52,8 @@ add_library(${PROJECT_NAME}
   src/JoeController.cpp
 )
 target_link_libraries(${PROJECT_NAME}
-    ${catkin_LIBRARIES}
+    PUBLIC
+    ${catkin_LIBRARIES} spdlog::spdlog
     ${pinocchio_LIBRARIES}
 )
 target_compile_options(${PROJECT_NAME} PUBLIC ${OCS2_CXX_FLAGS})

@@ -31,23 +31,25 @@ include_directories(
   ${pinocchio_INCLUDE_DIRS}
 )
 
+find_package(spdlog REQUIRED)
+
 ## Joint controller plugin
 add_library(JointController src/JointController.cpp)
-target_link_libraries(JointController ${catkin_LIBRARIES}) 
+target_link_libraries(JointController ${catkin_LIBRARIES} yaml-cpp spdlog::spdlog) 
 target_compile_options(JointController PRIVATE ${OCS2_CXX_FLAGS})
 
 ## RBD state plugin
 # Robot state publisher plugin
 add_library(StatePublisher src/StatePublisher.cpp)
-target_link_libraries(StatePublisher ${gazebo_LIBRARIES} ${catkin_LIBRARIES})
+target_link_libraries(StatePublisher ${gazebo_LIBRARIES} ${catkin_LIBRARIES} yaml-cpp spdlog::spdlog)
 target_compile_options(StatePublisher PRIVATE ${OCS2_CXX_FLAGS})
 
 ## Robot state publisher plugin
 add_library(RobotStatePublisher src/RobotStatePublisher.cpp)
-target_link_libraries(RobotStatePublisher ${gazebo_LIBRARIES} ${catkin_LIBRARIES})
+target_link_libraries(RobotStatePublisher ${gazebo_LIBRARIES} ${catkin_LIBRARIES} yaml-cpp spdlog::spdlog)
 target_compile_options(RobotStatePublisher PRIVATE ${OCS2_CXX_FLAGS})
 
 # Robot contact sensor
 add_library(ContactSensor SHARED src/ContactSensor.cpp)
-target_link_libraries(ContactSensor ${catkin_LIBRARIES} ${gazebo_LIBRARIES})
+target_link_libraries(ContactSensor ${catkin_LIBRARIES} ${gazebo_LIBRARIES} yaml-cpp spdlog::spdlog)
 target_compile_options(ContactSensor PRIVATE ${OCS2_CXX_FLAGS})

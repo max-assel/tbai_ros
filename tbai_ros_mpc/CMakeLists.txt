@@ -31,6 +31,8 @@ find_package(catkin REQUIRED COMPONENTS
     tbai
 )
 
+find_package(spdlog REQUIRED)
+
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES tbai_ros_mpc
@@ -56,7 +58,8 @@ add_library(${PROJECT_NAME}
     src/MpcController.cpp
 )
 target_link_libraries(${PROJECT_NAME}
-    ${catkin_LIBRARIES}
+    PUBLIC
+    ${catkin_LIBRARIES} spdlog::spdlog
     ${pinocchio_LIBRARIES}
 )
 target_compile_options(${PROJECT_NAME} PUBLIC ${OCS2_CXX_FLAGS})
@@ -65,7 +68,7 @@ add_executable(anymal_mpc_node
   src/MpcNode.cpp
 )
 target_link_libraries(anymal_mpc_node
-  ${catkin_LIBRARIES}
+  ${catkin_LIBRARIES} yaml-cpp spdlog::spdlog
 )
 target_compile_options(anymal_mpc_node PRIVATE ${OCS2_CXX_FLAGS})
 

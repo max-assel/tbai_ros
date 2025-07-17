@@ -26,7 +26,9 @@ void RosNp3oController::postStep(scalar_t currentTime, scalar_t dt) {
         ::tbai::np3o::State &state = np3oState_;  // post step, it's fine to use the already updated state
         stateVisualizer_.visualize(state);
         contactVisualizer_.visualize(state_.x, state_.contactFlags);
-        publishEstimatedState();
+        if (publishState_) {
+            publishEstimatedState();
+        }
         timeSinceLastVisualizationUpdate_ = 0.0;
     } else {
         timeSinceLastVisualizationUpdate_ += dt;

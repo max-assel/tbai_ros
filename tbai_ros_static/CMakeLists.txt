@@ -15,6 +15,8 @@ find_package(catkin REQUIRED COMPONENTS
   tbai
 )
 
+find_package(spdlog REQUIRED)
+
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES  ${PROJECT_NAME}
@@ -32,7 +34,7 @@ add_library(${PROJECT_NAME}
   src/StaticController.cpp
 )
 target_link_libraries(${PROJECT_NAME}
-    ${catkin_LIBRARIES}
+    ${catkin_LIBRARIES} spdlog::spdlog
 )
 
 add_executable(simple

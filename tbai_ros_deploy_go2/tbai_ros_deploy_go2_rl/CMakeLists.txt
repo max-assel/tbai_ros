@@ -14,6 +14,8 @@ find_package(catkin REQUIRED COMPONENTS
     tbai_ros_reference
 )
 
+find_package(spdlog REQUIRED)
+
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES
@@ -25,7 +27,8 @@ add_executable(deploy_go2_rl
     src/deploy_go2_rl.cpp
 )
 target_link_libraries(deploy_go2_rl
-    ${catkin_LIBRARIES} yaml-cpp
+    PUBLIC
+    ${catkin_LIBRARIES} yaml-cpp spdlog::spdlog
 )
 target_include_directories(deploy_go2_rl 
     PRIVATE

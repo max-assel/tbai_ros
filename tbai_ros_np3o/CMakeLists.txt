@@ -21,6 +21,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 find_package(pinocchio REQUIRED)
+find_package(spdlog REQUIRED)
 
 catkin_package(
   INCLUDE_DIRS include
@@ -41,7 +42,8 @@ add_library(${PROJECT_NAME}
   src/Np3oController.cpp
 )
 target_link_libraries(${PROJECT_NAME}
-    ${catkin_LIBRARIES}
+    PUBLIC
+    ${catkin_LIBRARIES} spdlog::spdlog
     ${pinocchio_LIBRARIES}
 )
 

@@ -27,6 +27,8 @@ bob_controller:
   kp: 30.0
   kd: 0.5
 
+  publish_state: false
+
   hf_repo: "kubjonai/tbai-models"
   hf_model: "go2_blind.pt"
   
