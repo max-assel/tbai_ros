@@ -9,14 +9,7 @@
     <arg name="network_interface"           default="eth0"/>
     <arg name="run_rviz"                    default="false"/>
     <arg name="run_virtual_joystick"        default="false"/>
-
-    <!-- Gazebo parameters -->
-    <arg name="gui" default="false"/>
-    <arg name="paused" default="false"/>
-    <arg name="world" default="normal"/>    
-    <arg name="x" default="0.0"/>
-    <arg name="y" default="0.0"/>
-    <arg name="z" default="3.0"/>
+    <arg name="publish_pointcloud"          default="false"/>
 
     <!-- Upload config path to ROS param server -->
     <param name="tbai_config_path" type="string" value="$(arg tbai_config_path)"/>
@@ -46,5 +39,22 @@
         <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen" />
     </group>
 
+
+    <group if="$(arg publish_pointcloud)">
+        <!-- Include the RealSense camera launch file with parameters -->
+        <include file="$(find realsense2_camera)/launch/rs_camera.launch">
+            <arg name="depth_width" value="640"/>
+            <arg name="depth_height" value="480"/>
+            <arg name="depth_fps" value="6"/>
+            <arg name="color_width" value="640"/>
+            <arg name="color_height" value="480"/>
+            <arg name="color_fps" value="6"/>
+            <arg name="filters" value="pointcloud"/>
+            <arg name="initial_reset" value="true"/>
+        </include>
+
+    </group>
+
+    <node pkg="tf" type="static_transform_publisher" name="map2camera" args="0 0 0.00 0 0.55 0  /front_camera /camera_link 100"/>
 
 </launch>
