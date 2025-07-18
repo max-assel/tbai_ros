@@ -13,7 +13,7 @@
     <arg name="world" default="normal"/>
     <arg name="x" default="0.0"/>
     <arg name="y" default="0.0"/>
-    <arg name="z" default="3.0"/>
+    <arg name="z" default="0.5"/>
 
      <!-- Upload config path to ROS param server -->
     <param name="tbai_config_path" type="string" value="$(arg tbai_config_path)"/>

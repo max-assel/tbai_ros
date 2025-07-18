@@ -53,3 +53,14 @@ target_compile_options(RobotStatePublisher PRIVATE ${OCS2_CXX_FLAGS})
 add_library(ContactSensor SHARED src/ContactSensor.cpp)
 target_link_libraries(ContactSensor ${catkin_LIBRARIES} ${gazebo_LIBRARIES} yaml-cpp spdlog::spdlog)
 target_compile_options(ContactSensor PRIVATE ${OCS2_CXX_FLAGS})
+
+install(
+  TARGETS
+      JointController
+      StatePublisher
+      RobotStatePublisher
+      ContactSensor
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)

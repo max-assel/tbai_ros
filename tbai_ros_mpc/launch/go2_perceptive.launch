@@ -19,7 +19,7 @@
     <arg name="world" default="normal"/>
     <arg name="x" default="0.0"/>
     <arg name="y" default="0.0"/>
-    <arg name="z" default="3.0"/>
+    <arg name="z" default="0.5"/>
 
     <!-- Set environment variable for config path -->
     <env name="TBAI_GLOBAL_CONFIG_PATH" value="$(arg tbai_config_path)"/>

@@ -37,11 +37,11 @@
 
 <!-- State publisher - enabled or disabled based on the config file -->
 <gazebo>
-  <plugin filename="/home/user/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libStatePublisher.so" name="StatePublisher"/>
+  <plugin filename="libStatePublisher.so" name="StatePublisher"/>
 </gazebo>
 
 <gazebo>
-  <plugin filename="/home/user/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libRobotStatePublisher.so" name="StatePublisher"/>
+  <plugin filename="libRobotStatePublisher.so" name="RobotStatePublisher"/>
 </gazebo>
 
  <joint name="face_front_to_depth_camera_front_camera" type="fixed">
@@ -169,7 +169,7 @@
           <stddev>0.05</stddev>
         </noise>
     </camera>
-    <plugin name="camera_controller" filename="/home/user/.micromamba/envs/ros1/lib/libgazebo_ros_openni_kinect.so">
+    <plugin name="camera_controller" filename="libgazebo_ros_openni_kinect.so">
     <baseline>0.2</baseline>
     <alwaysOn>true</alwaysOn>
     <updateRate>0.0</updateRate>
@@ -200,7 +200,7 @@
 <!-- Add contact sensors -->
 <gazebo reference="LF_FOOT">
     <sensor name="lf_foot_contact" type="contact">
-    <plugin name="lf_contact_plugin" filename="/home/user/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libContactSensor.so"/>
+    <plugin name="lf_contact_plugin" filename="libContactSensor.so"/>
     <contact>
         <collision>LF_SHANK_fixed_joint_lump__LF_FOOT_collision_sensor_collision_3</collision>
     </contact>
@@ -209,7 +209,7 @@
 
 <gazebo reference="RF_FOOT">
     <sensor name="rf_foot_contact" type="contact">
-    <plugin name="rf_contact_plugin" filename="/home/user/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libContactSensor.so"/>
+    <plugin name="rf_contact_plugin" filename="libContactSensor.so"/>
     <contact>
         <collision>RF_SHANK_fixed_joint_lump__RF_FOOT_collision_sensor_collision_3</collision>
     </contact>
@@ -218,7 +218,7 @@
 
 <gazebo reference="LH_FOOT">
     <sensor name="lh_foot_contact" type="contact">
-    <plugin name="lh_contact_plugin" filename="/home/user/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libContactSensor.so"/>
+    <plugin name="lh_contact_plugin" filename="libContactSensor.so"/>
     <contact>
         <collision>LH_SHANK_fixed_joint_lump__LH_FOOT_collision_sensor_collision_3</collision>
     </contact>
@@ -227,7 +227,7 @@
 
 <gazebo reference="RH_FOOT">
     <sensor name="rh_foot_contact" type="contact">
-    <plugin name="rh_contact_plugin" filename="/home/user/Documents/ros/devel/.private/tbai_ros_gazebo/lib/libContactSensor.so"/>
+    <plugin name="rh_contact_plugin" filename="libContactSensor.so"/>
     <contact>
         <collision>RH_SHANK_fixed_joint_lump__RH_FOOT_collision_sensor_collision_3</collision>
     </contact>
