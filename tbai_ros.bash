@@ -29,7 +29,7 @@ function lint() {
 
 function fresh_install() {
     pixi install
-    pixi run fresh_build_all --environment all
+    pixi run --environment all fresh_build_all
     echo "All good 🤗"
 }
 
