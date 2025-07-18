@@ -70,10 +70,10 @@ go2-gpu-free = ["common", "go2"]
 
 [tasks]
 ros_init = {cmd = "cd ../.. && rm -rf .catkin_tools && catkin init" }
-clean = { cmd = "catkin clean -y && rm -rf tbai2" }
-remove_tbai = {cmd="rm -rf tbai2 && rm -rf /tmp/cpmbuild"}
-clone_tbai = { cmd = "git clone git@github.com:lnotspotl/tbai2.git --single-branch --branch=main", depends-on=["remove_tbai"] }
-build_tbai = { cmd = "cmake -B/tmp/cpmbuild -Stbai2 -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX && cmake --build /tmp/cpmbuild --parallel 8 && cmake --build /tmp/cpmbuild --target install" }
+clean = { cmd = "catkin clean -y && rm -rf dependencies/tbai2" }
+remove_tbai = {cmd="rm -rf dependencies/tbai2 && rm -rf /tmp/cpmbuild"}
+clone_tbai = { cmd = "git clone git@github.com:lnotspotl/tbai2.git --single-branch --branch=main dependencies/tbai2", depends-on=["remove_tbai"] }
+build_tbai = { cmd = "cmake -B/tmp/cpmbuild -Sdependencies/tbai2 -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX && cmake --build /tmp/cpmbuild --parallel 8 && cmake --build /tmp/cpmbuild --target install" }
 ros_build_all = { cmd = "./tbai.bash --build" }
 ros_build_go2 = { cmd = "catkin build tbai_ros_deploy_go2_rl" }
 
