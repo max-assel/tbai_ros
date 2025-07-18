@@ -96,7 +96,7 @@ To instal `tbai_ros`, we recommend using `pixi`, though `tbai_ros` is a full-fle
 curl -fsSL https://pixi.sh/install.sh | sh # You might have to source your config again
 
 # Install tbai_ros
-mkdir -p ros/src && cd ros/src && git clone git@github.com:lnotspotl/tbai_ros.git --recursive --single-branch --branch develop && cd tbai_ros && ./tbai_ros.bash --fresh_install
+mkdir -p ros/src && cd ros/src && git clone git@github.com:lnotspotl/tbai_ros.git --recursive && cd tbai_ros && ./tbai_ros.bash --fresh_install
 ```
 
 Once the installation is complete, you can run one of our many examples, for instance:
