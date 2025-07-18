@@ -5,6 +5,8 @@
 #include <tbai_deploy_go2/Go2JoystickInterface.hpp>
 #include <tbai_reference/ReferenceVelocityGenerator.hpp>
 
+#include <tbai_core/config/Config.hpp>
+
 namespace tbai {
 namespace reference {
 
@@ -13,13 +15,21 @@ class Go2Joystick : public ::tbai::reference::ReferenceVelocityGenerator, public
     Go2Joystick(ros::NodeHandle &nh) : Go2JoystickInterface(), ReferenceVelocityGenerator() {
         changeControllerPublisher_ = nh.advertise<std_msgs::String>("/anymal_d/change_controller", 10);
         TBAI_LOG_INFO(logger_, "Go2Joystick initialized");
+
+        velocityFactorX_ = tbai::fromGlobalConfig<scalar_t>("go2_joystick/velocity_factor_x", 0.6);
+        velocityFactorY_ = tbai::fromGlobalConfig<scalar_t>("go2_joystick/velocity_factor_y", 0.5);
+        yawRateFactor_ = tbai::fromGlobalConfig<scalar_t>("go2_joystick/yaw_rate_factor", 0.4);
+
+        TBAI_LOG_INFO(logger_, "Velocity factor X: {}", velocityFactorX_);
+        TBAI_LOG_INFO(logger_, "Velocity factor Y: {}", velocityFactorY_);
+        TBAI_LOG_INFO(logger_, "Yaw rate factor: {}", yawRateFactor_);
     }
 
     ReferenceVelocity getReferenceVelocity(scalar_t time, scalar_t dt) {
         ReferenceVelocity reference;
-        reference.velocity_x = gamepad.ly * 0.6;
-        reference.velocity_y = -gamepad.lx * 0.5;
-        reference.yaw_rate = -gamepad.rx * 0.5;
+        reference.velocity_x = gamepad.ly * velocityFactorX_;
+        reference.velocity_y = -gamepad.lx * velocityFactorY_;
+        reference.yaw_rate = -gamepad.rx * yawRateFactor_;
         return reference;
     }
 
@@ -54,6 +64,10 @@ class Go2Joystick : public ::tbai::reference::ReferenceVelocityGenerator, public
    private:
     ros::Publisher changeControllerPublisher_;
     ros::NodeHandle nh_;
+
+    scalar_t yawRateFactor_ = 0.4;
+    scalar_t velocityFactorX_ = 0.6;
+    scalar_t velocityFactorY_ = 0.5;
 };
 
 std::unique_ptr<Go2Joystick> getGo2JoystickUnique(ros::NodeHandle &nh) {
