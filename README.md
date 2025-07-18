@@ -88,25 +88,26 @@ https://github.com/lnotspotl/tbai/assets/82883398/e3455dd3-10e8-41da-bb02-87fbdf
 ![joe_03](https://github.com/lnotspotl/tbai/assets/82883398/0139df20-d2ce-4de1-884f-ce37e770ee08)
 
 ## Installing tbai
+
+To instal `tbai_ros`, we recommend using `pixi`, though `tbai_ros` is a full-fledged ROS package and it can be integrated into your projects in using conventional tools and methods. We use `pixi` for reproducibility.
+
 ```bash
-# Install dependencies
-sudo apt install libmpfr-dev
+# Install pixi
+curl -fsSL https://pixi.sh/install.sh | sh # You might have to source your config again
 
-# Download project
-mkdir -p <your-file>/src && cd <your-file> && catkin init && cd src
-git clone git@github.com:lnotspotl/tbai.git --recursive
-
-# Install other dependencies using rosdep
-cd .. && rosdep install --from-paths src --ignore-src -r -y && cd src/tbai
-
-# Build tbai
-catkin config -DCMAKE_BUILD_TYPE=Release # -DTBAI_DEVELOP_PATH=/path/to/tbai 
-bash ./tbai_ros.bash --build  # This will only build the necessary packages
-
-# Source tbai
-cd ../.. && source devel/setup.bash
+# Install tbai_ros
+mkdir -p ros/src && cd ros/src && git clone git@github.com:lnotspotl/tbai_ros.git --recursive --single-branch --branch develop && cd tbai_ros && ./tbai_ros.bash --fresh_install
 ```
-If any of the steps throws an error for you, please let use know and we will try to extend this guideline with a fix as soon as possible. Thanks 🤗
+
+Once the installation is complete, you can run one of our many examples, for instance:
+
+```bash
+# Activate pixi environment
+pixi shell --environment all
+
+# Run NP3O example
+source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_np3o simple_go2.launch gui:=true
+```
 
 ## Credits
 This project stands on the shoulders of giants.
