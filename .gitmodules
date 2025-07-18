@@ -13,9 +13,6 @@
 [submodule "dependencies/kindr_ros"]
 	path = dependencies/kindr_ros
 	url = https://github.com/ANYbotics/kindr_ros.git
-[submodule "dependencies/grid_map"]
-	path = dependencies/grid_map
-	url = git@github.com:ANYbotics/grid_map.git
 [submodule "dependencies/qpoases_catkin"]
 	path = dependencies/qpoases_catkin
 	url = git@github.com:wxmerkt/qpoases_catkin.git
@@ -25,3 +22,15 @@
 [submodule "dependencies/elevation_mapping_cupy"]
 	path = dependencies/elevation_mapping_cupy
 	url = git@github.com:lnotspotl/elevation_mapping_cupy.git
+[submodule "dependencies/grid_map"]
+	path = dependencies/grid_map
+	url = git@github.com:lnotspotl/grid_map.git
+[submodule "dependencies/pybind11_catkin"]
+	path = dependencies/pybind11_catkin
+	url = git@github.com:wxmerkt/pybind11_catkin.git
+[submodule "dependencies/realsense-ros"]
+	path = dependencies/realsense-ros
+	url = git@github.com:IntelRealSense/realsense-ros.git
+[submodule "dependencies/ddynamic_reconfigure"]
+	path = dependencies/ddynamic_reconfigure
+	url = git@github.com:pal-robotics/ddynamic_reconfigure.git

@@ -1,16 +1,14 @@
-# tbai
+# Towards Better Athletic Intelligence - ROS Noetic
 
 ## Implemented controllers
 
 ```
 📦tbai
- ┣ 📂tbai_static               # Static (high gain PD) controller
- ┣ 📂tbai_mpc_perceptive       # Perceptive NMPC controller [1]
- ┣ 📂tbai_mpc_blind            # Blind NMPC controller [1]
- ┣ 📂tbai_rl_perceptive        # Perceptive RL controller [2]
- ┣ 📂tbai_rl_blind             # Blind RL controller [2]
- ┣ 📂tbai_dtc                  # DTC controller (perceptive) [3]
- ┣ 📂tbai_joe                  # Perceptive NMPC controller with NN-based tracking controller [1],[3]
+ ┣ 📂tbai_ros_static               # Static (high gain PD) controller
+ ┣ 📂tbai_ros_mpc                  # NMPC controller (both perceptive and blind versions) [1]
+ ┣ 📂tbai_ros_bob                  # RL walking controller, based on the wild-Anymal paper (both perceptive and blind versions) [2]
+ ┣ 📂tbai_ros_dtc                  # DTC controller (perceptive) [3]
+ ┣ 📂tbai_ros_joe                  # Perceptive NMPC controller with NN-based tracking controller [1], [3]
 
  [1] Perceptive Locomotion through Nonlinear Model Predictive Control
      https://arxiv.org/abs/2208.08373
@@ -38,7 +36,7 @@ https://github.com/lnotspotl/tbai/assets/82883398/1bf86da1-a3d4-44db-88c4-877ec7
 
 
 
-## Perceptive RL
+## Perceptive Bob
 
 
 
@@ -47,7 +45,7 @@ https://github.com/lnotspotl/tbai/assets/82883398/7f6bdefa-4299-454b-a0ef-55e463
 
 
 
-## Blind RL
+## Blind Bob
 
 
 https://github.com/lnotspotl/tbai/assets/82883398/ebc2d90d-5c03-4207-a868-2e9436c140d4
@@ -76,7 +74,7 @@ https://github.com/lnotspotl/tbai/assets/82883398/e3455dd3-10e8-41da-bb02-87fbdf
 ![mpc_03](https://github.com/lnotspotl/tbai/assets/82883398/daabb2c2-8ced-4ffd-956e-35279b78563b)
 
 
-## Rl (Bob)
+## Bob
 
 ![bob_03](https://github.com/lnotspotl/tbai/assets/82883398/3ea71f1c-b58c-4028-93d3-971592aa364d)
 
@@ -88,33 +86,6 @@ https://github.com/lnotspotl/tbai/assets/82883398/e3455dd3-10e8-41da-bb02-87fbdf
 ## Joe
 
 ![joe_03](https://github.com/lnotspotl/tbai/assets/82883398/0139df20-d2ce-4de1-884f-ce37e770ee08)
-
-
-## Installing libtorch C++
-There are two steps to installing `libtorch`. First, you need to download a suitable `libtorch` version.
-Once the library is downloaded, it's necessary to create a symlink to it in the `dependencies` folder.
-Here's how to do it:
-
-### 1. Getting libtorch download link
-Get your download link from the [official PyTorch website](https://pytorch.org/). Note that opting for the `(cxx11 ABI)` version is paramount.
-If you download the `(Pre-cxx11 ABI)` version, things won't work as necessary.
-
-
-![image](https://github.com/lnotspotl/tbai/assets/82883398/183255fc-83c5-4bab-a48d-f70e5c7593d7)
-
-
-### 2. Downloading libtorch and creating a symlink
-Now that you have your url, you can download the library, unzip it and create a symlink in the `dependencies` folder.
-```bash
-wget <your-url>
-unzip <downloaded-zip> -d <your-folder>  # can be `dependencies`
-ln -s <your-folder>/libtorch dependencies  # Only necessary if, in the previous step, you did not unzip in `dependencies`
-```
-Your `dependencies` folder should not look as follows:
-<p align="center">
-  <img src="https://github.com/lnotspotl/tbai/assets/82883398/657d8681-1abd-4dae-b4c2-15347ed542fd" />
-</p>
-That's it. You should now be able to compile the entire project. Enjoy 🤗
 
 ## Installing tbai
 ```bash
@@ -128,11 +99,9 @@ git clone git@github.com:lnotspotl/tbai.git --recursive
 # Install other dependencies using rosdep
 cd .. && rosdep install --from-paths src --ignore-src -r -y && cd src/tbai
 
-# !! Now install libtorch by following the installation guideline above
-
 # Build tbai
-catkin config -DCMAKE_BUILD_TYPE=Release
-bash ./tbai.bash --build  # This will only build the necessary packages
+catkin config -DCMAKE_BUILD_TYPE=Release # -DTBAI_DEVELOP_PATH=/path/to/tbai 
+bash ./tbai_ros.bash --build  # This will only build the necessary packages
 
 # Source tbai
 cd ../.. && source devel/setup.bash
@@ -155,6 +124,11 @@ Here are a couple that most inspiration was drawn from and that were instrumenta
 - https://x-io.co.uk/open-source-imu-and-ahrs-algorithms/
 - https://github.com/mayataka/robotoc
 - https://github.com/mayataka/legged_state_estimator
+- https://github.com/RossHartley/invariant-ekf
+- https://github.com/dfki-ric-underactuated-lab/dfki-quad
+- https://github.com/iit-DLSLab/muse
+- https://github.com/zeonsunlightyu/LocomotionWithNP3O
+- http://www.michaelsebek.cz/cs
 - hundreds of others ...
 
 Thank you all 🤗

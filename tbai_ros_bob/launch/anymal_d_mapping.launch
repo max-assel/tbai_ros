@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+    <!-- Required arguments -->
+    <arg name="mapping_device"      default="cpu"/>
+
+    <!-- Elevation mapping (CPU version) -->
+    <group if="$(eval mapping_device == 'cpu')">
+      <node pkg="elevation_mapping" type="elevation_mapping" name="elevation_mapping" output="screen">
+        <rosparam command="load" file="$(find tbai_ros_gridmap)/config/elevation_mapping.yaml"/>
+        <rosparam command="load" file="$(find tbai_ros_gridmap)/config/post_processing.yaml" />
+      </node>
+    </group>
+
+    <!-- Elevation mapping (GPU version) -->
+    <group if="$(eval mapping_device == 'gpu')">
+      <node pkg="elevation_mapping_cupy" type="elevation_mapping_node" name="elevation_mapping" output="screen">
+        <rosparam command="load" file="$(find elevation_mapping_cupy)/config/setups/anymal/anymal_parameters.yaml"/>
+        <rosparam command="load" file="$(find tbai_ros_gridmap)/config/elevation_mapping_cupy.yaml"/>
+      </node>
+    </group>
+
+</launch>
