@@ -19,9 +19,10 @@
 #include <tbai_ros_deploy_go2_rl/Go2Joystick.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
 #include <tbai_ros_static/StaticController.hpp>
+#include <tbai_core/ResourceMonitor.hpp>
 
 int main(int argc, char *argv[]) {
-    ros::init(argc, argv, "tbai_ros_np3o");
+    ros::init(argc, argv, "tbai_ros_deploy_go2_rl");
     ros::NodeHandle nh;
 
     // Set zero time
@@ -76,8 +77,15 @@ int main(int argc, char *argv[]) {
     controller.addController(
         std::make_unique<tbai::rl::RosBobController>(urdfString, stateSubscriber, referenceVelocityPtr));
 
+    // Start the resource monitor
+    tbai::ResourceMonitor resourceMonitor(1.0 / 30.0, 1.0 / 10.0);
+    resourceMonitor.startThread();
+
     // Start controller loop
     controller.start();
+
+    // Wait for resource monitor to finish
+    resourceMonitor.stopThread();
 
     return EXIT_SUCCESS;
 }
