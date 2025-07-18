@@ -9,6 +9,8 @@
 #include <tbai_core/Logging.hpp>
 #include <tbai_core/Types.hpp>
 
+#include <tbai_core/Logging.hpp>
+
 namespace tbai {
 namespace gridmap {
 
@@ -54,12 +56,12 @@ class GridmapInterface {
     inline scalar_t atPosition(scalar_t x, scalar_t y) const {
         grid_map::Position position(x, y);
         if (!(mapPtr_->isInside(position))) {
-            TBAI_GLOBAL_LOG_WARN_THROTTLE(2.0, "Position x: {}, y: {} is outside the map. Returning 0.0", x, y);
+            TBAI_LOG_WARN_THROTTLE(logger_, 2.0, "Position x: {}, y: {} is outside the map. Returning 0.0", x, y);
             return 0.0;
         }
         auto height = mapPtr_->atPosition(layer_, position);
         if (std::isnan(height) || std::isinf(height)) {
-            TBAI_GLOBAL_LOG_WARN_THROTTLE(2.0, "NAN or inf at position x: {}, y: {}. Replacing with 0.0", x, y);
+            TBAI_LOG_WARN_THROTTLE(logger_, 2.0, "NAN or inf at position x: {}, y: {}. Replacing with 0.0", x, y);
             return 0.0;
         }
         return height;
@@ -84,6 +86,8 @@ class GridmapInterface {
     std::unique_ptr<grid_map::GridMap> mapPtr_;
 
     const std::string layer_;
+
+    std::shared_ptr<spdlog::logger> logger_;
 };
 
 /**

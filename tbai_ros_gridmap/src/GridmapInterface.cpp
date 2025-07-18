@@ -13,6 +13,7 @@ namespace gridmap {
 /**********************************************************************************************************************/
 GridmapInterface::GridmapInterface(ros::NodeHandle &nh, const std::string &topic, const std::string &layer)
     : layer_(layer) {
+    logger_ = tbai::getLogger("GridmapInterface");
     subscriber_ = nh.subscribe(topic, 1, &GridmapInterface::callback, this);
 }
 
@@ -49,7 +50,7 @@ void GridmapInterface::waitTillInitialized() {
     while (true) {
         ros::spinOnce();
         if (isInitialized()) break;
-        ROS_INFO("[GridmapInterface] Waiting for gridmap to be initialized.");
+        TBAI_LOG_INFO(logger_, "Waiting for gridmap to be initialized.");
         ros::Duration(0.05).sleep();
     }
 }
