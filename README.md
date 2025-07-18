@@ -100,8 +100,8 @@ git clone git@github.com:lnotspotl/tbai.git --recursive
 cd .. && rosdep install --from-paths src --ignore-src -r -y && cd src/tbai
 
 # Build tbai
-catkin config -DCMAKE_BUILD_TYPE=Release # -DTBAI_DEVELOP_PATH=/path/to/tbai2 
-bash ./tbai.bash --build  # This will only build the necessary packages
+catkin config -DCMAKE_BUILD_TYPE=Release # -DTBAI_DEVELOP_PATH=/path/to/tbai 
+bash ./tbai_ros.bash --build  # This will only build the necessary packages
 
 # Source tbai
 cd ../.. && source devel/setup.bash
