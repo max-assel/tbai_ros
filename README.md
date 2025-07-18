@@ -1,4 +1,4 @@
-# tbai
+# Towards Better Athletic Intelligence - ROS Noetic
 
 ## Implemented controllers
 
