@@ -21,6 +21,7 @@ static_controller:
   kd: 0.5
   interpolation_time: 1.0 # s
   rate: 50 # Hz
+  publish_state: true
 
 np3o:
   kp: 40.0
@@ -42,6 +43,7 @@ bob_controller:
 
   action_scale: 0.25
   lin_vel_scale: 0.0
+  publish_state: true
 
   default_stance: [
     [ 0.025,  0.096, -0.263],
@@ -75,3 +77,12 @@ reference_generator:
 
   twist:
     topic: "cmd_vel"
+
+inekf_estimator:
+  rectify_orientation: true
+  remove_gyroscope_bias: true
+
+go2_joystick:
+  velocity_factor_x: 0.6
+  velocity_factor_y: 0.5
+  yaw_rate_factor: 0.4
