@@ -13,7 +13,7 @@ namespace gridmap {
 /**********************************************************************************************************************/
 GridmapInterface::GridmapInterface(ros::NodeHandle &nh, const std::string &topic, const std::string &layer)
     : layer_(layer) {
-    logger_ = tbai::getLogger("GridmapInterface");
+    logger_ = tbai::getLogger("gridmap_interface");
     subscriber_ = nh.subscribe(topic, 1, &GridmapInterface::callback, this);
 }
 
