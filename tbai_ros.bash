@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function print_help() {
-	echo "Usage: ./tbai [--format|--lint|--build|--test|--docs|--rebuild_docs|--activate_go2|--activate_go2_gpu_free|--activate_all|--activate_all_gpu_free]"
+	echo "Usage: ./tbai [--format|--lint|--build|--test|--docs|--rebuild_docs|--activate_go2|--activate_go2_gpu_free|--activate_all|--activate_all_gpu_free|--fresh_install]"
 }
 
 function activate_go2() {
@@ -25,6 +25,12 @@ function lint() {
     for folder in $folders; do
         cpplint --recursive $folder
     done
+}
+
+function fresh_install() {
+    pixi install
+    pixi run fresh_build_all --environment all
+    echo "All good 🤗"
 }
 
 function format() {
@@ -129,6 +135,10 @@ if [[ "$1" == "--activate_go2_gpu_free" ]]; then
     exit
 fi
 
+if [[ "$1" == "--fresh_install" ]]; then
+    fresh_install
+    exit
+fi
 
 
 if [[ "$1" == "--rebuild_docs" ]]; then
