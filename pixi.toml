@@ -69,8 +69,8 @@ go2 = ["common", "go2", "go2-gpu"]
 go2-gpu-free = ["common", "go2"]
 
 [tasks]
-ros_init = {cmd = "cd ../.. && rm -rf .catkin_tools && catkin init" }
-clean = { cmd = "cd ../.. && catkin init && cd $OLDPWD  && catkin clean -y && rm -rf dependencies/tbai" }
+ros_init = {cmd = "cd ../.. && rm -rf .catkin_tools && catkin init && catkin config -DCMAKE_BUILD_TYPE=Release" }
+clean = { cmd = "cd ../.. && catkin init && catkin config -DCMAKE_BUILD_TYPE=Release && cd $OLDPWD  && catkin clean -y && rm -rf dependencies/tbai" }
 remove_tbai = {cmd="rm -rf dependencies/tbai && rm -rf /tmp/cpmbuild"}
 clone_tbai = { cmd = "git clone git@github.com:lnotspotl/tbai.git --single-branch --branch=main dependencies/tbai", depends-on=["remove_tbai"] }
 build_tbai = { cmd = "cmake -B/tmp/cpmbuild -Sdependencies/tbai -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX && cmake --build /tmp/cpmbuild --parallel 8 && cmake --build /tmp/cpmbuild --target install" }

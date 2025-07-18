@@ -5,9 +5,7 @@ project(tbai_ros_dtc)
 add_compile_options(-std=c++17)
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(catkin REQUIRED COMPONENTS
-  tbai_ros_core
-)
+find_package(Torch REQUIRED)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -40,6 +38,7 @@ catkin_package(
 
 find_package(pinocchio REQUIRED)
 find_package(spdlog REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 ## Build
 include_directories(
@@ -52,8 +51,9 @@ add_library(${PROJECT_NAME}
 )
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
-    ${catkin_LIBRARIES} spdlog::spdlog
+    ${catkin_LIBRARIES} spdlog::spdlog yaml-cpp
     ${pinocchio_LIBRARIES}
+    ${TORCH_LIBRARIES}
 )
 target_compile_options(${PROJECT_NAME} PUBLIC ${OCS2_CXX_FLAGS})
 
