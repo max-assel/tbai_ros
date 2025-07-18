@@ -89,7 +89,7 @@ https://github.com/lnotspotl/tbai/assets/82883398/e3455dd3-10e8-41da-bb02-87fbdf
 
 ## Installing tbai
 
-To instal `tbai_ros`, we recommend using `pixi`, though `tbai_ros` is a full-fledged ROS package and it can be integrated into your projects in using conventional tools and methods. We use `pixi` for reproducibility.
+To install `tbai_ros`, we recommend using `pixi`, though `tbai_ros` is a full-fledged ROS package and it can be integrated into your projects in using conventional tools and methods. We use `pixi` for reproducibility.
 
 ```bash
 # Install pixi
