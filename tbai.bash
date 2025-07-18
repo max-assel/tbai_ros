@@ -1,7 +1,23 @@
 #!/usr/bin/env bash
 
 function print_help() {
-	echo "Usage: ./tbai [--format|--lint|--build|--test|--docs|--rebuild_docs]"
+	echo "Usage: ./tbai [--format|--lint|--build|--test|--docs|--rebuild_docs|--activate_go2|--activate_go2_gpu_free|--activate_all|--activate_all_gpu_free]"
+}
+
+function activate_go2() {
+	pixi shell -e "go2"
+}
+
+function activate_go2_gpu_free() {
+	pixi shell -e "go2-gpu-free"
+}
+
+function activate_all() {
+	pixi shell -e "all"
+}
+
+function activate_all_gpu_free() {
+	pixi shell -e "all-gpu-free"
 }
 
 function lint() {
@@ -92,6 +108,28 @@ if [[ "$1" == "--docs" ]]; then
     open_docs
     exit
 fi
+
+if [[ "$1" == "--activate_all" ]]; then
+    activate_all
+    exit
+fi
+
+if [[ "$1" == "--activate_all_gpu_free" ]]; then
+    activate_all_gpu_free
+    exit
+fi
+
+if [[ "$1" == "--activate_go2" ]]; then
+    activate_go2
+    exit
+fi
+
+if [[ "$1" == "--activate_go2_gpu_free" ]]; then
+    activate_go2_gpu_free
+    exit
+fi
+
+
 
 if [[ "$1" == "--rebuild_docs" ]]; then
     catkin clean tbai_ros_docs
