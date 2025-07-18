@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function print_help() {
-	echo "Usage: ./tbai [--format|--lint|--build|--test|--docs|--rebuild_docs|--activate_go2|--activate_go2_gpu_free|--activate_all|--activate_all_gpu_free|--fresh_install]"
+	echo "Usage: ./tbai [--format|--lint|--build|--test|--docs|--rebuild_docs|--activate_go2|--activate_go2_gpu_free|--activate_all|--activate_all_gpu_free|--fresh_install|--fresh_install_go2]"
 }
 
 function activate_go2() {
@@ -30,6 +30,12 @@ function lint() {
 function fresh_install() {
     pixi install
     pixi run --environment all-gpu-free fresh_build_all
+    echo "All good 🤗"
+}
+
+function fresh_install_go2() {
+    pixi install
+    pixi run --environment go2-gpu-free fresh_build_go2
     echo "All good 🤗"
 }
 
@@ -137,6 +143,11 @@ fi
 
 if [[ "$1" == "--fresh_install" ]]; then
     fresh_install
+    exit
+fi
+
+if [[ "$1" == "--fresh_install_go2" ]]; then
+    fresh_install_go2
     exit
 fi
 
