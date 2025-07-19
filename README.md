@@ -22,7 +22,7 @@
 
 
 
-https://github.com/lnotspotl/tbai/assets/82883398/f451c12d-7525-4606-b722-726f63d852ca
+https://github.com/lnotspotl/tbai_ros/assets/82883398/f451c12d-7525-4606-b722-726f63d852ca
 
 
 
@@ -31,7 +31,7 @@ https://github.com/lnotspotl/tbai/assets/82883398/f451c12d-7525-4606-b722-726f63
 
 
 
-https://github.com/lnotspotl/tbai/assets/82883398/1bf86da1-a3d4-44db-88c4-877ec78b06cc
+https://github.com/lnotspotl/tbai_ros/assets/82883398/1bf86da1-a3d4-44db-88c4-877ec78b06cc
 
 
 
@@ -40,7 +40,7 @@ https://github.com/lnotspotl/tbai/assets/82883398/1bf86da1-a3d4-44db-88c4-877ec7
 
 
 
-https://github.com/lnotspotl/tbai/assets/82883398/7f6bdefa-4299-454b-a0ef-55e463e0c88d
+https://github.com/lnotspotl/tbai_ros/assets/82883398/7f6bdefa-4299-454b-a0ef-55e463e0c88d
 
 
 
@@ -48,44 +48,44 @@ https://github.com/lnotspotl/tbai/assets/82883398/7f6bdefa-4299-454b-a0ef-55e463
 ## Blind Bob
 
 
-https://github.com/lnotspotl/tbai/assets/82883398/ebc2d90d-5c03-4207-a868-2e9436c140d4
+https://github.com/lnotspotl/tbai_ros/assets/82883398/ebc2d90d-5c03-4207-a868-2e9436c140d4
 
 
 
 ## DTC: Deep Tracking Control
 
 
-https://github.com/lnotspotl/tbai/assets/82883398/6cf672db-b737-4724-a6da-afa0c8dd19d5
+https://github.com/lnotspotl/tbai_ros/assets/82883398/6cf672db-b737-4724-a6da-afa0c8dd19d5
 
 
 ## Joe
 
 
-https://github.com/lnotspotl/tbai/assets/82883398/e3455dd3-10e8-41da-bb02-87fbdf3de041
+https://github.com/lnotspotl/tbai_ros/assets/82883398/e3455dd3-10e8-41da-bb02-87fbdf3de041
 
 
 ## System architecture
 
-![overview_01](https://github.com/lnotspotl/tbai/assets/82883398/2c17f08d-6994-4982-8739-2b8246dfcb32)
+![overview_01](https://github.com/lnotspotl/tbai_ros/assets/82883398/2c17f08d-6994-4982-8739-2b8246dfcb32)
 
 ## Controller architectures
 
 ## Mpc 
-![mpc_03](https://github.com/lnotspotl/tbai/assets/82883398/daabb2c2-8ced-4ffd-956e-35279b78563b)
+![mpc_03](https://github.com/lnotspotl/tbai_ros/assets/82883398/daabb2c2-8ced-4ffd-956e-35279b78563b)
 
 
 ## Bob
 
-![bob_03](https://github.com/lnotspotl/tbai/assets/82883398/3ea71f1c-b58c-4028-93d3-971592aa364d)
+![bob_03](https://github.com/lnotspotl/tbai_ros/assets/82883398/3ea71f1c-b58c-4028-93d3-971592aa364d)
 
 
 ## DTC: Deep Tracking Control
 
-![dtc_03](https://github.com/lnotspotl/tbai/assets/82883398/10b3481d-7782-4a0e-ac31-24e2786c3402)
+![dtc_03](https://github.com/lnotspotl/tbai_ros/assets/82883398/10b3481d-7782-4a0e-ac31-24e2786c3402)
 
 ## Joe
 
-![joe_03](https://github.com/lnotspotl/tbai/assets/82883398/0139df20-d2ce-4de1-884f-ce37e770ee08)
+![joe_03](https://github.com/lnotspotl/tbai_ros/assets/82883398/0139df20-d2ce-4de1-884f-ce37e770ee08)
 
 ## Installing tbai
 
