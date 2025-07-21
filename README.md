@@ -20,7 +20,7 @@
 
 ## Installing tbai
 
-To install `tbai_ros`, we recommend using `pixi`, though `tbai_ros` is a full-fledged ROS package and it can be integrated into your projects in using conventional tools and methods. We use `pixi` for reproducibility.
+To install `tbai_ros`, we recommend using `pixi`, though `tbai_ros` is a full-fledged ROS package and it can be integrated into your projects in using conventional tools and methods. We use `pixi` for reproducibility. Don't worry that ROS is past its end of life, pixi will install everything for you (even on the newest Ubuntu release) 😮
 
 ```bash
 # Install pixi
