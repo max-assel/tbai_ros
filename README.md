@@ -18,6 +18,37 @@
      https://arxiv.org/abs/2309.15462
 ```
 
+## Installing tbai
+
+To install `tbai_ros`, we recommend using `pixi`, though `tbai_ros` is a full-fledged ROS package and it can be integrated into your projects in using conventional tools and methods. We use `pixi` for reproducibility.
+
+```bash
+# Install pixi
+curl -fsSL https://pixi.sh/install.sh | sh # You might have to source your config again
+
+# Install tbai_ros
+mkdir -p ros/src && cd ros/src && git clone git@github.com:lnotspotl/tbai_ros.git --recursive && cd tbai_ros && ./tbai_ros.bash --fresh_install
+```
+
+Once the installation is complete, you can run one of our many examples, for instance:
+
+```bash
+# Activate pixi environment
+pixi shell --environment all-gpu-free
+
+# Run NP3O example
+source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_np3o simple_go2.launch gui:=true
+```
+
+## Go2 deployment
+
+[inside.webm](https://github.com/user-attachments/assets/b9745931-9766-4b03-9376-f104ce9f3f54)
+
+
+https://github.com/user-attachments/assets/6a4c4f4d-dd03-4de0-9b1f-5339305379f0
+
+
+
 ## Perceptive MPC
 
 
@@ -87,27 +118,6 @@ https://github.com/lnotspotl/tbai_ros/assets/82883398/e3455dd3-10e8-41da-bb02-87
 
 ![joe_03](https://github.com/lnotspotl/tbai_ros/assets/82883398/0139df20-d2ce-4de1-884f-ce37e770ee08)
 
-## Installing tbai
-
-To install `tbai_ros`, we recommend using `pixi`, though `tbai_ros` is a full-fledged ROS package and it can be integrated into your projects in using conventional tools and methods. We use `pixi` for reproducibility.
-
-```bash
-# Install pixi
-curl -fsSL https://pixi.sh/install.sh | sh # You might have to source your config again
-
-# Install tbai_ros
-mkdir -p ros/src && cd ros/src && git clone git@github.com:lnotspotl/tbai_ros.git --recursive && cd tbai_ros && ./tbai_ros.bash --fresh_install
-```
-
-Once the installation is complete, you can run one of our many examples, for instance:
-
-```bash
-# Activate pixi environment
-pixi shell --environment all-gpu-free
-
-# Run NP3O example
-source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_np3o simple_go2.launch gui:=true
-```
 
 ## Credits
 This project stands on the shoulders of giants.
