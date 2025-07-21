@@ -76,6 +76,24 @@ class SlipDetector:
         self.slip_threshold = slip_threshold
 
     def detect_slips(self, q: np.ndarray, v: np.ndarray, contacts: np.ndarray):
+        """Detect foot slips based on the linear end-effector velocities.
+
+        Parameters
+        ----------
+        q : np.ndarray
+            Generalized position vector of the robot (free-flyer + joints).
+        v : np.ndarray
+            Generalized velocity vector corresponding to *q*.
+        contacts : np.ndarray
+            Boolean mask (or list of indices) indicating which feet are in
+            contact with the ground in the current time step.
+
+        Returns
+        -------
+        list[bool]
+            A list with the same length as *contacts* where each entry is
+            *True* if the corresponding foot is slipping, *False* otherwise.
+        """
         self.pinocchio_interface.compute_forward_kinematics(q, v)
         slips = list()
         ee_velocities = self.end_effector_kinematics.get_velocities()
@@ -277,6 +295,28 @@ class TrackFollower:
         self.N = 100
 
     def run(self, xyz, yaw, phase: float):
+        """Compute a velocity command that steers the robot along the track.
+
+        The method computes a target waypoint based on the current *phase*
+        along the track and returns a planar SE(2) twist that drives the
+        robot towards it. The forward velocity is gated such that the robot
+        first aligns its heading with the desired direction before moving
+        forward aggressively.
+
+        Parameters
+        ----------
+        xyz : np.ndarray
+            Current base position (x, y, z) in world coordinates.
+        yaw : float
+            Current yaw angle of the base in radians.
+        phase : float
+            Normalised progress (0-1) along the benchmark track.
+
+        Returns
+        -------
+        geometry_msgs.msg.Twist
+            The commanded base twist to publish on */cmd_vel*.
+        """
         waypoint = self.track_model.calculate_waypoint(phase)
         current_x, current_y = xyz[0], xyz[1]
         desired_x, desired_y = waypoint.x, waypoint.y
@@ -285,28 +325,46 @@ class TrackFollower:
         desired_yaw = np.arctan2(dy, dx)
         yaw_diff = (desired_yaw - current_yaw + np.pi) % (2 * np.pi) - np.pi
 
-        if np.abs(yaw_diff) >= np.pi / 3:
-            lin_vel = 0.0
-        else:
-            lin_vel = 0.7
+        lin_vel = 0.0 if np.abs(yaw_diff) >= np.pi / 3 else 0.7
 
         twist = Twist()
         twist.linear.x = lin_vel
-        twist.angular.z = np.clip(0.5 * (yaw_diff), -0.7, 0.7)
+        twist.angular.z = np.clip(0.5 * yaw_diff, -0.7, 0.7)
         return twist
 
     def update_phase(self, xyz: np.ndarray, current_phase: float) -> float:
+        """Update the phase along the track while respecting a distance bound.
+
+        The phase is advanced by *phase_step* but projected back—using a
+        binary search—such that the corresponding waypoint never lies farther
+        than *tol* metres away from the current robot position. This keeps
+        the reference trajectory within a bounded tracking error even when
+        the robot momentarily stops or deviates from the nominal path.
+
+        Parameters
+        ----------
+        xyz : np.ndarray
+            Current base position (x, y, z).
+        current_phase : float
+            The phase used in the previous control iteration (0-1).
+
+        Returns
+        -------
+        float
+            The updated phase value in the range \([0, 1]\).
+        """
         x, y = xyz[0], xyz[1]
         new_phase = min(current_phase + self.phase_step, 1.0)
-        # Project phase back to make sure it's within reach of 1 meter
-        # perform binary search
+
+        # Project phase back to make sure the reference waypoint is within
+        # *tol* metres of the current position using a 1-D binary search.
         lb, ub = current_phase, new_phase
-        for i in range(self.N):
+        for _ in range(self.N):
             mid = (lb + ub) / 2
             w = self.track_model.calculate_waypoint(mid)
             dx = w.x - x
             dy = w.y - y
-            d = np.sqrt(dx * dx + dy * dy)
+            d = np.hypot(dx, dy)
             if d >= self.tol:
                 ub = mid
             else:

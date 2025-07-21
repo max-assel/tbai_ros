@@ -18,7 +18,22 @@ from helpers import (
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser()
+    """Parse the command-line arguments used to configure the benchmark.
+
+    Returns
+    -------
+    argparse.Namespace
+        A namespace containing the parsed arguments. The namespace always
+        contains the following attributes:
+
+        context_aware : bool
+            If *True* the benchmark will switch to an RL-based controller
+            whenever excessive foot-slip is detected.
+        start_waypoint : int
+            Index (1-based) of the first waypoint of the benchmark track
+            from which the evaluation should start.
+    """
+    parser = argparse.ArgumentParser(description="TBAI locomotion benchmark runner")
     parser.add_argument(
         "--context_aware",
         action="store_true",
@@ -29,6 +44,18 @@ def parse_args() -> argparse.Namespace:
 
 
 def main():
+    """Entry-point for the *tbai_ros_benchmark* node.
+
+    This function wires together all helper utilities defined in
+    `helpers.py` and starts the main ROS control loop that repeatedly:
+
+    1. Computes a desired twist command that follows the predefined track.
+    2. Publishes the command on */cmd_vel*.
+    3. Monitors foot slips and, if *context_aware* is enabled, switches to
+       an RL controller when a slip is detected.
+    4. Collects simple statistics such as the time required to reach the
+       next waypoint.
+    """
     args = parse_args()
     rospy.init_node("tbai_ros_benchmark")
     rospy.loginfo("Context-aware controller" + "enabled" if args.context_aware else "disabled")
