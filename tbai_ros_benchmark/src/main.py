@@ -31,7 +31,9 @@ def parse_args() -> argparse.Namespace:
 def main():
     args = parse_args()
     rospy.init_node("tbai_ros_benchmark")
-    rospy.loginfo("Context-aware controller" + "enabled" if args.context_aware else "disabled")
+    rospy.loginfo(
+        f"Context-aware controller {'enabled' if args.context_aware else 'disabled'}"
+    )
 
     ## setup
     urdf = rospy.get_param("/robot_description")

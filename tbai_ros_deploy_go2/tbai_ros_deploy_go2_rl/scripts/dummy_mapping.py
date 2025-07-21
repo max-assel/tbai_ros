@@ -36,31 +36,26 @@ def create_pointcloud2(odometry, point_cloud):
     point_cloud = point_cloud[::7, ...]
     N = point_cloud.shape[0]
 
-    
     if N == 0:
         # Empty point cloud
         structured = np.array([], dtype=[('x', np.float32), ('y', np.float32), ('z', np.float32)])
     else:
-        # Transform points from camera to odom frame
-        # Rotation around Y by pi/2
-        Ry = scipy.spatial.transform.Rotation.from_euler('y', np.pi/2).as_matrix()
-        Rz = scipy.spatial.transform.Rotation.from_euler('z', -np.pi/2).as_matrix()
-        T_camera_to_odom = np.linalg.inv(Rz @ Ry)
-        T = np.eye(4)
-        T[:3, :3] = T_camera_to_odom
-        
-        # Add homogeneous coordinate
+        # Transform points from camera to odom frame using the supplied odometry matrix
+        # odometry is the transform from odom -> camera, we need camera -> odom
+        T_camera_to_odom = np.linalg.inv(odometry)
+
+        # Add homogeneous coordinate to each point (N x 4)
         ones = np.ones((N, 1), dtype=point_cloud.dtype)
         points_hom = np.hstack((point_cloud, ones))
-        
-        # Apply transformation
-        points_odom_hom = np.dot(T, points_hom.T).T
+
+        # Apply transformation (4x4 @ 4xN)
+        points_odom_hom = (T_camera_to_odom @ points_hom.T).T
         points_odom = points_odom_hom[:, :3]
-        
+
         # Create structured array
         structured = np.zeros(N, dtype=[('x', np.float32), ('y', np.float32), ('z', np.float32)])
-        structured['x'] = -points_odom[:, 0].astype(np.float32)
-        structured['y'] = -points_odom[:, 1].astype(np.float32)
+        structured['x'] = points_odom[:, 0].astype(np.float32)
+        structured['y'] = points_odom[:, 1].astype(np.float32)
         structured['z'] = points_odom[:, 2].astype(np.float32)
     
     # Create PointCloud2 message
