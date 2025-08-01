@@ -38,6 +38,8 @@ pixi shell --environment all-gpu-free
 
 # Run NP3O example
 source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_np3o simple_go2.launch gui:=true
+
+# Try out other examples located under tbai_ros_mpc, tbai_ros_bob, tbai_ros_dtc, tbai_ros_joe and tbai_ros_np3o
 ```
 
 ## Go2 deployment
