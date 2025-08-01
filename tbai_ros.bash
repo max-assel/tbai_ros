@@ -43,7 +43,7 @@ function fresh_install() {
     if [ "$env" = "go2" ]; then
         echo "Installing go2 environment"
         pixi install
-        pixi run --environment all-gpu-free fresh_build_go2
+        pixi run --environment go2 fresh_build_go2
     elif [ "$env" = "go2-gpu-free" ]; then
         echo "Installing go2-gpu-free environment"
         pixi install
@@ -51,7 +51,7 @@ function fresh_install() {
     elif [ "$env" = "all" ]; then
         echo "Installing all environment"
         pixi install
-        pixi run --environment all-gpu-free fresh_build_all
+        pixi run --environment all fresh_build_all
     elif [ "$env" = "all-gpu-free" ]; then
         echo "Installing all-gpu-free environment"
         pixi install
