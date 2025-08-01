@@ -150,6 +150,12 @@ class UIController:
         self.np3o_button = ttk.Button(row1_frame, text="NP3O", command=lambda: self.publish_controller_change("NP3O"))
         self.np3o_button.pack(side=tk.LEFT, padx=5)
 
+        self.joe_button = ttk.Button(row1_frame, text="JOE", command=lambda: self.publish_controller_change("JOE"))
+        self.joe_button.pack(side=tk.LEFT, padx=5)
+
+        self.dtc_button = ttk.Button(row1_frame, text="DTC", command=lambda: self.publish_controller_change("DTC"))
+        self.dtc_button.pack(side=tk.LEFT, padx=5)
+
         # Second row for additional buttons
         row2_frame = ttk.Frame(button_grid)
         row2_frame.pack(pady=(5, 0))
