@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 
 function print_help() {
-	echo "Usage: ./tbai [--format|--lint|--build|--test|--docs|--rebuild_docs|--activate_go2|--activate_go2_gpu_free|--activate_all|--activate_all_gpu_free|--fresh_install|--fresh_install_go2]"
+	echo "Usage: ./tbai_ros.bash [--format|--lint|--build|--test|--docs|--rebuild_docs|--activate_go2|--activate_go2_gpu_free|--activate_all|--activate_all_gpu_free|--fresh_install [go2|go2-gpu-free|all|all-gpu-free]]"
+    echo "With --fresh_install, you can specify the environment to install. Pick from go2, go2-gpu-free, all, all-gpu-free"
+    echo "For instance, run \"./tbai_ros.bash --fresh_install go2\" to install the go2 environment"
+    echo "For instance, run \"./tbai_ros.bash --fresh_install go2-gpu-free\" to install the go2-gpu-free environment"
+    echo "For instance, run \"./tbai_ros.bash --fresh_install all\" to install the all environment"
+    echo "For instance, run \"./tbai_ros.bash --fresh_install all-gpu-free\" to install the all-gpu-free environment"
 }
 
 function activate_go2() {
@@ -28,15 +33,35 @@ function lint() {
 }
 
 function fresh_install() {
-    pixi install
-    pixi run --environment all-gpu-free fresh_build_all
-    echo "All good 🤗"
-}
+    env=$1
+    echo "Installing $env environment"
+    if [ -z "$env" ]; then
+        echo "No environment specified. Pick from go2, go2-gpu-free, all, all-gpu-free"
+        exit 1
+    fi
 
-function fresh_install_go2() {
-    pixi install
-    pixi run --environment go2-gpu-free fresh_build_go2
-    echo "All good 🤗"
+    if [ "$env" = "go2" ]; then
+        echo "Installing go2 environment"
+        pixi install
+        pixi run --environment all-gpu-free fresh_build_go2
+    elif [ "$env" = "go2-gpu-free" ]; then
+        echo "Installing go2-gpu-free environment"
+        pixi install
+        pixi run --environment go2-gpu-free fresh_build_go2_gpu_free
+    elif [ "$env" = "all" ]; then
+        echo "Installing all environment"
+        pixi install
+        pixi run --environment all-gpu-free fresh_build_all
+    elif [ "$env" = "all-gpu-free" ]; then
+        echo "Installing all-gpu-free environment"
+        pixi install
+        pixi run --environment all-gpu-free fresh_build_all_gpu_free
+    else
+        echo "Invalid environment: $env. Pick from go2, go2-gpu-free, all, all-gpu-free"
+        exit 1
+    fi
+
+    echo "All good 🤗 You can now activate your environment with \"pixi shell -e $env\""
 }
 
 function format() {
@@ -142,15 +167,14 @@ if [[ "$1" == "--activate_go2_gpu_free" ]]; then
 fi
 
 if [[ "$1" == "--fresh_install" ]]; then
-    fresh_install
+    if [[ -z "$2" ]]; then
+        print_help
+        exit
+    fi
+
+    fresh_install "$2"
     exit
 fi
-
-if [[ "$1" == "--fresh_install_go2" ]]; then
-    fresh_install_go2
-    exit
-fi
-
 
 if [[ "$1" == "--rebuild_docs" ]]; then
     catkin clean tbai_ros_docs

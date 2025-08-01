@@ -77,9 +77,10 @@ build_tbai = { cmd = "cmake -B/tmp/cpmbuild -Sdependencies/tbai -DBUILD_SHARED_L
 ros_build_all = { cmd = "./tbai_ros.bash --build && echo 'export GAZEBO_PLUGIN_PATH=$GAZEBO_PLUGIN_PATH:$(catkin locate)/devel/lib:$CONDA_PREFIX/lib' >> ../../devel/setup.sh" }
 ros_build_go2 = { cmd = "catkin build tbai_ros_deploy_go2_rl" }
 
-fresh_build_go2 = { cmd = "echo finished ", depends-on = ["clean", "clone_tbai", "build_tbai", "ros_build_go2"] }
-
-fresh_build_all = { cmd = "echo finished " , depends-on = ["clean", "clone_tbai", "build_tbai", "ros_build_all"] }
+fresh_build_go2 = { cmd = "catkin build elevation_mapping elevation_mapping_cupy realsense2_camera", depends-on = ["clean", "clone_tbai", "build_tbai", "ros_build_go2"] }
+fresh_build_go2_gpu_free = { cmd = "catkin build elevation_mapping realsense2_camera", depends-on = ["clean", "clone_tbai", "build_tbai", "ros_build_go2"] }
+fresh_build_all = { cmd = "catkin build elevation_mapping elevation_mapping_cupy" , depends-on = ["clean", "clone_tbai", "build_tbai", "ros_build_all"] }
+fresh_build_all_gpu_free = { cmd = "catkin build elevation_mapping" , depends-on = ["clean", "clone_tbai", "build_tbai", "ros_build_all"] }
 
 [dependencies]
 python = ">=3.11.8,<3.14"
