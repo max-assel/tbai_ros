@@ -32,3 +32,6 @@ subscribers:
   front_upper_depth:
     topic_name: /camera/depth/color/points # from realsense2_camera
     data_type: pointcloud
+  unitree_lidar:
+    topic_name: /unitree_lidar_points
+    data_type: pointcloud

@@ -32,7 +32,7 @@
       <param name="elevation_mapping/elevation_mapping_initial_delay" type="double" value="4.5"/> <!-- 4.5 seconds to wait for the robot to be in the correct position -->
       <node pkg="elevation_mapping_cupy" type="elevation_mapping_node" name="elevation_mapping" output="screen">
         <rosparam command="load" file="$(find tbai_ros_deploy_go2_rl)/config/cupy_parameters_go2.yaml"/>
-        <rosparam command="load" file="$(find tbai_ros_deploy_go2_rl)/config/elevation_mapping_go2.yaml"/>
+        <rosparam command="load" file="$(find tbai_ros_deploy_go2_rl)/config/elevation_mapping_go2_cupy.yaml"/>
       </node>
     </group>
 

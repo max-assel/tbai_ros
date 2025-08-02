@@ -7,8 +7,10 @@
 #include <memory>
 
 #include <ros/ros.h>
+#include <sensor_msgs/PointCloud2.h>
 #include <tbai_core/Env.hpp>
 #include <tbai_core/Logging.hpp>
+#include <tbai_core/ResourceMonitor.hpp>
 #include <tbai_core/Utils.hpp>
 #include <tbai_core/config/Config.hpp>
 #include <tbai_core/control/CentralController.hpp>
@@ -19,7 +21,52 @@
 #include <tbai_ros_deploy_go2_rl/Go2Joystick.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
 #include <tbai_ros_static/StaticController.hpp>
-#include <tbai_core/ResourceMonitor.hpp>
+
+class Go2RobotInterfaceWithLidar : public tbai::Go2RobotInterface {
+   public:
+    Go2RobotInterfaceWithLidar(const tbai::Go2RobotInterfaceArgs &args) : tbai::Go2RobotInterface(args) {
+        if (args.subscribeLidar()) {
+            ros::NodeHandle nh;
+            lidarPublisher = nh.advertise<sensor_msgs::PointCloud2>("unitree_lidar_points", 1);
+        }
+    }
+
+    void lidarCallback(const void *msg2) override {
+        auto *msg = reinterpret_cast<const sensor_msgs::msg::dds_::PointCloud2_ *>(msg2);
+
+        // Create a sensor_msgs::PointCloud2 message from the input
+        sensor_msgs::PointCloud2 pc2_msg;
+
+        // Use getter methods to access fields from the DDS message
+        pc2_msg.header.stamp = ros::Time(msg->header().stamp().sec(), msg->header().stamp().nanosec());
+        pc2_msg.header.frame_id = "radar";
+        pc2_msg.height = msg->height();
+        pc2_msg.width = msg->width();
+
+        // Convert fields (std::vector-like) to ROS fields
+        pc2_msg.fields.resize(msg->fields().size());
+        for (size_t i = 0; i < msg->fields().size(); ++i) {
+            const auto &field = msg->fields()[i];
+            pc2_msg.fields[i].name = field.name();
+            pc2_msg.fields[i].offset = field.offset();
+            pc2_msg.fields[i].datatype = field.datatype();
+            pc2_msg.fields[i].count = field.count();
+        }
+
+        pc2_msg.is_bigendian = msg->is_bigendian();
+        pc2_msg.point_step = msg->point_step();
+        pc2_msg.row_step = msg->row_step();
+        pc2_msg.is_dense = msg->is_dense();
+
+        pc2_msg.data = std::move(const_cast<std::vector<uint8_t> &>(msg->data()));
+
+        // Publish the message
+        lidarPublisher.publish(pc2_msg);
+    }
+
+   private:
+    ros::Publisher lidarPublisher;
+};
 
 int main(int argc, char *argv[]) {
     ros::init(argc, argv, "tbai_ros_deploy_go2_rl");
@@ -28,10 +75,14 @@ int main(int argc, char *argv[]) {
     // Set zero time
     tbai::writeInitTime(tbai::RosTime::rightNow());
 
+    auto useLidar = tbai::fromGlobalConfig<bool>("use_lidar");
+
     // Initialize Go2RobotInterface
-    std::shared_ptr<tbai::Go2RobotInterface> go2RobotInterface = std::shared_ptr<tbai::Go2RobotInterface>(
-        new tbai::Go2RobotInterface(tbai::Go2RobotInterfaceArgs().networkInterface(
-            tbai::getEnvAs<std::string>("TBAI_GO2_NETWORK_INTERFACE", true, "eth0"))));
+    std::shared_ptr<tbai::Go2RobotInterface> go2RobotInterface =
+        std::shared_ptr<tbai::Go2RobotInterface>(new Go2RobotInterfaceWithLidar(
+            tbai::Go2RobotInterfaceArgs()
+                .networkInterface(tbai::getEnvAs<std::string>("TBAI_GO2_NETWORK_INTERFACE", true, "eth0"))
+                .subscribeLidar(useLidar)));
 
     std::shared_ptr<tbai::StateSubscriber> stateSubscriber = go2RobotInterface;
     std::shared_ptr<tbai::CommandPublisher> commandPublisher = go2RobotInterface;

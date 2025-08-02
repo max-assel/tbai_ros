@@ -10,6 +10,7 @@
     <arg name="run_rviz"                    default="false"/>
     <arg name="run_virtual_joystick"        default="false"/>
     <arg name="publish_pointcloud"          default="false"/>
+    <arg name="mapping_device"              default="none"/>
 
     <!-- Upload config path to ROS param server -->
     <param name="tbai_config_path" type="string" value="$(arg tbai_config_path)"/>
@@ -39,6 +40,17 @@
         <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen" />
     </group>
 
+    <group if="$(eval mapping_device == 'gpu')">
+        <include file="$(find tbai_ros_deploy_go2_rl)/launch/go2_mapping.launch">
+            <arg name="mapping_device" value="gpu"/>
+        </include>
+    </group>
+
+    <group if="$(eval mapping_device == 'cpu')">
+        <include file="$(find tbai_ros_deploy_go2_rl)/launch/go2_mapping.launch">
+            <arg name="mapping_device" value="cpu"/>
+        </include>
+    </group>
 
     <group if="$(arg publish_pointcloud)">
         <!-- Include the RealSense camera launch file with parameters -->

@@ -6,6 +6,14 @@ input_sources:
     publish_on_update: true # Whether to publish the elevation map after a callback from this source.
     sensor_processor:
       type: perfect
+  unitree_lidar: # A name to identify the input source
+    type: pointcloud # Supported types: pointcloud
+    topic: /unitree_lidar_points
+    queue_size: 1
+    publish_on_update: true # Whether to publish the elevation map after a callback from this source.
+    sensor_processor:
+      type: perfect
+  
 
 map_frame_id: "odom"
 robot_base_frame_id: "base"
