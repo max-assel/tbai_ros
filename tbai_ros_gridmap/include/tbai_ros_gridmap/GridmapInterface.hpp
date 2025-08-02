@@ -9,8 +9,6 @@
 #include <tbai_core/Logging.hpp>
 #include <tbai_core/Types.hpp>
 
-#include <tbai_core/Logging.hpp>
-
 namespace tbai {
 namespace gridmap {
 

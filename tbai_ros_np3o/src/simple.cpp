@@ -4,6 +4,7 @@
 #include "tbai_ros_np3o/Np3oController.hpp"
 #include <ros/ros.h>
 #include <tbai_core/Logging.hpp>
+#include <tbai_core/ResourceMonitor.hpp>
 #include <tbai_core/Utils.hpp>
 #include <tbai_core/config/Config.hpp>
 #include <tbai_core/control/CentralController.hpp>
@@ -12,7 +13,6 @@
 #include <tbai_ros_core/Subscribers.hpp>
 #include <tbai_ros_reference/ReferenceVelocityGenerator.hpp>
 #include <tbai_ros_static/StaticController.hpp>
-#include <tbai_core/ResourceMonitor.hpp>
 
 int main(int argc, char *argv[]) {
     ros::init(argc, argv, "tbai_ros_np3o");

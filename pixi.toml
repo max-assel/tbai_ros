@@ -68,22 +68,10 @@ all-gpu-free = ["common", "all"]
 go2 = ["common", "go2", "go2-gpu"]
 go2-gpu-free = ["common", "go2"]
 
-[tasks]
-ros_init = {cmd = "cd ../.. && rm -rf .catkin_tools && catkin init && catkin config -DCMAKE_BUILD_TYPE=Release" }
-clean = { cmd = "cd ../.. && catkin init && catkin config -DCMAKE_BUILD_TYPE=Release && cd $OLDPWD  && catkin clean -y && rm -rf dependencies/tbai" }
-remove_tbai = {cmd="rm -rf dependencies/tbai && rm -rf /tmp/cpmbuild"}
-clone_tbai = { cmd = "git clone git@github.com:lnotspotl/tbai.git --single-branch --branch=main dependencies/tbai", depends-on=["remove_tbai"] }
-build_tbai = { cmd = "cmake -B/tmp/cpmbuild -Sdependencies/tbai -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CONDA_PREFIX && cmake --build /tmp/cpmbuild --parallel 8 && cmake --build /tmp/cpmbuild --target install" }
-ros_build_all = { cmd = "./tbai_ros.bash --build && echo 'export GAZEBO_PLUGIN_PATH=$GAZEBO_PLUGIN_PATH:$(catkin locate)/devel/lib:$CONDA_PREFIX/lib' >> ../../devel/setup.sh" }
-ros_build_go2 = { cmd = "catkin build tbai_ros_deploy_go2_rl" }
-
-fresh_build_go2 = { cmd = "catkin build elevation_mapping elevation_mapping_cupy hesai_ros_driver realsense2_camera", depends-on = ["clean", "clone_tbai", "build_tbai", "ros_build_go2"] }
-fresh_build_go2_gpu_free = { cmd = "catkin build elevation_mapping realsense2_camera hesai_ros_driver", depends-on = ["clean", "clone_tbai", "build_tbai", "ros_build_go2"] }
-fresh_build_all = { cmd = "catkin build elevation_mapping elevation_mapping_cupy" , depends-on = ["clean", "clone_tbai", "build_tbai", "ros_build_all"] }
-fresh_build_all_gpu_free = { cmd = "catkin build elevation_mapping" , depends-on = ["clean", "clone_tbai", "build_tbai", "ros_build_all"] }
-
 [dependencies]
 python = ">=3.11.8,<3.14"
+cpplint = ">=1.6.0,<2"
+just = ">=1.42.4,<2"
 
 [pypi-dependencies]
 simple-parsing = ">=0.1.7, <0.2"

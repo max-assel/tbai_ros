@@ -2,10 +2,9 @@
 
 #include <ros/ros.h>
 #include <std_msgs/String.h>
+#include <tbai_core/config/Config.hpp>
 #include <tbai_deploy_go2/Go2JoystickInterface.hpp>
 #include <tbai_reference/ReferenceVelocityGenerator.hpp>
-
-#include <tbai_core/config/Config.hpp>
 
 namespace tbai {
 namespace reference {
