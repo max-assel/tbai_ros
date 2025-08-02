@@ -18,3 +18,13 @@ roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o.launch publish_pointcloud:=true
 roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o.launch publish_pointcloud:=false mapping_device:=none
 
 ```
+
+---
+
+### Showcase
+
+#### Go2 inside
+[inside.webm](https://github.com/user-attachments/assets/b9745931-9766-4b03-9376-f104ce9f3f54)
+
+#### Go2 outside
+https://github.com/user-attachments/assets/6a4c4f4d-dd03-4de0-9b1f-5339305379f0
