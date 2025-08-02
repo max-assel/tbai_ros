@@ -35,3 +35,6 @@ subscribers:
   unitree_lidar:
     topic_name: /unitree_lidar_points
     data_type: pointcloud
+  hesai_lidar:
+    topic_name: /lidar_points
+    data_type: pointcloud

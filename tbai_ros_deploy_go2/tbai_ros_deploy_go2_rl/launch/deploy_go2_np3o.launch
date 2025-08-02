@@ -24,6 +24,8 @@
     <!-- Set environment variable for network interface -->
     <env name="TBAI_GO2_NETWORK_INTERFACE" value="$(arg network_interface)"/>
 
+    <env name="TBAI_GO2_PUBLISH_LIDAR" value="$(arg publish_pointcloud)"/>
+
     <param name="$(arg description_name)" command="$(find xacro)/xacro --inorder $(arg description_file)" />
 
     <!-- Launch simple node -->
@@ -64,6 +66,9 @@
             <arg name="filters" value="pointcloud"/>
             <arg name="initial_reset" value="true"/>
         </include>
+
+        <!-- Launch Hesai lidar -->
+        <include file="$(find hesai_ros_driver)/launch/start.launch"/>
 
     </group>
 

@@ -75,14 +75,12 @@ int main(int argc, char *argv[]) {
     // Set zero time
     tbai::writeInitTime(tbai::RosTime::rightNow());
 
-    auto useLidar = tbai::fromGlobalConfig<bool>("use_lidar");
-
     // Initialize Go2RobotInterface
     std::shared_ptr<tbai::Go2RobotInterface> go2RobotInterface =
         std::shared_ptr<tbai::Go2RobotInterface>(new Go2RobotInterfaceWithLidar(
             tbai::Go2RobotInterfaceArgs()
                 .networkInterface(tbai::getEnvAs<std::string>("TBAI_GO2_NETWORK_INTERFACE", true, "eth0"))
-                .subscribeLidar(useLidar)));
+                .subscribeLidar(tbai::getEnvAs<bool>("TBAI_GO2_PUBLISH_LIDAR", true, false))));
 
     std::shared_ptr<tbai::StateSubscriber> stateSubscriber = go2RobotInterface;
     std::shared_ptr<tbai::CommandPublisher> commandPublisher = go2RobotInterface;
