@@ -34,3 +34,6 @@
 [submodule "dependencies/ddynamic_reconfigure"]
 	path = dependencies/ddynamic_reconfigure
 	url = git@github.com:pal-robotics/ddynamic_reconfigure.git
+[submodule "dependencies/HesaiLidar_ROS_2.0"]
+	path = dependencies/HesaiLidar_ROS_2.0
+	url = git@github.com:lnotspotl/HesaiLidar_ROS_2.0.git
