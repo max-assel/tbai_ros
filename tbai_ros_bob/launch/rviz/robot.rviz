@@ -501,13 +501,13 @@ Visualization Manager:
       Autocompute Intensity Bounds: true
       Class: grid_map_rviz_plugin/GridMap
       Color: 200; 200; 200
-      Color Layer: elevation
+      Color Layer: inpaint
       Color Transformer: GridMapLayer
       ColorMap: default
       Enabled: true
       Grid Cell Decimation: 1
       Grid Line Thickness: 0.10000000149011612
-      Height Layer: elevation_inpainted
+      Height Layer: inpaint
       Height Transformer: GridMapLayer
       History Length: 1
       Invert ColorMap: false
@@ -542,14 +542,7 @@ Visualization Manager:
       Marker Topic: /markers
       Name: MarkerArray
       Namespaces:
-        ground_truth0: true
-        ground_truth1: true
-        ground_truth2: true
-        ground_truth3: true
-        nn_reconstructed0: true
-        nn_reconstructed1: true
-        nn_reconstructed2: true
-        nn_reconstructed3: true
+        {}
       Queue Size: 100
       Value: true
   Enabled: true
@@ -598,7 +591,7 @@ Visualization Manager:
       Near Clip Distance: 0.009999999776482582
       Pitch: 0.30539771914482117
       Target Frame: <Fixed Frame>
-      Yaw: 5.2485527992248535
+      Yaw: 5.238552570343018
     Saved: ~
 Window Geometry:
   Displays:

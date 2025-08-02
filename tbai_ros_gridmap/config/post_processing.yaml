@@ -11,5 +11,5 @@ postprocessor_pipeline: # set by postprocessor_pipeline_name
      type: gridMapCv/InpaintFilter
      params:
        input_layer: elevation
-       output_layer: elevation_inpainted
+       output_layer: inpaint
        radius: 0.05

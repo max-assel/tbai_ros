@@ -13,6 +13,7 @@
 
     <!-- Elevation mapping (GPU version) -->
     <group if="$(eval mapping_device == 'gpu')">
+      <param name="elevation_mapping/elevation_mapping_initial_delay" type="double" value="3.5"/> <!-- 3.5 seconds to wait for the robot to be in the correct position -->
       <node pkg="elevation_mapping_cupy" type="elevation_mapping_node" name="elevation_mapping" output="screen">
         <rosparam command="load" file="$(find elevation_mapping_cupy)/config/setups/anymal/anymal_parameters.yaml"/>
         <rosparam command="load" file="$(find tbai_ros_gridmap)/config/elevation_mapping_cupy.yaml"/>
