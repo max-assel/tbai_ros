@@ -34,7 +34,7 @@ pixi install && pixi shell --environment all-gpu-free
 just fresh-install-all-gpu-free
 ```
 
-### Alternative 2: conda
+### Alternative 2: micromamba
 ```bash
 # Install micromamba
 "${SHELL}" <(curl -L micro.mamba.pm/install.sh) # You might have to source your config again
