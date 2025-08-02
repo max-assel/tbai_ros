@@ -73,5 +73,6 @@
     </group>
 
     <node pkg="tf" type="static_transform_publisher" name="map2camera" args="0 0 0.00 0 0.22 0  /front_camera /camera_link 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="body2hesai" args="0.08 0 0.09 1.57 0.00 0  /base /hesai_lidar 100"/>
 
 </launch>
