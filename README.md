@@ -45,16 +45,12 @@ source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_np3o simple_go2.l
 # Try out other examples located under tbai_ros_mpc, tbai_ros_bob, tbai_ros_dtc, tbai_ros_joe and tbai_ros_np3o
 ```
 
-## Go2 deployment
+### Go2 deployment
 
-[inside.webm](https://github.com/user-attachments/assets/b9745931-9766-4b03-9376-f104ce9f3f54)
-
-
-https://github.com/user-attachments/assets/6a4c4f4d-dd03-4de0-9b1f-5339305379f0
+Check out the [**tbai_ros_deploy_go2_rl**](./tbai_ros_deploy_go2/tbai_ros_deploy_go2_rl) folder for deployment-related documentation, pictures and videos 🤗
 
 
-
-## Perceptive MPC
+### Perceptive MPC
 
 
 
@@ -63,7 +59,7 @@ https://github.com/lnotspotl/tbai_ros/assets/82883398/f451c12d-7525-4606-b722-72
 
 
 
-## Blind MPC
+### Blind MPC
 
 
 
@@ -72,7 +68,7 @@ https://github.com/lnotspotl/tbai_ros/assets/82883398/1bf86da1-a3d4-44db-88c4-87
 
 
 
-## Perceptive Bob
+### Perceptive Bob
 
 
 
@@ -81,50 +77,50 @@ https://github.com/lnotspotl/tbai_ros/assets/82883398/7f6bdefa-4299-454b-a0ef-55
 
 
 
-## Blind Bob
+### Blind Bob
 
 
 https://github.com/lnotspotl/tbai_ros/assets/82883398/ebc2d90d-5c03-4207-a868-2e9436c140d4
 
 
 
-## DTC: Deep Tracking Control
+### DTC: Deep Tracking Control
 
 
 https://github.com/lnotspotl/tbai_ros/assets/82883398/6cf672db-b737-4724-a6da-afa0c8dd19d5
 
 
-## Joe
+### Joe
 
 
 https://github.com/lnotspotl/tbai_ros/assets/82883398/e3455dd3-10e8-41da-bb02-87fbdf3de041
 
 
-## System architecture
+### System architecture
 
 ![overview_01](https://github.com/lnotspotl/tbai_ros/assets/82883398/2c17f08d-6994-4982-8739-2b8246dfcb32)
 
 ## Controller architectures
 
-## Mpc 
+### Mpc 
 ![mpc_03](https://github.com/lnotspotl/tbai_ros/assets/82883398/daabb2c2-8ced-4ffd-956e-35279b78563b)
 
 
-## Bob
+### Bob
 
 ![bob_03](https://github.com/lnotspotl/tbai_ros/assets/82883398/3ea71f1c-b58c-4028-93d3-971592aa364d)
 
 
-## DTC: Deep Tracking Control
+### DTC: Deep Tracking Control
 
 ![dtc_03](https://github.com/lnotspotl/tbai_ros/assets/82883398/10b3481d-7782-4a0e-ac31-24e2786c3402)
 
-## Joe
+### Joe
 
 ![joe_03](https://github.com/lnotspotl/tbai_ros/assets/82883398/0139df20-d2ce-4de1-884f-ce37e770ee08)
 
 
-## Credits
+### Credits
 This project stands on the shoulders of giants.
 None of this would have been possible were it not for many amazing open-source projects.
 Here are a couple that most inspiration was drawn from and that were instrumental during the development:
