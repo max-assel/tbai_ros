@@ -28,3 +28,14 @@ roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o.launch publish_pointcloud:=fals
 
 #### Go2 outside
 https://github.com/user-attachments/assets/6a4c4f4d-dd03-4de0-9b1f-5339305379f0
+
+---
+
+#### Go2 State Estimation
+
+[exp1.webm](https://github.com/user-attachments/assets/23d6d89a-2e1f-422d-bcd9-e3535efcabc2)
+
+#### Go2 Climbing stairs
+
+https://github.com/user-attachments/assets/11b9b8b0-2cab-49ce-9226-5dde3d2ac029
+
