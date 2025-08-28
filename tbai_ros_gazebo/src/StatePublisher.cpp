@@ -154,13 +154,15 @@ void StatePublisher::OnUpdate() {
     message.rbd_state[11] = linearVelocityBase[2];
 
     // Joint positions
+    const size_t offsetAngles = 12 + 0;
     for (int i = 0; i < jointAngles.size(); ++i) {
-        message.rbd_state[12 + i] = jointAngles[i];
+        message.rbd_state[offsetAngles + i] = jointAngles[i];
     }
 
     // Joint velocities
+    const size_t offsetVelocities = 12 + jointAngles.size();
     for (int i = 0; i < jointVelocities.size(); ++i) {
-        message.rbd_state[12 + 12 + i] = jointVelocities[i];
+        message.rbd_state[offsetVelocities + i] = jointVelocities[i];
     }
 
     // Observation time
