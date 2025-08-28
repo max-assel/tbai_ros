@@ -15,6 +15,6 @@ time stamp
 float64[4] orientation_xyzw
 float64[3] ang_vel
 float64[3] lin_acc
-float64[12] joint_angles
-float64[12] joint_velocities
+float64[] joint_angles
+float64[] joint_velocities
 bool[4] contact_flags

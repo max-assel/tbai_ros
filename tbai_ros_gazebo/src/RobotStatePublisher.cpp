@@ -156,11 +156,13 @@ void RobotStatePublisher::OnUpdate() {
     message.ang_vel[2] = angularVelocityBase[2];
 
     // Joint positions
+    message.joint_angles.resize(jointAngles.size());
     for (int i = 0; i < jointAngles.size(); ++i) {
         message.joint_angles[i] = jointAngles[i];
     }
 
     // Joint velocities
+    message.joint_velocities.resize(jointVelocities.size());
     for (int i = 0; i < jointVelocities.size(); ++i) {
         message.joint_velocities[i] = jointVelocities[i];
     }
