@@ -38,6 +38,7 @@ class StatePublisher : public ModelPlugin {
 
     double lastYaw_ = 0.0;
 
+    // TODO: make this dynamic
     std::array<bool, 4> contactFlags_;
     std::array<ros::Subscriber, 4> contactSubscribers_;
 

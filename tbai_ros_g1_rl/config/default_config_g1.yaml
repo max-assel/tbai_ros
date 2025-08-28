@@ -1,0 +1,23 @@
+robot_name: 'g1'
+
+joint_names: &jn ["left_hip_pitch_joint", "left_hip_roll_joint", "left_hip_yaw_joint", "left_knee_joint", "left_ankle_pitch_joint", "left_ankle_roll_joint", "right_hip_pitch_joint", "right_hip_roll_joint", "right_hip_yaw_joint", "right_knee_joint", "right_ankle_pitch_joint", "right_ankle_roll_joint", "waist_yaw_joint", "waist_roll_joint", "waist_pitch_joint", "left_shoulder_pitch_joint", "left_shoulder_roll_joint", "left_shoulder_yaw_joint", "left_elbow_joint", "left_wrist_roll_joint", "left_wrist_pitch_joint", "left_wrist_yaw_joint", "right_shoulder_pitch_joint", "right_shoulder_roll_joint", "right_shoulder_yaw_joint", "right_elbow_joint", "right_wrist_roll_joint", "right_wrist_pitch_joint", "right_wrist_yaw_joint"]
+base_name: "pelvis"
+
+state_topic: "anymal_d/state"
+command_topic: "anymal_d/command"
+change_controller_topic: "anymal_d/change_controller"
+contact_topics: ["/lf_foot_contact", "/rf_foot_contact", "/lh_foot_contact","/rh_foot_contact"] 
+
+
+marker_topic: "markers"
+odom_frame: "odom"
+
+gazebo:
+  ground_truth_state_publisher:
+    enabled: true
+    update_rate: 500.0
+
+anymal_d:
+  joint_controller:
+      type: tbai_ros_gazebo/JointController
+      joints: *jn

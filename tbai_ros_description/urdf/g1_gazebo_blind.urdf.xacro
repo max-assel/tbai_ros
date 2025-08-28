@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="g1">
+
+<!-- Includes -->
+<xacro:include filename="utils.xacro" />
+
+<!-- G1 bare urdf -->
+<xacro:include filename="$(find ocs2_robotic_assets)/resources/g1/urdf/g1_29dof.urdf" />
+
+<!-- Transmissions left leg -->
+<xacro:transmission name="transmission_1" joint="left_hip_pitch_joint" actuator="motor_1"/>
+<xacro:transmission name="transmission_2" joint="left_hip_roll_joint" actuator="motor_2"/>
+<xacro:transmission name="transmission_3" joint="left_hip_yaw_joint" actuator="motor_3"/>
+<xacro:transmission name="transmission_4" joint="left_knee_joint" actuator="motor_4"/>
+<xacro:transmission name="transmission_5" joint="left_ankle_pitch_joint" actuator="motor_5"/>
+<xacro:transmission name="transmission_6" joint="left_ankle_roll_joint" actuator="motor_6"/>
+
+<!-- Transmissions right leg -->
+<xacro:transmission name="transmission_7" joint="right_hip_pitch_joint" actuator="motor_7"/>
+<xacro:transmission name="transmission_8" joint="right_hip_roll_joint" actuator="motor_8"/>
+<xacro:transmission name="transmission_9" joint="right_hip_yaw_joint" actuator="motor_9"/>
+<xacro:transmission name="transmission_10" joint="right_knee_joint" actuator="motor_10"/>
+<xacro:transmission name="transmission_11" joint="right_ankle_pitch_joint" actuator="motor_11"/>
+<xacro:transmission name="transmission_12" joint="right_ankle_roll_joint" actuator="motor_12"/>
+
+<!-- Transmissions waist -->
+<xacro:transmission name="transmission_13" joint="waist_yaw_joint" actuator="motor_13"/>
+<xacro:transmission name="transmission_14" joint="waist_roll_joint" actuator="motor_14"/>
+<xacro:transmission name="transmission_15" joint="waist_pitch_joint" actuator="motor_15"/>
+
+<!-- Transmissions left arm -->
+<xacro:transmission name="transmission_16" joint="left_shoulder_pitch_joint" actuator="motor_16"/>
+<xacro:transmission name="transmission_17" joint="left_shoulder_roll_joint" actuator="motor_17"/>
+<xacro:transmission name="transmission_18" joint="left_shoulder_yaw_joint" actuator="motor_18"/>
+<xacro:transmission name="transmission_19" joint="left_elbow_joint" actuator="motor_19"/>
+<xacro:transmission name="transmission_20" joint="left_wrist_roll_joint" actuator="motor_20"/>
+<xacro:transmission name="transmission_21" joint="left_wrist_pitch_joint" actuator="motor_21"/>
+<xacro:transmission name="transmission_22" joint="left_wrist_yaw_joint" actuator="motor_22"/>
+
+<xacro:transmission name="transmission_23" joint="right_shoulder_pitch_joint" actuator="motor_23"/>
+<xacro:transmission name="transmission_24" joint="right_shoulder_roll_joint" actuator="motor_24"/>
+<xacro:transmission name="transmission_25" joint="right_shoulder_yaw_joint" actuator="motor_25"/>
+<xacro:transmission name="transmission_26" joint="right_elbow_joint" actuator="motor_26"/>
+<xacro:transmission name="transmission_27" joint="right_wrist_roll_joint" actuator="motor_27"/>
+<xacro:transmission name="transmission_28" joint="right_wrist_pitch_joint" actuator="motor_28"/>
+<xacro:transmission name="transmission_29" joint="right_wrist_yaw_joint" actuator="motor_29"/>
+
+<!-- Joint controller -->
+<gazebo>
+  <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
+    <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+    <robotNamespace>/anymal_d</robotNamespace>
+  </plugin>
+</gazebo>
+
+<!-- State publisher - enabled or disabled based on the config file -->
+<gazebo>
+  <plugin filename="libStatePublisher.so" name="StatePublisher"/>
+</gazebo>
+
+</robot>

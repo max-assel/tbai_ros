@@ -11,7 +11,8 @@
 # The message also includes contact information for the feet.
 # There are four feet, each contains a single contact flag
 # The feet are ordered as follows: LF, RF, LH, RH
+# Note: the length of rbd_state need not be 36, however many controllers expect that.
 
 time stamp
-float64[36] rbd_state
+float64[] rbd_state
 bool[4] contact_flags

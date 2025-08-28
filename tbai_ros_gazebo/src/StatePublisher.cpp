@@ -133,6 +133,11 @@ void StatePublisher::OnUpdate() {
     // Put everything into an RbdState message
     tbai_ros_msgs::RbdState message;  // TODO(lnotspotl): Room for optimization here
 
+    // Resize rbd_state to the correct size
+    // orientation: 3, position: 3, angular velocity: 3, linear velocity: 3, joint angles: joints_.size(), joint
+    // velocities: joints_.size()
+    message.rbd_state.resize(3 + 3 + 3 + 3 + joints_.size() * 2);
+
     // Base orientation - Euler zyx as {roll, pitch, yaw}
     message.rbd_state[0] = rpy[0];
     message.rbd_state[1] = rpy[1];
@@ -154,13 +159,13 @@ void StatePublisher::OnUpdate() {
     message.rbd_state[11] = linearVelocityBase[2];
 
     // Joint positions
-    const size_t offsetAngles = 12 + 0;
+    constexpr size_t offsetAngles = 3 + 3 + 3 + 3;
     for (int i = 0; i < jointAngles.size(); ++i) {
         message.rbd_state[offsetAngles + i] = jointAngles[i];
     }
 
     // Joint velocities
-    const size_t offsetVelocities = 12 + jointAngles.size();
+    const size_t offsetVelocities = offsetAngles + jointAngles.size();
     for (int i = 0; i < jointVelocities.size(); ++i) {
         message.rbd_state[offsetVelocities + i] = jointVelocities[i];
     }
