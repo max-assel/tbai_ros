@@ -81,7 +81,7 @@ https://github.com/lnotspotl/tbai_ros/assets/82883398/f451c12d-7525-4606-b722-72
 
 
 
-https://github.com/lnotspotl/tbai_ros/assets/82883398/1bf86da1-a3d4-44db-88c4-877ec78b06cc
+[mpc_go2_blind.webm](https://github.com/user-attachments/assets/28f11d25-4ba0-4b7a-ae3d-e8b1c1a60de6)
 
 
 
