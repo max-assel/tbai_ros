@@ -17,6 +17,9 @@ roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o.launch publish_pointcloud:=true
 ## Deploy np3o policy, with no mapping
 roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o.launch publish_pointcloud:=false mapping_device:=none
 
+## Turn lidar ON or OFF (ROS2 needs to be sourced)
+ros2 topic pub /utlidar/switch std_msgs/msg/String "data: 'ON'" --once
+ros2 topic pub /utlidar/switch std_msgs/msg/String "data: 'OFF'" --once
 ```
 
 ---
