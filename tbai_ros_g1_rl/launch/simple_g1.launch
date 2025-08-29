@@ -36,4 +36,10 @@
         <arg name="paused" value="$(arg paused)"/>
     </include>
 
+    <!-- Launch simple node -->
+    <node name="simple" pkg="tbai_ros_g1_rl" type="simple" output="screen"/>
+
+    <!-- Launch virtual joystick -->
+    <node name="virtual_joystick" pkg="tbai_ros_utils" type="virtual_joystick.py" output="screen"/>
+
 </launch>

@@ -19,3 +19,47 @@ find_package(catkin REQUIRED COMPONENTS
   tbai
   visualization_msgs
 )
+
+find_package(pinocchio REQUIRED)
+find_package(spdlog REQUIRED)
+
+catkin_package(
+  INCLUDE_DIRS include
+  LIBRARIES  ${PROJECT_NAME}
+  CATKIN_DEPENDS tbai_ros_reference tbai_ros_gridmap
+  DEPENDS
+)
+
+## Build
+include_directories(
+    include
+    ${catkin_INCLUDE_DIRS}
+    ${pinocchio_INCLUDE_DIRS}
+)
+
+add_library(${PROJECT_NAME}
+  src/G1RlController.cpp
+)
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+    ${catkin_LIBRARIES} spdlog::spdlog
+    ${pinocchio_LIBRARIES}
+)
+
+add_executable(simple
+    src/simple.cpp
+)
+target_link_libraries(simple
+    ${catkin_LIBRARIES} ${PROJECT_NAME} yaml-cpp
+)
+
+install(TARGETS ${PROJECT_NAME}
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
+)
+
+install(
+  DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+)
