@@ -6,6 +6,7 @@ int main(int argc, char *argv[]) {
     ros::NodeHandle nh;
 
     tbai::reference::Go2Joystick joystick(nh);
+    joystick.InitDdsModel("eth0");
     joystick.Start();
 
     ros::Rate rate(20);
