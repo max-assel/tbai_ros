@@ -44,7 +44,7 @@ mkdir -p ros/src && cd ros/src
 git clone git@github.com:lnotspotl/tbai_ros.git --recursive && cd tbai_ros
 
 # Create conda environment
-micromamba env create -f .conda/all-gpu-free.yml
+micromamba env create -f .conda/all-gpu-free.yaml
 micromamba activate all-gpu-free
 
 # Install tbai_ros
