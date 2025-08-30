@@ -9,6 +9,7 @@
     <arg name="network_interface"           default="eth0"/>
     <arg name="run_rviz"                    default="false"/>
     <arg name="run_virtual_joystick"        default="false"/>
+    <arg name="run_go2_joystick"            default="true"/>
     <arg name="publish_pointcloud"          default="false"/>
     <arg name="mapping_device"              default="none"/>
 
@@ -34,6 +35,10 @@
     <!-- Launch virtual joystick -->
     <group if="$(arg run_virtual_joystick)">
         <node name="virtual_joystick" pkg="tbai_ros_utils" type="virtual_joystick.py" output="screen"/>
+    </group>
+
+    <group if="$(arg run_go2_joystick)">
+        <node name="go2_joystick_node" pkg="tbai_ros_deploy_go2_rl" type="go2_joystick_node" output="screen"/>
     </group>
 
     <!-- Start Rviz visualizer -->

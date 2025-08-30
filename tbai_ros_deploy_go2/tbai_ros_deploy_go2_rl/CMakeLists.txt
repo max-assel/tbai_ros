@@ -34,3 +34,15 @@ target_include_directories(deploy_go2_rl
     PRIVATE
     "${catkin_INCLUDE_DIRS}" include
 )
+
+add_executable(go2_joystick_node
+    src/go2_joystick_node.cpp
+)
+target_link_libraries(go2_joystick_node
+    PUBLIC
+    ${catkin_LIBRARIES} yaml-cpp spdlog::spdlog
+)
+target_include_directories(go2_joystick_node 
+    PRIVATE
+    "${catkin_INCLUDE_DIRS}" include
+)

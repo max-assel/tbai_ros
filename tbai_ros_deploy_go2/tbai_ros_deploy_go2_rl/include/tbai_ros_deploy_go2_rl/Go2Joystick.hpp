@@ -2,6 +2,7 @@
 
 #include <ros/ros.h>
 #include <std_msgs/String.h>
+#include <geometry_msgs/Twist.h>
 #include <tbai_core/config/Config.hpp>
 #include <tbai_deploy_go2/Go2JoystickInterface.hpp>
 #include <tbai_reference/ReferenceVelocityGenerator.hpp>
@@ -22,6 +23,16 @@ class Go2Joystick : public ::tbai::reference::ReferenceVelocityGenerator, public
         TBAI_LOG_INFO(logger_, "Velocity factor X: {}", velocityFactorX_);
         TBAI_LOG_INFO(logger_, "Velocity factor Y: {}", velocityFactorY_);
         TBAI_LOG_INFO(logger_, "Yaw rate factor: {}", yawRateFactor_);
+
+        twistPublisher_ = nh.advertise<geometry_msgs::Twist>("/cmd_vel", 2);
+    }
+
+    void publishTwist() {
+        geometry_msgs::Twist twist;
+        twist.linear.x = gamepad.ly * velocityFactorX_;
+        twist.linear.y = -gamepad.lx * velocityFactorY_;
+        twist.angular.z = -gamepad.rx * yawRateFactor_;
+        twistPublisher_.publish(twist);
     }
 
     ReferenceVelocity getReferenceVelocity(scalar_t time, scalar_t dt) {
@@ -33,36 +44,37 @@ class Go2Joystick : public ::tbai::reference::ReferenceVelocityGenerator, public
     }
 
     void onPressA() override {
-        TBAI_LOG_WARN(logger_, "A pressed: Changing controller to SIT");
         std_msgs::String msg;
         msg.data = "SIT";
         changeControllerPublisher_.publish(msg);
+        TBAI_LOG_WARN(logger_, "A pressed: Changing controller to {}", msg.data);
     }
 
     virtual void onPressB() override {
-        TBAI_LOG_WARN(logger_, "B pressed: Changing controller to BOB");
         std_msgs::String msg;
         msg.data = "BOB";
         changeControllerPublisher_.publish(msg);
+        TBAI_LOG_WARN(logger_, "B pressed: Changing controller to {}", msg.data);
     }
 
     virtual void onPressX() override {
-        TBAI_LOG_WARN(logger_, "X pressed: Changing controller to STAND");
         std_msgs::String msg;
         msg.data = "STAND";
         changeControllerPublisher_.publish(msg);
+        TBAI_LOG_WARN(logger_, "X pressed: Changing controller to {}", msg.data);
     }
 
     virtual void onPressY() override {
-        TBAI_LOG_WARN(logger_, "Y pressed: Changing controller to NP3O");
         std_msgs::String msg;
         msg.data = "NP3O";
         changeControllerPublisher_.publish(msg);
+        TBAI_LOG_WARN(logger_, "Y pressed: Changing controller to {}", msg.data);
     }
 
    private:
     ros::Publisher changeControllerPublisher_;
     ros::NodeHandle nh_;
+    ros::Publisher twistPublisher_;
 
     scalar_t yawRateFactor_ = 0.4;
     scalar_t velocityFactorX_ = 0.6;
