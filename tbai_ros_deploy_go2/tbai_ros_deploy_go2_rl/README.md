@@ -8,6 +8,9 @@ mkdir -p ros/src && cd ros/src && git clone git@github.com:lnotspotl/tbai_ros.gi
 pixi shell --environment go2
 source $(catkin locate)/devel/setup.bash
 
+## Test standing
+/tmp/tbai_build_123/tbai_deploy_go2/test_stand_sit
+
 ## Deploy np3o policy, with mapping running on gpu
 roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o.launch publish_pointcloud:=true mapping_device:=gpu
 
@@ -16,6 +19,9 @@ roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o.launch publish_pointcloud:=true
 
 ## Deploy np3o policy, with no mapping
 roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o.launch publish_pointcloud:=false mapping_device:=none
+
+## Deploy np3o policy, inference on host PC, motor commands are sent to the robot from host PC
+roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o.launch publish_pointcloud:=false mapping_device:=none network_interface:=enp3s0 run_rviz:=true
 
 ## Turn lidar ON or OFF (ROS2 needs to be sourced)
 ros2 topic pub /utlidar/switch std_msgs/msg/String "data: 'ON'" --once
