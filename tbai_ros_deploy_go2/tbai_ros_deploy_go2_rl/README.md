@@ -9,7 +9,7 @@ pixi shell --environment go2
 source $(catkin locate)/devel/setup.bash
 
 ## Test standing
-/tmp/tbai_build_123/tbai_deploy_go2/test_stand_sit
+/tmp/tbai_build_123/tbai_deploy_go2/test_stand_sit enp3s0
 
 ## Deploy np3o policy, with mapping running on gpu
 roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o.launch publish_pointcloud:=true mapping_device:=gpu
