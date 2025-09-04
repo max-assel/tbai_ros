@@ -29,7 +29,7 @@ Panels:
   - Class: rviz/Time
     Name: Time
     SyncMode: 0
-    SyncSource: PointCloud2
+    SyncSource: ""
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -403,6 +403,8 @@ Visualization Manager:
           Value: false
         front_camera:
           Value: false
+        hesai_lidar:
+          Value: true
         imu:
           Value: false
         odom:
@@ -480,6 +482,8 @@ Visualization Manager:
             front_camera:
               camera_link:
                 {}
+            hesai_lidar:
+              {}
             imu:
               {}
             radar:
@@ -554,6 +558,15 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /cbf_markers
+      Name: MarkerArray
+      Namespaces:
+        cbf_boundaries: true
+        cbf_regions: true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 255; 255; 255
@@ -582,7 +595,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 2.941559076309204
+      Distance: 2.3728179931640625
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -590,17 +603,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 1.1700668334960938
-        Y: -1.034098744392395
-        Z: -1.1920928955078125e-07
+        X: 0.1625717580318451
+        Y: -0.728333592414856
+        Z: -8.344650268554688e-07
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.21843117475509644
+      Pitch: 0.6284309029579163
       Target Frame: base
-      Yaw: 5.4845662117004395
+      Yaw: 4.969566345214844
     Saved: ~
 Window Geometry:
   Displays:

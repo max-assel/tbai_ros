@@ -23,6 +23,9 @@ roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o.launch publish_pointcloud:=fals
 ## Deploy np3o policy, inference on host PC, motor commands are sent to the robot from host PC
 roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o.launch publish_pointcloud:=false mapping_device:=none network_interface:=enp3s0 run_rviz:=true
 
+## Deploy np3o policy with MPPI safety controller in the loop
+roslaunch tbai_ros_deploy_go2_rl deploy_go2_np3o_mppi.launch publish_pointcloud:=false mapping_device:=none network_interface:=enp3s0 run_rviz:=true
+
 ## Turn lidar ON or OFF (ROS2 needs to be sourced)
 ros2 topic pub /utlidar/switch std_msgs/msg/String "data: 'ON'" --once
 ros2 topic pub /utlidar/switch std_msgs/msg/String "data: 'OFF'" --once
