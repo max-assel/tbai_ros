@@ -567,6 +567,15 @@ Visualization Manager:
         cbf_regions: true
       Queue Size: 100
       Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /trajectory_markers
+      Name: MarkerArray
+      Namespaces:
+        optimal_trajectory: true
+        trajectory_points: true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 255; 255; 255

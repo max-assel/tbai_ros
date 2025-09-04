@@ -1,29 +1,27 @@
 #!/usr/bin/env python3
 
-import time
-import numpy as np
-import sympy as sp
-import rospy
-from geometry_msgs.msg import Twist, Point
-from visualization_msgs.msg import Marker, MarkerArray
-from tbai_ros_msgs.msg import EstimatedState
 import functools
+import time
 
 import matplotlib.pyplot as plt
-
+import numpy as np
+import rospy
+import sympy as sp
+from geometry_msgs.msg import Point, Twist
 from scipy.spatial.transform import Rotation as R
-
-from tbai_safe.systems import SimpleSingleIntegrator2D
-from tbai_safe.cbf import ControlBarrierFunctionFactory
-from tbai_safe.symperf import jit_expr
+from tbai_safe.cbf import ControlBarrierFunctionFactory, visualize_cbfs
 from tbai_safe.mppi import (
     AcceleratedSafetyMPPI,
-    get_cost_function_parameterized,
     MppiCbfCost,
     MppiCbfCostInputs,
     cost_fn,
+    get_cost_function_parameterized,
 )
-from tbai_safe.cbf import ControlBarrierFunctionFactory, visualize_cbfs
+from tbai_safe.symperf import jit_expr
+from tbai_safe.systems import SimpleSingleIntegrator2D
+from visualization_msgs.msg import Marker, MarkerArray
+
+from tbai_ros_msgs.msg import EstimatedState
 
 
 def extract_yaw(quat_xyzw):
@@ -64,6 +62,7 @@ class SafeNode:
         self.twist_subscriber = rospy.Subscriber("/cmd_vel", Twist, self.twist_callback)
         self.twist_publisher = rospy.Publisher("/cmd_vel_safe", Twist, queue_size=1)
         self.cbf_marker_pub = rospy.Publisher("/cbf_markers", MarkerArray, queue_size=1, latch=True)
+        self.trajectory_marker_pub = rospy.Publisher("/trajectory_markers", MarkerArray, queue_size=1)
         self.frame_id = rospy.get_param("~frame_id", "odom")
 
         self.x = 0
@@ -156,6 +155,75 @@ class SafeNode:
             marker_array.markers.append(cyl)
             marker_array.markers.append(boundary)
         self.cbf_marker_pub.publish(marker_array)
+
+    def _make_trajectory_marker(self, trajectory, z=0.05, marker_id=2000, color=(0.0, 1.0, 0.0, 0.8), thickness=0.05):
+        """Create a LINE_STRIP marker for the optimal trajectory"""
+        marker = Marker()
+        marker.header.frame_id = self.frame_id
+        marker.header.stamp = rospy.Time.now()
+        marker.ns = "optimal_trajectory"
+        marker.id = marker_id
+        marker.type = Marker.LINE_STRIP
+        marker.action = Marker.ADD
+        marker.pose.orientation.w = 1.0
+        marker.scale.x = float(thickness)
+        marker.color.r, marker.color.g, marker.color.b, marker.color.a = color
+
+        # Add trajectory points
+        for point in trajectory:
+            p = Point()
+            p.x = float(point[0])
+            p.y = float(point[1])
+            p.z = float(z)
+            marker.points.append(p)
+
+        marker.lifetime = rospy.Duration(0.1)  # Short lifetime for dynamic updates
+        return marker
+
+    def _make_trajectory_points_marker(
+        self, trajectory, z=0.05, marker_id=2001, color=(0.0, 0.8, 1.0, 0.9), point_size=0.03
+    ):
+        """Create SPHERE_LIST marker for trajectory waypoints"""
+        marker = Marker()
+        marker.header.frame_id = self.frame_id
+        marker.header.stamp = rospy.Time.now()
+        marker.ns = "trajectory_points"
+        marker.id = marker_id
+        marker.type = Marker.SPHERE_LIST
+        marker.action = Marker.ADD
+        marker.pose.orientation.w = 1.0
+        marker.scale.x = float(point_size)
+        marker.scale.y = float(point_size)
+        marker.scale.z = float(point_size)
+        marker.color.r, marker.color.g, marker.color.b, marker.color.a = color
+
+        # Add trajectory points
+        for point in trajectory:
+            p = Point()
+            p.x = float(point[0])
+            p.y = float(point[1])
+            p.z = float(z)
+            marker.points.append(p)
+
+        marker.lifetime = rospy.Duration(0.1)  # Short lifetime for dynamic updates
+        return marker
+
+    def publish_trajectory_markers(self, trajectory, z=0.05):
+        """Publish trajectory markers for RViz visualization"""
+        if trajectory is None or len(trajectory) == 0:
+            return
+
+        marker_array = MarkerArray()
+
+        # Create line strip for the trajectory path
+        line_marker = self._make_trajectory_marker(trajectory, z=z, marker_id=2000)
+        marker_array.markers.append(line_marker)
+
+        # Create points for trajectory waypoints
+        points_marker = self._make_trajectory_points_marker(trajectory, z=z, marker_id=2001)
+        marker_array.markers.append(points_marker)
+
+        self.trajectory_marker_pub.publish(marker_array)
 
 
 def main():
@@ -381,6 +449,7 @@ def main():
 
         if mppi.return_optimal_trajectory:
             optimal_trajectory_plot.set_data(optimal_trajectory[:, 0], optimal_trajectory[:, 1])
+            safe_node.publish_trajectory_markers(optimal_trajectory, z=safe_node.z + 0.02)
 
         rate.sleep()
     plt.show()
