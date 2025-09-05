@@ -41,6 +41,11 @@ ros2 topic pub /utlidar/switch std_msgs/msg/String "data: 'OFF'" --once
 #### Go2 outside
 https://github.com/user-attachments/assets/6a4c4f4d-dd03-4de0-9b1f-5339305379f0
 
+#### Go2 MPPI controller
+
+
+https://github.com/user-attachments/assets/cd899ec2-643c-4ec6-b8ed-7130023b7798
+
 ---
 
 #### Go2 State Estimation
