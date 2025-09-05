@@ -4,7 +4,7 @@
 
 ```bash
 ## Build project
-mkdir -p ros/src && cd ros/src && git clone git@github.com:lnotspotl/tbai_ros.git --recursive && cd tbai_ros && ./tbai_ros.bash --fresh_install go2
+mkdir -p ros/src && cd ros/src && git clone git@github.com:lnotspotl/tbai_ros.git --recursive && cd tbai_ros && just fresh-install-go2
 pixi shell --environment go2
 source $(catkin locate)/devel/setup.bash
 
