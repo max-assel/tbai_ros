@@ -65,7 +65,7 @@ class MpcController final : public tbai::Controller {
 
     void stopController() override { stopReferenceThread(); }
 
-    scalar_t getRate() const override { return 200.0; }
+    scalar_t getRate() const override { return 400.0; }
 
     bool checkStability() const override;
 
