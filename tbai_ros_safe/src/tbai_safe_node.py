@@ -2,6 +2,7 @@
 
 import functools
 import time
+from typing import Callable
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -24,42 +25,47 @@ from visualization_msgs.msg import Marker, MarkerArray
 from tbai_ros_msgs.msg import EstimatedState
 
 
-def extract_yaw(quat_xyzw):
-    quat = R.from_quat(quat_xyzw)
-    return quat.as_euler("zyx", degrees=False)[0]
+def extract_yaw(quat_xyzw: np.ndarray) -> float:
+    """Extract yaw angle from quaternion, ordered as xyzw"""
+    return R.from_quat(quat_xyzw).as_euler("zyx", degrees=False)[0]
 
 
-def log_fps(fn, fps_interval=5):
-    count = 0
-    last_time = time.time()
-    fn_name = fn.__name__
+def log_cps(fn: Callable, log_interval: float = 5.0) -> Callable:
+    """Log the number of calls per second of a function, log every `log_interval` seconds"""
+    call_count, last_log_time = 0, None
 
+    @functools.wraps(fn)
     def wrapper(*args, **kwargs):
-        nonlocal count
-        nonlocal last_time
-        count += 1
-        current_time = rospy.get_time()
-        if current_time - last_time > fps_interval:
-            fps = count / (current_time - last_time)
-            last_time = current_time
-            rospy.loginfo(f"{fn_name} fps: {fps}")
-            count = 0
+        nonlocal call_count, last_log_time
 
-        result = fn(*args, **kwargs)
-        return result
+        # Ensure proper initialization of last_log_time
+        if last_log_time is None:
+            last_log_time = rospy.get_time()
+
+        # Update statistics
+        call_count, current_time = call_count + 1, rospy.get_time()
+
+        # Log fps if interval has passed
+        if current_time - last_log_time > log_interval:
+            fps = call_count / (current_time - last_log_time)
+            rospy.loginfo(f"[{fn.__name__}] fps: {fps}")
+            last_log_time = current_time
+            call_count = 0
+
+        return fn(*args, **kwargs)
 
     return wrapper
 
 
-def angle_diff(a, b):
-    diff = (b - a + np.pi) % (2 * np.pi) - np.pi
-    return diff
+def angle_diff(alpha: float, beta: float) -> float:
+    """Compute the difference between two angles, in radians"""
+    return (beta - alpha + np.pi) % (2 * np.pi) - np.pi
 
 
 class SafeNode:
     def __init__(self):
-        self.state_subscriber = rospy.Subscriber("/estimated_state", EstimatedState, self.state_callback)
-        self.twist_subscriber = rospy.Subscriber("/cmd_vel", Twist, self.twist_callback)
+        self.state_subscriber = rospy.Subscriber("/estimated_state", EstimatedState, self._state_callback)
+        self.twist_subscriber = rospy.Subscriber("/cmd_vel", Twist, self._twist_callback)
         self.twist_publisher = rospy.Publisher("/cmd_vel_safe", Twist, queue_size=1)
         self.cbf_marker_pub = rospy.Publisher("/cbf_markers", MarkerArray, queue_size=1, latch=True)
         self.trajectory_marker_pub = rospy.Publisher("/trajectory_markers", MarkerArray, queue_size=1)
@@ -81,8 +87,8 @@ class SafeNode:
             rospy.sleep(0.1)
         self.first_message = True
 
-    @functools.partial(log_fps, fps_interval=10)
-    def state_callback(self, state):
+    @functools.partial(log_cps, log_interval=10)
+    def _state_callback(self, state):
         base_position = state.base_position
         self.x = base_position[0]
         self.y = base_position[1]
@@ -90,8 +96,8 @@ class SafeNode:
         self.quat = state.base_orientation_xyzw
         self.first_message = True
 
-    @functools.partial(log_fps, fps_interval=10)
-    def twist_callback(self, twist):
+    @functools.partial(log_cps, log_interval=10)
+    def _twist_callback(self, twist):
         self.cmd_x = twist.linear.x
         self.cmd_y = twist.linear.y
         self.rot_z = twist.angular.z
