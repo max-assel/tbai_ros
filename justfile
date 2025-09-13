@@ -91,7 +91,7 @@ clean:
     CURRENT_DIR=$(pwd)
     cd ../..
     catkin init
-    catkin config -DCMAKE_BUILD_TYPE=Release
+    catkin config --cmake-args -Wno-dev -DCMAKE_BUILD_TYPE=Release
     echo "Cleaning ROS workspace: $CURRENT_DIR"
     cd $CURRENT_DIR
     catkin clean -y
