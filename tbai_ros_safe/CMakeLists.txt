@@ -17,16 +17,6 @@ catkin_package(
 )
 
 catkin_install_python(PROGRAMS
-  src/tbai_safe_node.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-catkin_install_python(PROGRAMS
-  src/tbai_safe_node_mppi.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-catkin_install_python(PROGRAMS
   src/tbai_safe_node_naive.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
