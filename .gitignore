@@ -2,3 +2,6 @@
 __pycache__/
 tbai/
 pixi.lock
+
+*.mp4
+*.gif

@@ -4,7 +4,7 @@ from tkinter import ttk
 
 import rospy
 from geometry_msgs.msg import Twist
-from std_msgs.msg import String
+from std_msgs.msg import String, Bool
 from std_srvs.srv import Empty
 
 
@@ -159,11 +159,18 @@ class UIController:
     row2_frame = ttk.Frame(button_grid)
     row2_frame.pack(pady=(5, 0))
 
-    self.clear_map_button = ttk.Button(row2_frame, text="Clear Map", command=self.clear_elevation_map)
-    self.clear_map_button.pack(side=tk.LEFT, padx=5)
+    self.toggle_autonomy_button = ttk.Button(row2_frame, text="Toggle Autonomy", command=self.toggle_autonomy)
+    self.toggle_autonomy_button.pack(side=tk.LEFT, padx=5)
 
-    self.velocity_pub = rospy.Publisher("/cmd_vel", Twist, queue_size=10)
-    self.controller_pub = rospy.Publisher("/anymal_d/change_controller", String, queue_size=10)
+    self.cbf_switch_button = ttk.Button(row2_frame, text="CBF Switch", command=self.publish_cbf_switch)
+    self.cbf_switch_button.pack(side=tk.LEFT, padx=5)
+
+    self.autonomy_mode = False
+
+    self.velocity_pub = rospy.Publisher("/cmd_vel", Twist, queue_size=2)
+    self.controller_pub = rospy.Publisher("/anymal_d/change_controller", String, queue_size=2)
+    self.autonomy_pub = rospy.Publisher("/anymal_d/autonomy", Bool, queue_size=2)
+    self.cbf_switch_pub = rospy.Publisher("/anymal_d/cbf_switch", Bool, queue_size=2)
 
     self.linear_x = 0.0
     self.linear_y = 0.0
@@ -209,17 +216,19 @@ class UIController:
     self.controller_pub.publish(msg)
     rospy.loginfo(f"Published controller change: {controller_name}")
 
-  def clear_elevation_map(self):
-    """Call ROS service to clear elevation map"""
-    try:
-      rospy.wait_for_service("/elevation_mapping/clear_map", timeout=1.0)
-      clear_map_service = rospy.ServiceProxy("/elevation_mapping/clear_map", Empty)
-      response = clear_map_service()
-      rospy.loginfo("Elevation map cleared successfully")
-    except rospy.ServiceException as e:
-      rospy.logerr(f"Service call failed: {e}")
-    except rospy.ROSException as e:
-      rospy.logerr(f"Service not available: {e}")
+  def toggle_autonomy(self):
+    """Toggle autonomy mode"""
+    self.autonomy_mode = not self.autonomy_mode
+    msg = Bool()
+    msg.data = self.autonomy_mode
+    self.autonomy_pub.publish(msg)
+    rospy.loginfo(f"Autonomy mode: {'enabled' if self.autonomy_mode else 'disabled'}")
+
+  def publish_cbf_switch(self):
+    """Toggle CBF switch"""
+    msg = Bool()
+    msg.data = True
+    self.cbf_switch_pub.publish(msg)
 
   def update_gui(self):
     """Update GUI periodically"""
@@ -245,9 +254,9 @@ def main():
     ui_controller = UIController()
     ui_controller.run()
   except KeyboardInterrupt:
-    pass
+    print("Keyboard interrupt - shutting down")
   except rospy.ROSInterruptException:
-    pass
+    print("ROS interrupt - shutting down")
 
 
 if __name__ == "__main__":

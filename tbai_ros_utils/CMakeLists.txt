@@ -6,6 +6,6 @@ find_package(catkin REQUIRED)
 catkin_package()
 
 catkin_install_python(PROGRAMS
-  scripts/virtual_joystick.py
+  src/virtual_joystick.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
