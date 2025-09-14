@@ -7,9 +7,9 @@ from typing import Callable
 import matplotlib.pyplot as plt
 import numpy as np
 import rospy
-from std_msgs.msg import Bool
 from geometry_msgs.msg import Point, Twist
 from scipy.spatial.transform import Rotation as R
+from std_msgs.msg import Bool
 from tbai_safe.cbf import ControlBarrierFunctionFactory, visualize_cbfs
 from tbai_safe.control import VanillaSafetyFilterNew
 from tbai_safe.mppi import (
@@ -392,10 +392,10 @@ def main():
   x_desired = np.array([2.7, 3.0])
 
   cbf_params = {
-    "rect1": dict(c_x=6+x_offset, c_y=2.9+y_offset, w=2.0, h=2.0, kappa=10, color="red"),
-    "rect2": dict(c_x=0+x_offset, c_y=2.9+y_offset, w=2.0, h=2.0, kappa=10, color="red"),
-    "sphere1": dict(c_x=4+x_offset, c_y=3.4+y_offset, r=1.3, kappa=10, color="green"),
-    "sphere2": dict(c_x=2+x_offset, c_y=3.6+y_offset, r=1.3, kappa=10, color="blue"),
+    "rect1": dict(c_x=6 + x_offset, c_y=2.9 + y_offset, w=2.0, h=2.0, kappa=10, color="red"),
+    "rect2": dict(c_x=0 + x_offset, c_y=2.9 + y_offset, w=2.0, h=2.0, kappa=10, color="red"),
+    "sphere1": dict(c_x=4 + x_offset, c_y=3.4 + y_offset, r=1.3, kappa=10, color="green"),
+    "sphere2": dict(c_x=2 + x_offset, c_y=3.6 + y_offset, r=1.3, kappa=10, color="blue"),
   }
 
   system = SimpleSingleIntegrator2D()
@@ -682,7 +682,7 @@ def main():
     cbf2_plot.set_data(time_hist, cbf2_hist)
     ax_cbf.relim()
     ax_cbf.autoscale_view()
-    ax_cbf.axhline(0, color='r', linestyle='--', linewidth=1)
+    ax_cbf.axhline(0, color="r", linestyle="--", linewidth=1)
     fig_cbf.canvas.draw()
     fig_cbf.canvas.flush_events()
 

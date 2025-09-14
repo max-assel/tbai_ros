@@ -4,8 +4,7 @@ from tkinter import ttk
 
 import rospy
 from geometry_msgs.msg import Twist
-from std_msgs.msg import String, Bool
-from std_srvs.srv import Empty
+from std_msgs.msg import Bool, String
 
 
 class VirtualJoystick(tk.Frame):
