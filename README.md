@@ -41,7 +41,7 @@ just fresh-install-all-gpu-free
 
 # Clone tbai_ros
 mkdir -p ros/src && cd ros/src
-git clone git@github.com:max-assel/tbai_ros.git --recursive && cd tbai_ros
+git clone git@github.com:max-assel/tbai_ros.git --branch ros2 --recursive && cd tbai_ros
 
 # Create conda environment
 micromamba env create -f .conda/all-gpu-free.yaml
