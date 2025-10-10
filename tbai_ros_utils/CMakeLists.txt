@@ -3,9 +3,7 @@ project(tbai_ros_utils)
 
 find_package(ament_cmake REQUIRED)
 
-catkin_package()
-
-install(TARGETS 
+install(PROGRAMS 
   src/virtual_joystick.py
     DESTINATION lib/${PROJECT_NAME}
 )

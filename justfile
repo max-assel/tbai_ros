@@ -58,7 +58,7 @@ build:
     ros_packages="tbai_ros_utils"
 
     echo "[TBAI] Building ROS packages:$ros_packages"
-    catkin build $ros_packages
+    MAKEFLAGS="-j 4" colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release --executor sequential --packages-up-to $ros_packages
 
 # Run tests for ROS packages
 test:
@@ -93,11 +93,14 @@ clean:
     #!/usr/bin/env bash
     CURRENT_DIR=$(pwd)
     cd ../..
-    catkin init
-    catkin config --cmake-args -Wno-dev -DCMAKE_BUILD_TYPE=Release
-    echo "Cleaning ROS workspace: $CURRENT_DIR"
-    cd $CURRENT_DIR
-    catkin clean -y
+    # catkin init
+    # catkin config --cmake-args -Wno-dev -DCMAKE_BUILD_TYPE=Release
+    # echo "Cleaning ROS workspace: $CURRENT_DIR"
+    # cd $CURRENT_DIR
+    # catkin clean -y
+    rm -rf ../../build 
+    rm -rf ../../logs 
+    rm -rf ../../install
     rm -rf dependencies/tbai
 
 # Remove tbai dependencies
