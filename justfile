@@ -147,7 +147,7 @@ fresh-install-all: clean clone-tbai build-tbai ros-build-all install-tbai-safe
     echo "All good 🤗"
 
 # Fresh install all-gpu-free environment
-fresh-install-all-gpu-free: clean clone-tbai build-tbai ros-build-all install-tbai-safe
+fresh-install-all-gpu-free: clean clone-tbai build-tbai ros-build-all # install-tbai-safe
     #!/usr/bin/env bash
     catkin build elevation_mapping
     echo "All good 🤗"
