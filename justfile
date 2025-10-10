@@ -43,17 +43,20 @@ lint:
 # Build ROS packages (only those related to tbai_ros)
 build:
     #!/usr/bin/env bash
-    ros_packages=""
-    search_dirs=(./ tbai_ros_deploy_go2/)
-    for search_dir in ${search_dirs[@]}; do
-        for folder in "$search_dir"*/; do
-            folder=${folder%/}
-            if [[ -f "$folder/CMakeLists.txt" ]] && [[ -f "$folder/package.xml" ]]; then
-                package=$(basename "$folder")
-                ros_packages+=" $package"
-            fi
-        done
-    done
+    # ros_packages=""
+    # search_dirs=(./ tbai_ros_deploy_go2/)
+    # for search_dir in ${search_dirs[@]}; do
+    #     for folder in "$search_dir"*/; do
+    #         folder=${folder%/}
+    #         if [[ -f "$folder/CMakeLists.txt" ]] && [[ -f "$folder/package.xml" ]] && [ ! [ -f "$folder/COLCON_IGNORE"]]; then
+    #             package=$(basename "$folder")
+    #             ros_packages+=" $package"
+    #         fi
+    #     done
+    # done
+
+    ros_packages="tbai_ros_utils"
+
     echo "[TBAI] Building ROS packages:$ros_packages"
     catkin build $ros_packages
 
@@ -114,9 +117,9 @@ build-tbai:
     cmake --build {{tbai_build_dir}} --parallel 8
     cmake --build {{tbai_build_dir}} --target install
 
-install-tbai-safe: clone-tbai
-    #!/usr/bin/env bash
-    cd dependencies/tbai/tbai_safe && pip3 install -e "."
+# install-tbai-safe: clone-tbai
+#     #!/usr/bin/env bash
+#     cd dependencies/tbai/tbai_safe && pip3 install -e "."
 
 # Build all ROS packages
 ros-build-all: build
@@ -129,19 +132,19 @@ ros-build-go2:
     catkin build tbai_ros_deploy_go2_rl
 
 # Fresh install go2 environment
-fresh-install-go2: clean clone-tbai build-tbai ros-build-go2 install-tbai-safe
+fresh-install-go2: clean clone-tbai build-tbai ros-build-go2 # install-tbai-safe
     #!/usr/bin/env bash
     catkin build elevation_mapping elevation_mapping_cupy hesai_ros_driver realsense2_camera
     echo "All good 🤗"
 
 # Fresh install go2-gpu-free environment
-fresh-install-go2-gpu-free: clean clone-tbai build-tbai ros-build-go2 install-tbai-safe
+fresh-install-go2-gpu-free: clean clone-tbai build-tbai ros-build-go2 # install-tbai-safe
     #!/usr/bin/env bash
     catkin build elevation_mapping realsense2_camera hesai_ros_driver
     echo "All good 🤗"
 
 # Fresh install all environment
-fresh-install-all: clean clone-tbai build-tbai ros-build-all install-tbai-safe
+fresh-install-all: clean clone-tbai build-tbai ros-build-all # install-tbai-safe
     #!/usr/bin/env bash
     catkin build elevation_mapping elevation_mapping_cupy
     echo "All good 🤗"
