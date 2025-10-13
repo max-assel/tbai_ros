@@ -12,6 +12,6 @@
 # There are four feet, each contains a single contact flag
 # The feet are ordered as follows: LF, RF, LH, RH
 
-time stamp
+builtin_interfaces/Time stamp
 float64[36] rbd_state
 bool[4] contact_flags

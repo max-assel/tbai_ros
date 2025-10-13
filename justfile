@@ -57,7 +57,7 @@ build:
 
     cd ~/tbai_ws
 
-    ros_packages="tbai_ros_utils"
+    ros_packages="tbai_ros_utils tbai_ros_msgs"
 
     echo "[TBAI] Building ROS packages:$ros_packages"
     MAKEFLAGS="-j 4" colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release --executor sequential --packages-up-to $ros_packages
@@ -113,7 +113,7 @@ remove-tbai:
 # Clone tbai repository
 clone-tbai: remove-tbai
     #!/usr/bin/env bash
-    git clone git@github.com:max-assel/tbai.git --single-branch --branch=main dependencies/tbai
+    git clone https://github.com/max-assel/tbai.git --single-branch --branch=main dependencies/tbai
 
 # Build tbai library
 build-tbai:
