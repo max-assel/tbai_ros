@@ -11,18 +11,20 @@ namespace tbai {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-RosStateSubscriber::RosStateSubscriber(ros::NodeHandle &nh, const std::string &stateTopic) {
-    stateSubscriber_ = nh.subscribe(stateTopic, 1, &RosStateSubscriber::stateMessageCallback, this);
+RosStateSubscriber::RosStateSubscriber(const rclcpp::Node::SharedPtr & node, const std::string &stateTopic) {
+    node_ = node;
+    stateSubscriber_ = node->create_subscription<tbai_ros_msgs::RbdState>(stateTopic, 1, std::bind(&RosStateSubscriber::stateMessageCallback, this, std::placeholders::_1));
 }
 
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 void RosStateSubscriber::waitTillInitialized() {
-    while (!stateMessage_ && ros::ok()) {
-        ros::spinOnce();
-        ros::Duration(0.05).sleep();
-        ROS_INFO_STREAM_THROTTLE(1, "[StateSubscriber] Waiting for state message...");
+    while (!stateMessage_ && rclcpp::ok()) {
+        rclcpp::spin_some(node_);
+        // ros::Duration(0.05).sleep();
+        rclcpp::Rate(20).sleep();
+        RCLCPP_INFO_THROTTLE(node_->get_logger(), *node_->get_clock(), 1000, "[StateSubscriber] Waiting for state message...");
     }
 }
 
@@ -47,15 +49,19 @@ void RosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::RbdState::Ptr
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-MuseRosStateSubscriber::MuseRosStateSubscriber(ros::NodeHandle &nhtemp, const std::string &stateTopic,
+MuseRosStateSubscriber::MuseRosStateSubscriber(const rclcpp::Node::SharedPtr & nodetemp, const std::string &stateTopic,
                                                const std::string &urdf) {
     logger_ = tbai::getLogger("MuseRosStateSubscriber");
 
-    ros::NodeHandle nh;
-    nh.setCallbackQueue(&thisQueue_);
+    // ros::NodeHandle nh;
+    // nh.setCallbackQueue(&thisQueue_);
+    callbackGroup_ = nodetemp->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+    rclcpp::SubscriptionOptions options;
+    options.callback_group = callbackGroup_;
 
     TBAI_LOG_INFO(logger_, "Initializing MuseRosStateSubscriber");
-    stateSubscriber_ = nh.subscribe(stateTopic, 1, &MuseRosStateSubscriber::stateMessageCallback, this);
+    stateSubscriber_ = nodetemp->create_subscription<tbai_ros_msgs::RobotState>(
+        stateTopic, 1, std::bind(&MuseRosStateSubscriber::stateMessageCallback, this, std::placeholders::_1), options);
 
     TBAI_LOG_INFO(logger_, "Initialized MuseRosStateSubscriber");
 
@@ -72,10 +78,11 @@ void MuseRosStateSubscriber::waitTillInitialized() {
     }
 
     TBAI_THROW_UNLESS(isRunning_, "MuseRosStateSubscriber not running");
-    while (!isInitialized_ && ros::ok()) {
-        ros::spinOnce();
-        ros::Duration(1.0 / 5.0).sleep();
-        TBAI_LOG_INFO(logger_, "Waiting for state message...");
+    while (!stateMessage_ && rclcpp::ok()) {
+        rclcpp::spin_some(node_);
+        // ros::Duration(0.05).sleep();
+        rclcpp::Rate(20).sleep();
+        RCLCPP_INFO_THROTTLE(node_->get_logger(), *node_->get_clock(), 1000, "[StateSubscriber] Waiting for state message...");
     }
 }
 
@@ -102,7 +109,7 @@ void MuseRosStateSubscriber::stopThreads() {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 void MuseRosStateSubscriber::threadFunction() {
-    while (isRunning_ && ros::ok()) {
+    while (isRunning_ && rclcpp::ok()) {
         thisQueue_.callAvailable(ros::WallDuration(1.0 / 5.0));
     }
 }
@@ -193,7 +200,7 @@ void MuseRosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::RobotStat
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-InekfRosStateSubscriber::InekfRosStateSubscriber(ros::NodeHandle &nhtemp, const std::string &stateTopic,
+InekfRosStateSubscriber::InekfRosStateSubscriber(rconst rclcpp::Node::SharedPtr & nodetemp, const std::string &stateTopic,
                                                  const std::string &urdf) {
     logger_ = tbai::getLogger("inekf_ros_state_subscriber");
     TBAI_LOG_INFO(logger_, "Initializing InekfRosStateSubscriber");
@@ -221,7 +228,7 @@ void InekfRosStateSubscriber::waitTillInitialized() {
     }
 
     TBAI_THROW_UNLESS(isRunning_, "MuseRosStateSubscriber not running");
-    while (!isInitialized_ && ros::ok()) {
+    while (!isInitialized_ && rclcpp::ok()) {
         ros::spinOnce();
         ros::Duration(1.0 / 5.0).sleep();
         TBAI_LOG_INFO(logger_, "Waiting for state message...");
@@ -251,7 +258,7 @@ void InekfRosStateSubscriber::stopThreads() {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 void InekfRosStateSubscriber::threadFunction() {
-    while (isRunning_ && ros::ok()) {
+    while (isRunning_ && rclcpp::ok()) {
         thisQueue_.callAvailable(ros::WallDuration(1.0 / 5.0));
     }
 }

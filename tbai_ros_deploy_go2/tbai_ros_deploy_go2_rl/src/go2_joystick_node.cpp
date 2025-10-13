@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
 
     ros::Rate rate(20);
 
-    while (ros::ok()) {
+    while (rclcpp::ok()) {
         ros::spinOnce();
         joystick.publishTwist();
         rate.sleep();

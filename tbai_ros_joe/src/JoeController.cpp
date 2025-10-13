@@ -829,7 +829,7 @@ void JoeController::resetMpc() {
     TBAI_LOG_INFO(logger_, "Resetting MPC...");
     mrt_.resetMpcNode(initTargetTrajectories);
 
-    while (!mrt_.initialPolicyReceived() && ros::ok()) {
+    while (!mrt_.initialPolicyReceived() && rclcpp::ok()) {
         TBAI_LOG_INFO(logger_, "Waiting for initial policy...");
         ros::spinOnce();
         mrt_.spinMRT();

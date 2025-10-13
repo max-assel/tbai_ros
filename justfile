@@ -57,7 +57,7 @@ build:
 
     cd ~/tbai_ws
 
-    ros_packages="tbai_ros_utils tbai_ros_msgs"
+    ros_packages="tbai_ros_utils tbai_ros_msgs tbai_ros_core"
 
     echo "[TBAI] Building ROS packages:$ros_packages"
     MAKEFLAGS="-j 4" colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release --executor sequential --packages-up-to $ros_packages

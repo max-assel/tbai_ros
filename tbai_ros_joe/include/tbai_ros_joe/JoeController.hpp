@@ -66,7 +66,7 @@ class JoeController final : public tbai::Controller {
 
     bool checkStability() const override;
 
-    bool ok() const override { return ros::ok(); }
+    bool ok() const override { return rclcpp::ok(); }
 
     void waitTillInitialized() override { stateSubscriberPtr_->waitTillInitialized(); }
 

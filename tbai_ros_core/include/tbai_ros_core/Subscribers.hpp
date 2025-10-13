@@ -7,19 +7,21 @@
 
 #include "tbai_ros_msgs/RbdState.h"
 #include "tbai_ros_msgs/RobotState.h"
-#include <ros/callback_queue.h>
-#include <ros/ros.h>
+// #include <ros/callback_queue.h>
+// #include <ros/ros.h>
 #include <std_msgs/String.h>
 #include <tbai_core/Logging.hpp>
 #include <tbai_core/Types.hpp>
 #include <tbai_core/control/Subscribers.hpp>
 #include <tbai_estim/inekf/InEKFEstimator.hpp>
 #include <tbai_estim/muse/MuseEstimator.hpp>
+
 namespace tbai {
 
-class RosStateSubscriber : public tbai::StateSubscriber {
+class RosStateSubscriber : public tbai::StateSubscriber 
+{
    public:
-    RosStateSubscriber(ros::NodeHandle &nh, const std::string &stateTopic);
+    RosStateSubscriber(const rclcpp::Node::SharedPtr & node, const std::string &stateTopic);
 
     void waitTillInitialized() override;
 
@@ -33,13 +35,18 @@ class RosStateSubscriber : public tbai::StateSubscriber {
     tbai_ros_msgs::RbdState::Ptr stateMessage_;
 
     /** State message subscriber */
-    ros::Subscriber stateSubscriber_;
+    rclcpp::Subscription<tbai_ros_msgs::RbdState>::SharedPtr stateSubscriber_;
+
+    rclcpp::Node::SharedPtr node_;
 };
 
-class RosChangeControllerSubscriber : public ChangeControllerSubscriber {
+class RosChangeControllerSubscriber : public ChangeControllerSubscriber 
+{
    public:
-    RosChangeControllerSubscriber(ros::NodeHandle &nh, const std::string &topic) {
-        controllerSubscriber_ = nh.subscribe(topic, 1, &RosChangeControllerSubscriber::controllerCallback, this);
+    RosChangeControllerSubscriber(const rclcpp::Node::SharedPtr & node, const std::string &topic) 
+    {
+        // controllerSubscriber_ = nh.subscribe(topic, 1, &RosChangeControllerSubscriber::controllerCallback, this);
+        controllerSubscriber_ = node->create_subscription<std_msgs::String>(topic, 1, std::bind(&RosChangeControllerSubscriber::controllerCallback, this, std::placeholders::_1));
     }
 
     void triggerCallbacks() override {
@@ -53,13 +60,14 @@ class RosChangeControllerSubscriber : public ChangeControllerSubscriber {
    private:
     void controllerCallback(const std_msgs::String::ConstPtr &msg) { latestControllerType_ = msg->data; }
 
-    ros::Subscriber controllerSubscriber_;
+    rclcpp::Subscription<std_msgs::String>::SharedPtr controllerSubscriber_;
     std::string latestControllerType_;
 };
 
-class MuseRosStateSubscriber : public tbai::ThreadedStateSubscriber {
+class MuseRosStateSubscriber : public tbai::ThreadedStateSubscriber 
+{
    public:
-    MuseRosStateSubscriber(ros::NodeHandle &nhtemp, const std::string &stateTopic, const std::string &urdf = "");
+    MuseRosStateSubscriber(const rclcpp::Node::SharedPtr & nodetemp, const std::string &stateTopic, const std::string &urdf = "");
     ~MuseRosStateSubscriber() override { stopThreads(); }
     void waitTillInitialized() override;
 
@@ -68,7 +76,7 @@ class MuseRosStateSubscriber : public tbai::ThreadedStateSubscriber {
 
    private:
     /** State message subscriber */
-    ros::Subscriber stateSubscriber_;
+    rclcpp::Subscription<tbai_ros_msgs::RobotState>::SharedPtr stateSubscriber_;
 
     /** State message callback */
     void stateMessageCallback(const tbai_ros_msgs::RobotState::Ptr &msg);
@@ -79,18 +87,20 @@ class MuseRosStateSubscriber : public tbai::ThreadedStateSubscriber {
     std::atomic_bool isRunning_ = false;
     std::atomic_bool isInitialized_ = false;
 
-    ros::CallbackQueue thisQueue_;
+    // ros::CallbackQueue thisQueue_;
+    rclcpp::CallbackGroup::SharedPtr callbackGroup_;
     std::unique_ptr<tbai::muse::MuseEstimator> estimator_;
 
     std::shared_ptr<spdlog::logger> logger_;
-    ros::Time lastStateTime_;
+    rclcpp::Time lastStateTime_;
     bool firstState_ = true;
     scalar_t lastYaw_ = 0.0;
 };
 
-class InekfRosStateSubscriber : public tbai::ThreadedStateSubscriber {
+class InekfRosStateSubscriber : public tbai::ThreadedStateSubscriber 
+{
    public:
-    InekfRosStateSubscriber(ros::NodeHandle &nhtemp, const std::string &stateTopic, const std::string &urdf = "");
+    InekfRosStateSubscriber(const rclcpp::Node::SharedPtr & nodetemp, const std::string &stateTopic, const std::string &urdf = "");
     ~InekfRosStateSubscriber() override { stopThreads(); }
     void waitTillInitialized() override;
 
@@ -99,7 +109,7 @@ class InekfRosStateSubscriber : public tbai::ThreadedStateSubscriber {
 
    private:
     /** State message subscriber */
-    ros::Subscriber stateSubscriber_;
+    rclcpp::Subscription<tbai_ros_msgs::RobotState>::SharedPtr stateSubscriber_;
 
     /** State message callback */
     void stateMessageCallback(const tbai_ros_msgs::RobotState::Ptr &msg);
@@ -118,11 +128,11 @@ class InekfRosStateSubscriber : public tbai::ThreadedStateSubscriber {
     bool rectifyOrientation_ = true;
     bool removeGyroscopeBias_ = true;
 
-    ros::CallbackQueue thisQueue_;
+    rclcpp::CallbackGroup::SharedPtr callbackGroup_;
     std::unique_ptr<tbai::inekf::InEKFEstimator> estimator_;
 
     std::shared_ptr<spdlog::logger> logger_;
-    ros::Time lastStateTime_;
+    rclcpp::Time lastStateTime_;
     bool firstState_ = true;
     scalar_t lastYaw_ = 0.0;
 };

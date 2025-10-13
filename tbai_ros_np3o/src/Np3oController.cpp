@@ -44,7 +44,7 @@ void RosNp3oController::stopController() {
 }
 
 bool RosNp3oController::ok() const {
-    return ros::ok();
+    return rclcpp::ok();
 }
 
 void RosNp3oController::preStep(scalar_t currentTime, scalar_t dt) {

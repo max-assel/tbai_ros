@@ -7,11 +7,14 @@ namespace tbai {
 
 class RosCommandPublisher : public tbai::CommandPublisher {
    public:
-    RosCommandPublisher(ros::NodeHandle &nh, const std::string &commandTopic) {
-        commandPublisher_ = nh.advertise<tbai_ros_msgs::JointCommandArray>(commandTopic, 1);
+    RosCommandPublisher(const rclcpp::Node::SharedPtr &node, const std::string &commandTopic) 
+    {
+        // commandPublisher_ = nh.advertise<tbai_ros_msgs::JointCommandArray>(commandTopic, 1);
+        commandPublisher_ = node->create_publisher<tbai_ros_msgs::JointCommandArray>(commandTopic, 1);
     }
 
-    virtual void publish(std::vector<MotorCommand> commands) override {
+    virtual void publish(std::vector<MotorCommand> commands) override 
+    {
         // Message to be sent to the motor controller
         tbai_ros_msgs::JointCommandArray commandArray;
         commandArray.joint_commands.resize(commands.size());
@@ -33,7 +36,8 @@ class RosCommandPublisher : public tbai::CommandPublisher {
     }
 
    private:
-    ros::Publisher commandPublisher_;
+    // ros::Publisher commandPublisher_;
+    rclcpp::Publisher<tbai_ros_msgs::JointCommandArray>::SharedPtr commandPublisher_;
 };
 
 }  // namespace tbai

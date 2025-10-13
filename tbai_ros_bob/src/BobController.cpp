@@ -55,7 +55,7 @@ void RosBobController::stopController() {
 }
 
 bool RosBobController::ok() const {
-    return ros::ok();
+    return rclcpp::ok();
 }
 
 void RosBobController::preStep(scalar_t currentTime, scalar_t dt) {

@@ -121,7 +121,7 @@ void MpcController::referenceThread() {
     referenceTrajectoryGeneratorPtr_->reset();
 
     // Wait for initial mpc observation
-    while (ros::ok() && !stopReferenceThread_) {
+    while (rclcpp::ok() && !stopReferenceThread_) {
         spinOnceReferenceThread();
         if (referenceTrajectoryGeneratorPtr_->isInitialized()) break;
         ros::Duration(0.02).sleep();
@@ -129,7 +129,7 @@ void MpcController::referenceThread() {
 
     // Start reference thread
     ros::Rate rate(5.0);
-    while (ros::ok() && !stopReferenceThread_) {
+    while (rclcpp::ok() && !stopReferenceThread_) {
         spinOnceReferenceThread();
         TBAI_LOG_INFO_THROTTLE(logger_, 5.0, "Publishing reference");
         referenceTrajectoryGeneratorPtr_->publishReferenceTrajectory();
@@ -200,7 +200,7 @@ void MpcController::resetMpc() {
                                                           {initialObservation.input});
     mrt_.resetMpcNode(initTargetTrajectories);
 
-    while (!mrt_.initialPolicyReceived() && ros::ok()) {
+    while (!mrt_.initialPolicyReceived() && rclcpp::ok()) {
         TBAI_LOG_INFO(logger_, "Waiting for initial policy...");
         ros::spinOnce();
         mrt_.spinMRT();

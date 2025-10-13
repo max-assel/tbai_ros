@@ -71,7 +71,7 @@ std::string GaitKeyboardPublisher::getKeyboardCommand() {
   const std::string commadMsg = "Enter the desired gait, for the list of available gait enter \"list\"";
   std::cout << commadMsg << ": ";
 
-  auto shouldTerminate = []() { return !ros::ok() || !ros::master::check(); };
+  auto shouldTerminate = []() { return !rclcpp::ok() || !ros::master::check(); };
   const auto commandLine = stringToWords(getCommandLineString(shouldTerminate));
 
   if (commandLine.empty()) {
@@ -134,7 +134,7 @@ int main(int argc, char* argv[]) {
   GaitKeyboardPublisher gaitCommand(nodeHandle, gaitCommandFile, robotName, true);
 
   auto thread1 = std::thread([&]() {
-    while (ros::ok() && ros::master::check()) {
+    while (rclcpp::ok() && ros::master::check()) {
         ros::spinOnce();
         std::string currentGaitCommand;
         {
@@ -151,7 +151,7 @@ int main(int argc, char* argv[]) {
     }
   });
 
-  while (ros::ok() && ros::master::check()) {
+  while (rclcpp::ok() && ros::master::check()) {
     std::string gaitCommand3 = gaitCommand.getKeyboardCommand();
     if(gaitCommand3 != "") {
       gaitCommand.handleGaitCommand(gaitCommand3);
