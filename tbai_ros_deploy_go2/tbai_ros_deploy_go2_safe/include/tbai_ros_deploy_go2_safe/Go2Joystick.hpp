@@ -14,7 +14,7 @@ namespace reference {
 class Go2Joystick : public ::tbai::reference::ReferenceVelocityGenerator, public ::tbai::go2::Go2JoystickInterface {
    public:
     Go2Joystick(ros::NodeHandle &nh) : Go2JoystickInterface(), ReferenceVelocityGenerator() {
-        changeControllerPublisher_ = nh.advertise<std_msgs::String>("/anymal_d/change_controller", 10);
+        changeControllerPublisher_ = nh.advertise<std_msgs::msg::String>("/anymal_d/change_controller", 10);
         cbfSwitchPublisher_ = nh.advertise<std_msgs::Bool>("/anymal_d/cbf_switch", 10);
         autonomySwitchPublisher_ = nh.advertise<std_msgs::Bool>("/anymal_d/autonomy", 10);
         TBAI_LOG_INFO(logger_, "Go2Joystick initialized");
@@ -47,28 +47,28 @@ class Go2Joystick : public ::tbai::reference::ReferenceVelocityGenerator, public
     }
 
     void onPressA() override {
-        std_msgs::String msg;
+        std_msgs::msg::String msg;
         msg.data = "SIT";
         changeControllerPublisher_.publish(msg);
         TBAI_LOG_WARN(logger_, "A pressed: Changing controller to {}", msg.data);
     }
 
     virtual void onPressB() override {
-        std_msgs::String msg;
+        std_msgs::msg::String msg;
         msg.data = "BOB";
         changeControllerPublisher_.publish(msg);
         TBAI_LOG_WARN(logger_, "B pressed: Changing controller to {}", msg.data);
     }
 
     virtual void onPressX() override {
-        std_msgs::String msg;
+        std_msgs::msg::String msg;
         msg.data = "STAND";
         changeControllerPublisher_.publish(msg);
         TBAI_LOG_WARN(logger_, "X pressed: Changing controller to {}", msg.data);
     }
 
     virtual void onPressY() override {
-        std_msgs::String msg;
+        std_msgs::msg::String msg;
         msg.data = "NP3O";
         changeControllerPublisher_.publish(msg);
         TBAI_LOG_WARN(logger_, "Y pressed: Changing controller to {}", msg.data);

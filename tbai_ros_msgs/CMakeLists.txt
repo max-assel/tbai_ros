@@ -11,7 +11,7 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
-find_package(std_msgs REQUIRED)
+# find_package(std_msgs REQUIRED)
 find_package(builtin_interfaces REQUIRED)
 
 # Declare the message files to be built
@@ -22,7 +22,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
         "msg/RobotState.msg"
         "msg/EstimatedState.msg"
     DEPENDENCIES 
-        std_msgs 
+        # std_msgs 
         builtin_interfaces
 )
 

@@ -13,7 +13,7 @@ namespace tbai {
 /*********************************************************************************************************************/
 RosStateSubscriber::RosStateSubscriber(const rclcpp::Node::SharedPtr & node, const std::string &stateTopic) {
     node_ = node;
-    stateSubscriber_ = node->create_subscription<tbai_ros_msgs::RbdState>(stateTopic, 1, std::bind(&RosStateSubscriber::stateMessageCallback, this, std::placeholders::_1));
+    stateSubscriber_ = node->create_subscription<tbai_ros_msgs::msg::RbdState>(stateTopic, 1, std::bind(&RosStateSubscriber::stateMessageCallback, this, std::placeholders::_1));
 }
 
 /*********************************************************************************************************************/
@@ -34,7 +34,7 @@ void RosStateSubscriber::waitTillInitialized() {
 State RosStateSubscriber::getLatestState() {
     State state;
     state.x = vector_t(Eigen::Map<vector_t>(stateMessage_->rbd_state.data(), stateMessage_->rbd_state.size()));
-    state.timestamp = stateMessage_->stamp.toSec();
+    state.timestamp = stateMessage_->stamp;
     state.contactFlags = std::vector<bool>(stateMessage_->contact_flags.begin(), stateMessage_->contact_flags.end());
     return state;
 }
@@ -42,7 +42,7 @@ State RosStateSubscriber::getLatestState() {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-void RosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::RbdState::Ptr &msg) {
+void RosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::msg::RbdState::Ptr &msg) {
     stateMessage_ = msg;
 }
 
@@ -55,13 +55,10 @@ MuseRosStateSubscriber::MuseRosStateSubscriber(const rclcpp::Node::SharedPtr & n
 
     // ros::NodeHandle nh;
     // nh.setCallbackQueue(&thisQueue_);
-    callbackGroup_ = nodetemp->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-    rclcpp::SubscriptionOptions options;
-    options.callback_group = callbackGroup_;
 
     TBAI_LOG_INFO(logger_, "Initializing MuseRosStateSubscriber");
-    stateSubscriber_ = nodetemp->create_subscription<tbai_ros_msgs::RobotState>(
-        stateTopic, 1, std::bind(&MuseRosStateSubscriber::stateMessageCallback, this, std::placeholders::_1), options);
+    stateSubscriber_ = nodetemp->create_subscription<tbai_ros_msgs::msg::RobotState>(
+        stateTopic, 1, std::bind(&MuseRosStateSubscriber::stateMessageCallback, this, std::placeholders::_1));
 
     TBAI_LOG_INFO(logger_, "Initialized MuseRosStateSubscriber");
 
@@ -117,7 +114,7 @@ void MuseRosStateSubscriber::threadFunction() {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-void MuseRosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::RobotState::Ptr &msg) {
+void MuseRosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::msg::RobotState::Ptr &msg) {
     // Determine time step since last state
     scalar_t dt = 0.0;
     scalar_t currentTime = msg->stamp.toSec();
@@ -266,7 +263,7 @@ void InekfRosStateSubscriber::threadFunction() {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-void InekfRosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::RobotState::Ptr &msg) {
+void InekfRosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::msg::RobotState::Ptr &msg) {
     // Determine time step since last state
     scalar_t dt = 0.0;
     scalar_t currentTime = msg->stamp.toSec();

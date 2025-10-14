@@ -5,11 +5,12 @@
 #include <string>
 #include <vector>
 
-#include "tbai_ros_msgs/RbdState.h"
-#include "tbai_ros_msgs/RobotState.h"
+#include <tbai_ros_msgs/msg/rbd_state.hpp>
+#include <tbai_ros_msgs/msg/robot_state.hpp>
 // #include <ros/callback_queue.h>
 // #include <ros/ros.h>
-#include <std_msgs/String.h>
+#include "rclcpp/rclcpp.hpp"
+#include <std_msgs/msg/string.hpp>
 #include <tbai_core/Logging.hpp>
 #include <tbai_core/Types.hpp>
 #include <tbai_core/control/Subscribers.hpp>
@@ -29,13 +30,13 @@ class RosStateSubscriber : public tbai::StateSubscriber
 
    private:
     /** State message callback */
-    void stateMessageCallback(const tbai_ros_msgs::RbdState::Ptr &msg);
+    void stateMessageCallback(const tbai_ros_msgs::msg::RbdState::Ptr &msg);
 
     /** Shared pointer to the latest state message */
-    tbai_ros_msgs::RbdState::Ptr stateMessage_;
+    tbai_ros_msgs::msg::RbdState::Ptr stateMessage_;
 
     /** State message subscriber */
-    rclcpp::Subscription<tbai_ros_msgs::RbdState>::SharedPtr stateSubscriber_;
+    rclcpp::Subscription<tbai_ros_msgs::msg::RbdState>::SharedPtr stateSubscriber_;
 
     rclcpp::Node::SharedPtr node_;
 };
@@ -46,7 +47,7 @@ class RosChangeControllerSubscriber : public ChangeControllerSubscriber
     RosChangeControllerSubscriber(const rclcpp::Node::SharedPtr & node, const std::string &topic) 
     {
         // controllerSubscriber_ = nh.subscribe(topic, 1, &RosChangeControllerSubscriber::controllerCallback, this);
-        controllerSubscriber_ = node->create_subscription<std_msgs::String>(topic, 1, std::bind(&RosChangeControllerSubscriber::controllerCallback, this, std::placeholders::_1));
+        controllerSubscriber_ = node->create_subscription<std_msgs::msg::String>(topic, 1, std::bind(&RosChangeControllerSubscriber::controllerCallback, this, std::placeholders::_1));
     }
 
     void triggerCallbacks() override {
@@ -58,9 +59,9 @@ class RosChangeControllerSubscriber : public ChangeControllerSubscriber
     }
 
    private:
-    void controllerCallback(const std_msgs::String::ConstPtr &msg) { latestControllerType_ = msg->data; }
+    void controllerCallback(const std_msgs::msg::String::ConstPtr &msg) { latestControllerType_ = msg->data; }
 
-    rclcpp::Subscription<std_msgs::String>::SharedPtr controllerSubscriber_;
+    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr controllerSubscriber_;
     std::string latestControllerType_;
 };
 
@@ -76,10 +77,10 @@ class MuseRosStateSubscriber : public tbai::ThreadedStateSubscriber
 
    private:
     /** State message subscriber */
-    rclcpp::Subscription<tbai_ros_msgs::RobotState>::SharedPtr stateSubscriber_;
+    rclcpp::Subscription<tbai_ros_msgs::msg::RobotState>::SharedPtr stateSubscriber_;
 
     /** State message callback */
-    void stateMessageCallback(const tbai_ros_msgs::RobotState::Ptr &msg);
+    void stateMessageCallback(const tbai_ros_msgs::msg::RobotState::Ptr &msg);
 
     void threadFunction();
     std::thread stateThread_;
@@ -88,13 +89,14 @@ class MuseRosStateSubscriber : public tbai::ThreadedStateSubscriber
     std::atomic_bool isInitialized_ = false;
 
     // ros::CallbackQueue thisQueue_;
-    rclcpp::CallbackGroup::SharedPtr callbackGroup_;
     std::unique_ptr<tbai::muse::MuseEstimator> estimator_;
 
     std::shared_ptr<spdlog::logger> logger_;
     rclcpp::Time lastStateTime_;
     bool firstState_ = true;
     scalar_t lastYaw_ = 0.0;
+
+    rclcpp::Node::SharedPtr node_;
 };
 
 class InekfRosStateSubscriber : public tbai::ThreadedStateSubscriber 
@@ -109,10 +111,10 @@ class InekfRosStateSubscriber : public tbai::ThreadedStateSubscriber
 
    private:
     /** State message subscriber */
-    rclcpp::Subscription<tbai_ros_msgs::RobotState>::SharedPtr stateSubscriber_;
+    rclcpp::Subscription<tbai_ros_msgs::msg::RobotState>::SharedPtr stateSubscriber_;
 
     /** State message callback */
-    void stateMessageCallback(const tbai_ros_msgs::RobotState::Ptr &msg);
+    void stateMessageCallback(const tbai_ros_msgs::msg::RobotState::Ptr &msg);
 
     void enable() override { enable_ = true; }
     void disable() override { enable_ = false; }

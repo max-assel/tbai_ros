@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>tbai_ros_core</name>
   <version>0.0.0</version>
   <description>The tbai_ros_core package</description>
@@ -8,15 +8,16 @@
 
   <license>MIT</license>
 
-  <buildtool_depend>catkin</buildtool_depend>
-  <depend>roscpp</depend>
-  <depend>roslib</depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>rclcpp</depend>
   <depend>tbai_ros_msgs</depend>
-  <depend>ocs2_robotic_assets</depend>
-  <depend>ocs2_robotic_tools</depend>
+  <!-- <depend>ocs2_robotic_assets</depend> -->
+  <!-- <depend>ocs2_robotic_tools</depend> -->
   <depend>std_msgs</depend>
   <depend>tbai</depend>
 
-  <export>
+  <export>                               
+   <build_type>ament_cmake</build_type>
   </export>
+
 </package>

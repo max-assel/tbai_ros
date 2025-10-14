@@ -31,7 +31,7 @@ class GaitKeyboardPublisher {
 
   void handleGaitCommand(std::string gaitCommand);
 
-  void gaitCommandCallback(const std_msgs::String::ConstPtr& msg);
+  void gaitCommandCallback(const std_msgs::msg::String::ConstPtr& msg);
 
   void printGaitList(const std::vector<std::string>& gaitList) const;
 
@@ -50,7 +50,7 @@ GaitKeyboardPublisher::GaitKeyboardPublisher(ros::NodeHandle nodeHandle, const s
   loadData::loadStdVector(gaitFile, "list", gaitList_, verbose);
 
   modeSequenceTemplatePublisher_ = nodeHandle.advertise<ocs2_msgs::mode_schedule>(robotName + "_mpc_mode_schedule", 1, true);
-  gaitCommandSubscriber_ = nodeHandle.subscribe<std_msgs::String>("/gait_command", 1, &GaitKeyboardPublisher::gaitCommandCallback, this);
+  gaitCommandSubscriber_ = nodeHandle.subscribe<std_msgs::msg::String>("/gait_command", 1, &GaitKeyboardPublisher::gaitCommandCallback, this);
 
   gaitMap_.clear();
   for (const auto& gaitName : gaitList_) {
@@ -59,7 +59,7 @@ GaitKeyboardPublisher::GaitKeyboardPublisher(ros::NodeHandle nodeHandle, const s
   ROS_INFO_STREAM(robotName + "_mpc_mode_schedule command node is ready.");
 }
 
-void GaitKeyboardPublisher::gaitCommandCallback(const std_msgs::String::ConstPtr& msg) {
+void GaitKeyboardPublisher::gaitCommandCallback(const std_msgs::msg::String::ConstPtr& msg) {
   std::lock_guard<std::mutex> lock(gaitCommandMutex_);
   gaitCommand_ = msg->data;
 }

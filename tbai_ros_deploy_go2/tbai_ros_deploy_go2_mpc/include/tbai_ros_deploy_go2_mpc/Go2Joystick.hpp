@@ -13,8 +13,8 @@ namespace reference {
 class Go2Joystick : public ::tbai::reference::ReferenceVelocityGenerator, public ::tbai::go2::Go2JoystickInterface {
    public:
     Go2Joystick(ros::NodeHandle &nh) : Go2JoystickInterface(), ReferenceVelocityGenerator() {
-        changeControllerPublisher_ = nh.advertise<std_msgs::String>("/anymal_d/change_controller", 10);
-        gaitCommandPublisher_ = nh.advertise<std_msgs::String>("/gait_command", 10);
+        changeControllerPublisher_ = nh.advertise<std_msgs::msg::String>("/anymal_d/change_controller", 10);
+        gaitCommandPublisher_ = nh.advertise<std_msgs::msg::String>("/gait_command", 10);
         TBAI_LOG_INFO(logger_, "Go2Joystick initialized");
 
         velocityFactorX_ = tbai::fromGlobalConfig<scalar_t>("go2_joystick/velocity_factor_x", 0.6);
@@ -45,35 +45,35 @@ class Go2Joystick : public ::tbai::reference::ReferenceVelocityGenerator, public
     }
 
     void onPressA() override {
-        std_msgs::String msg;
+        std_msgs::msg::String msg;
         msg.data = "SIT";
         changeControllerPublisher_.publish(msg);
         TBAI_LOG_WARN(logger_, "A pressed: Changing controller to {}", msg.data);
     }
 
     virtual void onPressB() override {
-        std_msgs::String msg;
+        std_msgs::msg::String msg;
         msg.data = "WBC";
         changeControllerPublisher_.publish(msg);
         TBAI_LOG_WARN(logger_, "B pressed: Changing controller to {}", msg.data);
     }
 
     virtual void onPressX() override {
-        std_msgs::String msg;
+        std_msgs::msg::String msg;
         msg.data = "STAND";
         changeControllerPublisher_.publish(msg);
         TBAI_LOG_WARN(logger_, "X pressed: Changing controller to {}", msg.data);
     }
 
     virtual void onPressY() override {
-        std_msgs::String msg;
+        std_msgs::msg::String msg;
         msg.data = "NP3O";
         changeControllerPublisher_.publish(msg);
         TBAI_LOG_WARN(logger_, "Y pressed: Changing controller to {}", msg.data);
     }
 
     virtual void onPressUp() override {
-        std_msgs::String msg;
+        std_msgs::msg::String msg;
         msg.data = "trot";
         gaitCommandPublisher_.publish(msg);
         TBAI_LOG_WARN(logger_, "Up pressed: Changing gait to {}", msg.data);
@@ -81,21 +81,21 @@ class Go2Joystick : public ::tbai::reference::ReferenceVelocityGenerator, public
 
     virtual void onPressDown() override {
     
-        std_msgs::String msg;
+        std_msgs::msg::String msg;
         msg.data = "stance";
         gaitCommandPublisher_.publish(msg);
         TBAI_LOG_WARN(logger_, "Down pressed: Changing gait to {}", msg.data);
     }
 
     virtual void onPressRight() override {
-        std_msgs::String msg;
+        std_msgs::msg::String msg;
         msg.data = "standing_trot";
         gaitCommandPublisher_.publish(msg);
         TBAI_LOG_WARN(logger_, "Right pressed: Changing gait to {}", msg.data);
     }
 
     virtual void onPressLeft() override {
-        std_msgs::String msg;
+        std_msgs::msg::String msg;
         msg.data = "static_walk";
         gaitCommandPublisher_.publish(msg);
         TBAI_LOG_WARN(logger_, "Left pressed: Changing gait to {}", msg.data);

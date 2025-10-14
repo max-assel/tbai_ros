@@ -34,7 +34,7 @@ void RobotStatePublisher::Load(physics::ModelPtr robot, sdf::ElementPtr sdf) {
 
     ros::NodeHandle nh;
     auto stateTopic = tbai::fromGlobalConfig<std::string>("state_topic");
-    statePublisher_ = nh.advertise<tbai_ros_msgs::RobotState>(stateTopic, 2);
+    statePublisher_ = nh.advertise<tbai_ros_msgs::msg::RobotState>(stateTopic, 2);
 
     auto base = tbai::fromGlobalConfig<std::string>("base_name");
     baseLinkPtr_ = robot->GetChildLink(base);
@@ -137,7 +137,7 @@ void RobotStatePublisher::OnUpdate() {
     }
 
     // Put everything into an RbdState message
-    tbai_ros_msgs::RobotState message;  // TODO(lnotspotl): Room for optimization here
+    tbai_ros_msgs::msg::RobotState message;  // TODO(lnotspotl): Room for optimization here
 
     // Base orientation - Euler zyx as {roll, pitch, yaw}
     message.orientation_xyzw[0] = baseOrientationIgn.X();
