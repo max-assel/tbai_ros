@@ -30,10 +30,10 @@ class RosStateSubscriber : public tbai::StateSubscriber
 
    private:
     /** State message callback */
-    void stateMessageCallback(const tbai_ros_msgs::msg::RbdState::Ptr &msg);
+    void stateMessageCallback(const tbai_ros_msgs::msg::RbdState::SharedPtr msg);
 
     /** Shared pointer to the latest state message */
-    tbai_ros_msgs::msg::RbdState::Ptr stateMessage_;
+    tbai_ros_msgs::msg::RbdState::SharedPtr stateMessage_;
 
     /** State message subscriber */
     rclcpp::Subscription<tbai_ros_msgs::msg::RbdState>::SharedPtr stateSubscriber_;
@@ -59,7 +59,7 @@ class RosChangeControllerSubscriber : public ChangeControllerSubscriber
     }
 
    private:
-    void controllerCallback(const std_msgs::msg::String::ConstPtr &msg) { latestControllerType_ = msg->data; }
+    void controllerCallback(const std_msgs::msg::String::SharedPtr msg) { latestControllerType_ = msg->data; }
 
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr controllerSubscriber_;
     std::string latestControllerType_;
@@ -80,7 +80,7 @@ class MuseRosStateSubscriber : public tbai::ThreadedStateSubscriber
     rclcpp::Subscription<tbai_ros_msgs::msg::RobotState>::SharedPtr stateSubscriber_;
 
     /** State message callback */
-    void stateMessageCallback(const tbai_ros_msgs::msg::RobotState::Ptr &msg);
+    void stateMessageCallback(const tbai_ros_msgs::msg::RobotState::SharedPtr msg);
 
     void threadFunction();
     std::thread stateThread_;
@@ -114,7 +114,7 @@ class InekfRosStateSubscriber : public tbai::ThreadedStateSubscriber
     rclcpp::Subscription<tbai_ros_msgs::msg::RobotState>::SharedPtr stateSubscriber_;
 
     /** State message callback */
-    void stateMessageCallback(const tbai_ros_msgs::msg::RobotState::Ptr &msg);
+    void stateMessageCallback(const tbai_ros_msgs::msg::RobotState::SharedPtr msg);
 
     void enable() override { enable_ = true; }
     void disable() override { enable_ = false; }
@@ -137,6 +137,8 @@ class InekfRosStateSubscriber : public tbai::ThreadedStateSubscriber
     rclcpp::Time lastStateTime_;
     bool firstState_ = true;
     scalar_t lastYaw_ = 0.0;
+
+    rclcpp::Node::SharedPtr node_;
 };
 
 }  // namespace tbai

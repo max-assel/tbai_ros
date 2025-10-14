@@ -13,7 +13,11 @@ namespace tbai {
 /*********************************************************************************************************************/
 RosStateSubscriber::RosStateSubscriber(const rclcpp::Node::SharedPtr & node, const std::string &stateTopic) {
     node_ = node;
-    stateSubscriber_ = node->create_subscription<tbai_ros_msgs::msg::RbdState>(stateTopic, 1, std::bind(&RosStateSubscriber::stateMessageCallback, this, std::placeholders::_1));
+    stateSubscriber_ = node->create_subscription<tbai_ros_msgs::msg::RbdState>(stateTopic, 
+                                                                                1, 
+                                                                                std::bind(&RosStateSubscriber::stateMessageCallback, 
+                                                                                            this, 
+                                                                                            std::placeholders::_1));
 }
 
 /*********************************************************************************************************************/
@@ -34,7 +38,7 @@ void RosStateSubscriber::waitTillInitialized() {
 State RosStateSubscriber::getLatestState() {
     State state;
     state.x = vector_t(Eigen::Map<vector_t>(stateMessage_->rbd_state.data(), stateMessage_->rbd_state.size()));
-    state.timestamp = stateMessage_->stamp;
+    state.timestamp = stateMessage_->stamp.sec + 1e-9 * stateMessage_->stamp.nanosec;
     state.contactFlags = std::vector<bool>(stateMessage_->contact_flags.begin(), stateMessage_->contact_flags.end());
     return state;
 }
@@ -42,7 +46,7 @@ State RosStateSubscriber::getLatestState() {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-void RosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::msg::RbdState::Ptr &msg) {
+void RosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::msg::RbdState::SharedPtr msg) {
     stateMessage_ = msg;
 }
 
@@ -75,7 +79,8 @@ void MuseRosStateSubscriber::waitTillInitialized() {
     }
 
     TBAI_THROW_UNLESS(isRunning_, "MuseRosStateSubscriber not running");
-    while (!stateMessage_ && rclcpp::ok()) {
+    while (!isInitialized_ && rclcpp::ok()) 
+    {
         rclcpp::spin_some(node_);
         // ros::Duration(0.05).sleep();
         rclcpp::Rate(20).sleep();
@@ -105,24 +110,27 @@ void MuseRosStateSubscriber::stopThreads() {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-void MuseRosStateSubscriber::threadFunction() {
-    while (isRunning_ && rclcpp::ok()) {
-        thisQueue_.callAvailable(ros::WallDuration(1.0 / 5.0));
+void MuseRosStateSubscriber::threadFunction() 
+{
+    while (isRunning_ && rclcpp::ok()) 
+    {
+        // WHAT IS THIS
+        // thisQueue_.callAvailable(ros::WallDuration(1.0 / 5.0));
     }
 }
 
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-void MuseRosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::msg::RobotState::Ptr &msg) {
+void MuseRosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::msg::RobotState::SharedPtr msg) {
     // Determine time step since last state
     scalar_t dt = 0.0;
-    scalar_t currentTime = msg->stamp.toSec();
+    scalar_t currentTime = msg->stamp.sec + 1e-9 * msg->stamp.nanosec;
     if (firstState_) {
         lastStateTime_ = msg->stamp;
         firstState_ = false;
     } else {
-        dt = currentTime - lastStateTime_.toSec();
+        dt = currentTime - lastStateTime_.seconds() - 1e-9 * lastStateTime_.nanoseconds();
         lastStateTime_ = msg->stamp;
     }
 
@@ -197,14 +205,17 @@ void MuseRosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::msg::Robo
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-InekfRosStateSubscriber::InekfRosStateSubscriber(rconst rclcpp::Node::SharedPtr & nodetemp, const std::string &stateTopic,
-                                                 const std::string &urdf) {
+InekfRosStateSubscriber::InekfRosStateSubscriber(const rclcpp::Node::SharedPtr & node, const std::string &stateTopic,
+                                                 const std::string &urdf) 
+{
+    node_ = node;
     logger_ = tbai::getLogger("inekf_ros_state_subscriber");
     TBAI_LOG_INFO(logger_, "Initializing InekfRosStateSubscriber");
 
-    ros::NodeHandle nh;
-    nh.setCallbackQueue(&thisQueue_);
-    stateSubscriber_ = nh.subscribe(stateTopic, 1, &InekfRosStateSubscriber::stateMessageCallback, this);
+    // ros::NodeHandle nh;
+    // nh.setCallbackQueue(&thisQueue_);
+    // stateSubscriber_ = nh.subscribe(stateTopic, 1, &InekfRosStateSubscriber::stateMessageCallback, this);
+    stateSubscriber_ = node->create_subscription<tbai_ros_msgs::msg::RobotState>(stateTopic, 1, std::bind(&InekfRosStateSubscriber::stateMessageCallback, this, std::placeholders::_1));
 
     std::vector<std::string> footNames = {"LF_FOOT", "RF_FOOT", "LH_FOOT", "RH_FOOT"};
     TBAI_LOG_INFO(logger_, "Creating InEKFEstimator, foot frames: {}", footNames);
@@ -225,9 +236,12 @@ void InekfRosStateSubscriber::waitTillInitialized() {
     }
 
     TBAI_THROW_UNLESS(isRunning_, "MuseRosStateSubscriber not running");
-    while (!isInitialized_ && rclcpp::ok()) {
-        ros::spinOnce();
-        ros::Duration(1.0 / 5.0).sleep();
+    while (!isInitialized_ && rclcpp::ok()) 
+    {
+        // ros::spinOnce();
+        rclcpp::spin_some(node_);
+        // ros::Duration(0.05).sleep();
+        rclcpp::Rate(20).sleep();        
         TBAI_LOG_INFO(logger_, "Waiting for state message...");
     }
 }
@@ -254,24 +268,26 @@ void InekfRosStateSubscriber::stopThreads() {
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-void InekfRosStateSubscriber::threadFunction() {
-    while (isRunning_ && rclcpp::ok()) {
-        thisQueue_.callAvailable(ros::WallDuration(1.0 / 5.0));
+void InekfRosStateSubscriber::threadFunction() 
+{
+    while (isRunning_ && rclcpp::ok()) 
+    {
+        // thisQueue_.callAvailable(ros::WallDuration(1.0 / 5.0));
     }
 }
 
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
 /*********************************************************************************************************************/
-void InekfRosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::msg::RobotState::Ptr &msg) {
+void InekfRosStateSubscriber::stateMessageCallback(const tbai_ros_msgs::msg::RobotState::SharedPtr msg) {
     // Determine time step since last state
     scalar_t dt = 0.0;
-    scalar_t currentTime = msg->stamp.toSec();
+    scalar_t currentTime = msg->stamp.sec + 1e-9 * msg->stamp.nanosec;
     if (firstState_) {
         lastStateTime_ = msg->stamp;
         firstState_ = false;
     } else {
-        dt = currentTime - lastStateTime_.toSec();
+        dt = currentTime - lastStateTime_.seconds() - 1e-9 * lastStateTime_.nanoseconds();
         lastStateTime_ = msg->stamp;
     }
 
