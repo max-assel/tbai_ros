@@ -24,7 +24,7 @@
 # 	url = git@github.com:lnotspotl/elevation_mapping_cupy.git
 [submodule "dependencies/grid_map"]
 	path = dependencies/grid_map
-	url = git@github.gatech.edu:GeorgiaTechLIDARGroup/grid_map.git
+	url = https://github.gatech.edu/GeorgiaTechLIDARGroup/grid_map.git
     branch = foxy-devel
 # [submodule "dependencies/pybind11_catkin"]
 # 	path = dependencies/pybind11_catkin
