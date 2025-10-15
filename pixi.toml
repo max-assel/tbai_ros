@@ -23,6 +23,7 @@ spdlog = ">=1.15.3,<2"
 pinocchio = ">=3.7.0,<4"
 pytorch = "2.*"
 eigen="3.4.0.*"
+colcon-common-extensions = ">=0.3.0,<0.4"
 
 [feature.all.dependencies] 
 ros-humble-desktop = ">=0.10.0,<0.11"
