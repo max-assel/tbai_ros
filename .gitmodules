@@ -37,3 +37,6 @@
 # [submodule "dependencies/HesaiLidar_ROS_2.0"]
 # 	path = dependencies/HesaiLidar_ROS_2.0
 # 	url = git@github.com:lnotspotl/HesaiLidar_ROS_2.0.git
+[submodule "dependencies/grid_map"]
+	path = dependencies/grid_map
+	url = https://github.gatech.edu/GeorgiaTechLIDARGroup/grid_map.git
