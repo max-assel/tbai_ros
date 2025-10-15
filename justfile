@@ -160,7 +160,7 @@ fresh-install-all: clean clone-tbai build-tbai ros-build-all # install-tbai-safe
     echo "All good 🤗"
 
 # Fresh install all-gpu-free environment
-fresh-install-all-gpu-free: clean clone-tbai build-tbai ros-build-all # install-tbai-safe
+fresh-install-humble: clean clone-tbai build-tbai ros-build-all # install-tbai-safe
     #!/usr/bin/env bash
     cd ~/tbai_ws
     MAKEFLAGS="-j 4" colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release --executor sequential --packages-up-to elevation_mapping

@@ -18,7 +18,7 @@ build = "colcon build --symlink-install --cmake-args -DCMAKE_EXPORT_COMPILE_COMM
 python = "*"
 # Build tools
 compilers = "*"
-cmake = "*"
+cmake = "3.*"
 pkg-config = "*"
 make = "*"
 ninja = "*"
@@ -26,6 +26,8 @@ ninja = "*"
 rosdep = "*"
 colcon-common-extensions = "*"
 just = "*"
+pinocchio = ">=3.7.0,<4"
+pytorch = "2.*"
 
 [target.linux.dependencies]
 libgl-devel = "*"
@@ -42,3 +44,5 @@ channels = ["https://prefix.dev/robostack-humble"]
 
 [feature.humble.dependencies]
 ros-humble-desktop = "*"
+ros-humble-nav2-costmap-2d	= "*"
+ros-humble-filters = "*"
