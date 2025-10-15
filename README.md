@@ -29,7 +29,7 @@ curl -fsSL https://pixi.sh/install.sh | sh # You might have to source your confi
 
 # Install tbai_ros
 mkdir -p ros/src && cd ros/src
-git clone git@github.com:max-assel/tbai_ros.git --recursive && cd tbai_ros
+git clone https://github.com/max-assel/tbai_ros.git --recursive && cd tbai_ros
 pixi install && pixi shell --environment all-gpu-free
 just fresh-install-all-gpu-free
 ```
@@ -41,7 +41,7 @@ just fresh-install-all-gpu-free
 
 # Clone tbai_ros
 mkdir -p ros/src && cd ros/src
-git clone git@github.com:max-assel/tbai_ros.git --recursive && cd tbai_ros
+git clone https://github.com/max-assel/tbai_ros.git --recursive && cd tbai_ros
 
 # Create conda environment
 micromamba env create -f .conda/all-gpu-free.yaml
@@ -59,6 +59,15 @@ pixi shell --environment all-gpu-free
 
 # Run NP3O example
 source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_np3o simple_go2.launch gui:=true
+
+# Run MPC example
+source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_mpc anymal_d_perceptive.launch gui:=true
+
+# Run BOB example
+source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_bob anymal_d_perceptive.launch gui:=true
+
+# Run DTC example
+source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_dtc simple.launch gui:=true
 
 # Try out other examples located under tbai_ros_mpc, tbai_ros_bob, tbai_ros_dtc, tbai_ros_joe and tbai_ros_np3o
 ```
