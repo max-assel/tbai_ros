@@ -30,7 +30,12 @@ int main(int argc, char *argv[]) {
     auto estimatorType = tbai::fromGlobalConfig<std::string>("estimator_type");
 
     std::shared_ptr<tbai::StateSubscriber> stateSubscriber;
-    if (estimatorType == "muse") {
+    if (estimatorType == "muse") 
+    {
+        stateSubscriber =
+            std::shared_ptr<tbai::StateSubscriber>(new tbai::MuseRosStateSubscriber(nh, stateTopic, urdfString));
+    } else if (estimatorType == "inekf") 
+    {
         stateSubscriber =
             std::shared_ptr<tbai::StateSubscriber>(new tbai::InekfRosStateSubscriber(nh, stateTopic, urdfString));
     } else if (estimatorType == "ground_truth") {

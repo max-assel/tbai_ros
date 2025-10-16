@@ -49,7 +49,7 @@ reference_generator:
   twist:
     topic: "cmd_vel"
 
-estimator_type: "muse"
+estimator_type: "inekf"
 
 gazebo:
   contact_sensor:
