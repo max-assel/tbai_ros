@@ -62,6 +62,7 @@ source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_np3o simple_go2.l
 
 # Run MPC example
 source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_mpc anymal_d_perceptive.launch gui:=true
+source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_mpc go2_perceptive.launch gui:=true
 
 # Run BOB example
 source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_bob anymal_d_perceptive.launch gui:=true

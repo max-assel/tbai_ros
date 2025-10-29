@@ -40,7 +40,7 @@ class LocalTerrainEstimator {
     // Local terrain estimate
     TerrainPlane terrainPlane_;
 
-    // last foorholds
+    // last footholds
     std::vector<vector3_t> lastFootholds_;
 
     // Kinematics model

@@ -14,7 +14,7 @@
     <arg name="controller_config_file" default="$(find tbai_ros_mpc)/config/go2/perceptive/controllers.info"/>
 
     <!-- Gazebo parameters -->
-    <arg name="gui" default="false"/>
+    <arg name="gui" default="true"/>
     <arg name="paused" default="false"/>
     <arg name="world" default="normal"/>
     <arg name="x" default="0.0"/>
