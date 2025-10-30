@@ -86,7 +86,7 @@ void MpcController::spinOnceReferenceThread() {
 
 std::vector<MotorCommand> MpcController::getMotorCommands(scalar_t currentTime, scalar_t dt) 
 {
-    ROS_INFO_STREAM("[MpcController::getMotorCommands] start");
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands] start");
 
     mrt_.spinMRT();
     mrt_.updatePolicy();
@@ -95,54 +95,54 @@ std::vector<MotorCommand> MpcController::getMotorCommands(scalar_t currentTime, 
 
     auto observation = generateSystemObservation();
 
-    ROS_INFO_STREAM("[MpcController::getMotorCommands] observation: ");
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]      time: ");
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          " << observation.time);
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]      state: ");
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          torso orientation: " << observation.state.segment(0,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          torso position:    " << observation.state.segment(3,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          torso angular vel: " << observation.state.segment(6,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          torso linear vel:  " << observation.state.segment(9,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          LF joint pos:      " << observation.state.segment(12,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          RF joint pos:      " << observation.state.segment(15,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          LH joint pos:      " << observation.state.segment(18,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          RH joint pos:      " << observation.state.segment(21,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]      input: ");
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          LF contact force:  " << observation.input.segment(0,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          RF contact force:  " << observation.input.segment(3,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          LH contact force:  " << observation.input.segment(6,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          RH contact force:  " << observation.input.segment(9,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          LF joint vel:      " << observation.input.segment(12,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          RF joint vel:      " << observation.input.segment(15,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          LH joint vel:      " << observation.input.segment(18,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          RH joint vel:      " << observation.input.segment(21,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands] observation: ");
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]      time: ");
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          " << observation.time);
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]      state: ");
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          torso orientation: " << observation.state.segment(0,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          torso position:    " << observation.state.segment(3,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          torso angular vel: " << observation.state.segment(6,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          torso linear vel:  " << observation.state.segment(9,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          LF joint pos:      " << observation.state.segment(12,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          RF joint pos:      " << observation.state.segment(15,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          LH joint pos:      " << observation.state.segment(18,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          RH joint pos:      " << observation.state.segment(21,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]      input: ");
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          LF contact force:  " << observation.input.segment(0,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          RF contact force:  " << observation.input.segment(3,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          LH contact force:  " << observation.input.segment(6,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          RH contact force:  " << observation.input.segment(9,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          LF joint vel:      " << observation.input.segment(12,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          RF joint vel:      " << observation.input.segment(15,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          LH joint vel:      " << observation.input.segment(18,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          RH joint vel:      " << observation.input.segment(21,3).transpose());
 
     ocs2::vector_t desiredState;
     ocs2::vector_t desiredInput;
     size_t desiredMode;
     mrt_.evaluatePolicy(tNow_, observation.state, desiredState, desiredInput, desiredMode);
 
-    ROS_INFO_STREAM("[MpcController::getMotorCommands] desired: ");
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]      state: ");
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          torso orientation: " << desiredState.segment(0,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          torso position:    " << desiredState.segment(3,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          torso angular vel: " << desiredState.segment(6,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          torso linear vel:  " << desiredState.segment(9,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          LF joint pos:      " << desiredState.segment(12,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          RF joint pos:      " << desiredState.segment(15,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          LH joint pos:      " << desiredState.segment(18,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          RH joint pos:      " << desiredState.segment(21,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]      input: ");
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          LF contact force:  " << desiredInput.segment(0,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          RF contact force:  " << desiredInput.segment(3,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          LH contact force:  " << desiredInput.segment(6,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          RH contact force:  " << desiredInput.segment(9,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          LF joint vel:      " << desiredInput.segment(12,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          RF joint vel:      " << desiredInput.segment(15,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          LH joint vel:      " << desiredInput.segment(18,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          RH joint vel:      " << desiredInput.segment(21,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]      mode: ");
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          desired mode:      " << desiredMode);
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands] desired: ");
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]      state: ");
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          torso orientation: " << desiredState.segment(0,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          torso position:    " << desiredState.segment(3,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          torso angular vel: " << desiredState.segment(6,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          torso linear vel:  " << desiredState.segment(9,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          LF joint pos:      " << desiredState.segment(12,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          RF joint pos:      " << desiredState.segment(15,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          LH joint pos:      " << desiredState.segment(18,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          RH joint pos:      " << desiredState.segment(21,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]      input: ");
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          LF contact force:  " << desiredInput.segment(0,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          RF contact force:  " << desiredInput.segment(3,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          LH contact force:  " << desiredInput.segment(6,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          RH contact force:  " << desiredInput.segment(9,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          LF joint vel:      " << desiredInput.segment(12,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          RF joint vel:      " << desiredInput.segment(15,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          LH joint vel:      " << desiredInput.segment(18,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          RH joint vel:      " << desiredInput.segment(21,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]      mode: ");
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          desired mode:      " << desiredMode);
 
     constexpr ocs2::scalar_t time_eps = 1e-4;
     ocs2::vector_t dummyState;
@@ -150,47 +150,47 @@ std::vector<MotorCommand> MpcController::getMotorCommands(scalar_t currentTime, 
     size_t dummyMode;
     mrt_.evaluatePolicy(tNow_ + time_eps, observation.state, dummyState, dummyInput, dummyMode);
 
-    ROS_INFO_STREAM("[MpcController::getMotorCommands] dummy: ");
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]      input: ");
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          LF contact force:  " << dummyInput.segment(0,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          RF contact force:  " << dummyInput.segment(3,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          LH contact force:  " << dummyInput.segment(6,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          RH contact force:  " << dummyInput.segment(9,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          LF joint vel:      " << dummyInput.segment(12,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          RF joint vel:      " << dummyInput.segment(15,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          LH joint vel:      " << dummyInput.segment(18,3).transpose());
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]          RH joint vel:      " << dummyInput.segment(21,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands] dummy: ");
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]      input: ");
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          LF contact force:  " << dummyInput.segment(0,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          RF contact force:  " << dummyInput.segment(3,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          LH contact force:  " << dummyInput.segment(6,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          RH contact force:  " << dummyInput.segment(9,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          LF joint vel:      " << dummyInput.segment(12,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          RF joint vel:      " << dummyInput.segment(15,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          LH joint vel:      " << dummyInput.segment(18,3).transpose());
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]          RH joint vel:      " << dummyInput.segment(21,3).transpose());
 
     ocs2::vector_t joint_accelerations = (dummyInput.tail<12>() - desiredInput.tail<12>()) / time_eps;
 
-    ROS_INFO_STREAM("[MpcController::getMotorCommands] joint_accelerations: ");
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]      [0]: " << joint_accelerations(0));
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]      [1]: " << joint_accelerations(1));
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]      [2]: " << joint_accelerations(2));
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]      [3]: " << joint_accelerations(3));
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]      [4]: " << joint_accelerations(4));
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]      [5]: " << joint_accelerations(5));
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]      [6]: " << joint_accelerations(6));
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]      [7]: " << joint_accelerations(7));
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]      [8]: " << joint_accelerations(8));
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]      [9]: " << joint_accelerations(9));
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]      [10]: " << joint_accelerations(10));
-    ROS_INFO_STREAM("[MpcController::getMotorCommands]      [11]: " << joint_accelerations(11));
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands] joint_accelerations: ");
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]      [0]: " << joint_accelerations(0));
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]      [1]: " << joint_accelerations(1));
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]      [2]: " << joint_accelerations(2));
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]      [3]: " << joint_accelerations(3));
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]      [4]: " << joint_accelerations(4));
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]      [5]: " << joint_accelerations(5));
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]      [6]: " << joint_accelerations(6));
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]      [7]: " << joint_accelerations(7));
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]      [8]: " << joint_accelerations(8));
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]      [9]: " << joint_accelerations(9));
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]      [10]: " << joint_accelerations(10));
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands]      [11]: " << joint_accelerations(11));
 
     auto commands = wbcPtr_->getMotorCommands(tNow_, observation.state, observation.input, observation.mode,
                                               desiredState, desiredInput, desiredMode, joint_accelerations, isStable_);
 
-    ROS_INFO_STREAM("[MpcController::getMotorCommands] motor commands: ");
-    for (size_t i = 0; i < commands.size(); ++i) 
-    {
-        ROS_INFO_STREAM("[MpcController::getMotorCommands]      [" << i << "]");
-        ROS_INFO_STREAM("[MpcController::getMotorCommands]          joint_name:     " << commands[i].joint_name);
-        ROS_INFO_STREAM("[MpcController::getMotorCommands]          desired_position:     " << commands[i].desired_position);
-        ROS_INFO_STREAM("[MpcController::getMotorCommands]          desired_velocity:     " << commands[i].desired_velocity);
-        ROS_INFO_STREAM("[MpcController::getMotorCommands]          kp:   " << commands[i].kp);
-        ROS_INFO_STREAM("[MpcController::getMotorCommands]          kd:   " << commands[i].kd);
-        ROS_INFO_STREAM("[MpcController::getMotorCommands]          torque_ff:   " << commands[i].torque_ff);
-    }
+    // ROS_INFO_STREAM("[MpcController::getMotorCommands] motor commands: ");
+    // for (size_t i = 0; i < commands.size(); ++i) 
+    // {
+    //     ROS_INFO_STREAM("[MpcController::getMotorCommands]      [" << i << "]");
+    //     ROS_INFO_STREAM("[MpcController::getMotorCommands]          joint_name:     " << commands[i].joint_name);
+    //     ROS_INFO_STREAM("[MpcController::getMotorCommands]          desired_position:     " << commands[i].desired_position);
+    //     ROS_INFO_STREAM("[MpcController::getMotorCommands]          desired_velocity:     " << commands[i].desired_velocity);
+    //     ROS_INFO_STREAM("[MpcController::getMotorCommands]          kp:   " << commands[i].kp);
+    //     ROS_INFO_STREAM("[MpcController::getMotorCommands]          kd:   " << commands[i].kd);
+    //     ROS_INFO_STREAM("[MpcController::getMotorCommands]          torque_ff:   " << commands[i].torque_ff);
+    // }
 
     timeSinceLastMpcUpdate_ += dt;
     timeSinceLastVisualizationUpdate_ += dt;

@@ -7,5 +7,6 @@ catkin_package()
 
 catkin_install_python(PROGRAMS
   src/virtual_joystick.py
+  src/global_path_velocity_generator.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )

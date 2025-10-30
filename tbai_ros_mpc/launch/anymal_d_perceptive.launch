@@ -16,7 +16,7 @@
     <!-- Gazebo parameters -->
     <arg name="gui" default="false"/>
     <arg name="paused" default="false"/>
-    <arg name="world" default="normal"/>
+    <arg name="world" default="rubble"/>
     <arg name="x" default="0.0"/>
     <arg name="y" default="0.0"/>
     <arg name="z" default="0.5"/>
@@ -25,7 +25,7 @@
     <env name="TBAI_GLOBAL_CONFIG_PATH" value="$(arg tbai_config_path)"/>
 
     <!-- Launch virtual joystick -->
-    <node name="virtual_joystick" pkg="tbai_ros_utils" type="virtual_joystick.py" output="screen"/>
+    <!-- <node name="virtual_joystick" pkg="tbai_ros_utils" type="virtual_joystick.py" output="screen"/> -->
 
     <!-- Upload config path to ROS param server -->
     <param name="tbai_config_path" type="string" value="$(arg tbai_config_path)"/>
@@ -34,6 +34,11 @@
     <param name="task_settings_file" type="string" value="$(arg task_settings_file)"/>
     <param name="target_command_config_file" type="string" value="$(arg target_command_config_file)"/>
     <param name="controller_config_file" type="string" value="$(arg controller_config_file)"/>
+
+    <!-- Launch global path velocity generator -->
+    <node name="global_path_velocity_generator" pkg="tbai_ros_utils" type="global_path_velocity_generator.py" output="screen">
+        <param name="world" type="string" value="$(arg world)"/>
+    </node>
 
     <!-- Launch gazebo -->
     <include file="$(find tbai_ros_gazebo)/launch/world.launch">

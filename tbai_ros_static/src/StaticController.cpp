@@ -92,7 +92,7 @@ void RosStaticController::postStep(scalar_t currentTime, scalar_t dt) {
 /*********************************************************************************************************************/
 void RosStaticController::publishOdomBaseTransforms(const vector_t &currentState, const ros::Time &currentTime) 
 {
-    ROS_INFO_STREAM("[publishOdomBaseTransforms]");
+    // ROS_INFO_STREAM("[publishOdomBaseTransforms]");
     geometry_msgs::TransformStamped odomBaseTransform;
 
     // Header
