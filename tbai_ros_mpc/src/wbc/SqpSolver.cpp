@@ -2,6 +2,8 @@
 
 #include <qpOASES.hpp>
 
+#include <iostream>
+
 namespace switched_model {
 
 vector_t SqpSolver::solveSqp(const Task &weightedTasks, const Task &constraints, bool &isStable) {
@@ -33,7 +35,9 @@ vector_t SqpSolver::solveSqp(const Task &weightedTasks, const Task &constraints,
         qp_problem.init(H.data(), g.data(), A.data(), nullptr, nullptr, lbA.data(), ubA.data(), nWsr);
 
     // Check if QP initialization was successful
-    if (qp_status != qpOASES::SUCCESSFUL_RETURN) {
+    if (qp_status != qpOASES::SUCCESSFUL_RETURN) 
+    {
+        std::cout << "QP initialization failed with status: " << qp_status << std::endl;
         isStable = false;
         return vector_t::Zero(nDecisionVariables);
     }
@@ -43,7 +47,9 @@ vector_t SqpSolver::solveSqp(const Task &weightedTasks, const Task &constraints,
     qpOASES::returnValue sol_status = qp_problem.getPrimalSolution(solution.data());
 
     // Check if solution was successful
-    if (sol_status != qpOASES::SUCCESSFUL_RETURN) {
+    if (sol_status != qpOASES::SUCCESSFUL_RETURN) 
+    {
+        std::cout << "QP solution failed with status: " << sol_status << std::endl;
         isStable = false;
         return vector_t::Zero(nDecisionVariables);
     }

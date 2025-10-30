@@ -12,11 +12,12 @@
     <arg name="task_settings_file" default="$(find tbai_ros_mpc)/config/anymal_d/perceptive/task.info"/>
     <arg name="target_command_config_file" default="$(find tbai_ros_mpc)/config/anymal_d/perceptive/targetCommand.info"/>
     <arg name="controller_config_file" default="$(find tbai_ros_mpc)/config/anymal_d/perceptive/controllers.info"/>
+    <arg name="gait_command_file" default="$(find tbai_ros_deploy_go2_mpc)/config/gait.info"/>
 
     <!-- Gazebo parameters -->
-    <arg name="gui" default="false"/>
+    <arg name="gui" default="true"/>
     <arg name="paused" default="false"/>
-    <arg name="world" default="rubble"/>
+    <arg name="world" default="gap_stones"/>
     <arg name="x" default="0.0"/>
     <arg name="y" default="0.0"/>
     <arg name="z" default="0.5"/>
@@ -34,11 +35,12 @@
     <param name="task_settings_file" type="string" value="$(arg task_settings_file)"/>
     <param name="target_command_config_file" type="string" value="$(arg target_command_config_file)"/>
     <param name="controller_config_file" type="string" value="$(arg controller_config_file)"/>
+    <param name="gait_command_file" type="string" value="$(arg gait_command_file)"/>
 
     <!-- Launch global path velocity generator -->
-    <node name="global_path_velocity_generator" pkg="tbai_ros_utils" type="global_path_velocity_generator.py" output="screen">
+    <!-- <node name="global_path_velocity_generator" pkg="tbai_ros_utils" type="global_path_velocity_generator.py" output="screen">
         <param name="world" type="string" value="$(arg world)"/>
-    </node>
+    </node> -->
 
     <!-- Launch gazebo -->
     <include file="$(find tbai_ros_gazebo)/launch/world.launch">
@@ -60,7 +62,8 @@
 
     <node pkg="tbai_ros_mpc" type="anymal_mpc_node" name="anymal_mpc_node" output="screen"/>
 
-    <node pkg="ocs2_anymal_commands" type="gait_command_node" name="gait_command_node"
+    <!-- Launch Gait command node -->
+    <node pkg="tbai_ros_deploy_go2_mpc" type="go2_gait_node" name="go2_gait_node"
           output="screen" launch-prefix="gnome-terminal --"/>
 
     <!-- Start Rviz visualizer -->
