@@ -1,6 +1,6 @@
 [submodule "dependencies/ocs2"]
 	path = dependencies/ocs2
-	url = https://github.com/lnotspotl/ocs2.git
+	url = https://github.com/max-assel/ocs2.git
 [submodule "dependencies/ocs2_robotic_assets"]
 	path = dependencies/ocs2_robotic_assets
 	url = https://github.com/projectatctu/ocs2_robotic_assets.git
