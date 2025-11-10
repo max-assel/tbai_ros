@@ -20,6 +20,7 @@ rosbag record -a
 ## GRID MAP DTC
 source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_dtc simple.launch gui:=true world:=ramp
 
+contact_flags in state are not updated. Not sure why.
 
 # RAMP ENVIRONMENT
 

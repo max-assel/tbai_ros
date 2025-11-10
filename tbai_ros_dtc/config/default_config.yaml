@@ -50,7 +50,7 @@ estimator_type: "ground_truth"
 
 gazebo:
   contact_sensor:
-    enabled: false
+    enabled: true
     update_rate: 1000 # Hz
 
   ground_truth_state_publisher:
