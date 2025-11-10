@@ -49,11 +49,14 @@ class GlobalPathVelocityGenerator:
         rospy.loginfo(f"Direction to Goal: {dir_to_goal_odom_frame}")
 
         # Normalize direction vector
-        norm = np.linalg.norm(dir_to_goal_odom_frame)
+        norm = np.linalg.norm(dir_to_goal_odom_frame[0:2]) # Only consider x and y for norm, Z we can assume is fine
 
         if (norm < 0.25):
             rospy.loginfo("Goal reached or very close to goal. Stopping.")
             velocity_command = Twist()
+            velocity_command.linear.x = 0.0
+            velocity_command.linear.y = 0.0
+            velocity_command.angular.z = 0.0
             self.velocity_publisher.publish(velocity_command)
             return
 

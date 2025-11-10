@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 
 
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <envname>"
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <envname> <baseline>"
     exit 1
 fi
 
 source $(catkin locate)/devel/setup.bash
 
 ENV_NAME=$1
+BASELINE=$2
 
 ENV_X=0
 ENV_Y=0
@@ -137,18 +138,22 @@ rostopic pub /anymal_d/change_controller std_msgs/String "data: STAND" --once
 ## Unause Gazebo physics
 rosservice call /gazebo/unpause_physics
 
-## Set in CheaterMode 1
-# rosservice call /CheaterMode 1
-
 sleep 1
 
-# rostopic pub /anymal_d/change_controller std_msgs/String "data: WBC" --once
-# rostopic pub /anymal_d/change_controller std_msgs/String "data: BOB" --once
-rostopic pub /anymal_d/change_controller std_msgs/String "data: DTC" --once
-
-sleep 1
-
-rostopic pub /gait_command std_msgs/String "data: trot" --once
+if [ "$BASELINE" == "WBC" ]; then
+    rostopic pub /anymal_d/change_controller std_msgs/String "data: WBC" --once
+    sleep 1
+    rostopic pub /gait_command std_msgs/String "data: trot" --once
+elif [ "$BASELINE" == "RL" ]; then
+    rostopic pub /anymal_d/change_controller std_msgs/String "data: BOB" --once
+elif [ "$BASELINE" == "DTC" ]; then
+    rostopic pub /anymal_d/change_controller std_msgs/String "data: DTC" --once
+    sleep 1
+    rostopic pub /gait_command std_msgs/String "data: trot" --once    
+else
+    echo "Unknown baseline: $BASELINE"
+    exit 1
+fi
 
 sleep 1
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+    <!-- Manually define urdf -->
+    <arg name="description_name"    default="robot_description"/>
+    <arg name="description_file"    default="$(find tbai_ros_description)/urdf/anymal_d_gazebo.urdf.xacro"/>
+
+    <!-- Load gazebo description -->
+    <param name="$(arg description_name)" command="$(find xacro)/xacro --inorder $(arg description_file)" />
+
+    <!-- Start Rviz visualizer -->
+    <arg name="rvizconfig" default="$(find tbai_ros_bob)/launch/rviz/rosbag.rviz" />
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen" />
+
+</launch>
