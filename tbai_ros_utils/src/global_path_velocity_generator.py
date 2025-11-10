@@ -30,26 +30,32 @@ class GlobalPathVelocityGenerator:
         self.state_subscriber = rospy.Subscriber("anymal_d/state", RbdState, self.state_callback)
         self.velocity_publisher = rospy.Publisher("cmd_vel", Twist, queue_size=10)
 
+        self.latest_state = None
+
+
     def state_callback(self, msg):
-        # Process the RbdState message and generate velocity commands
+        self.latest_state = msg
+
+    def send_velocity(self):
+        state = self.latest_state
+        if state is None:
+            return
+
         # rospy.loginfo(f"Received RbdState message: {msg}")
         # Velocity generation logic here
-        current_pose = msg.rbd_state[:6]  # Assuming first 6 elements are orientation and position
-
+        current_pose = state.rbd_state[:6]  # Assuming first 6 elements are orientation and position
         rospy.loginfo(f"Current Pose: {current_pose}")
 
         current_position = current_pose[3:6]
 
         rospy.loginfo(f"Current Position: {current_position}")
 
-        dir_to_goal_odom_frame = np.array(self.global_goal) - np.array(current_position)
+        rbt_to_goal_pos_odom_frame = np.array(self.global_goal) - np.array(current_position)
 
         rospy.loginfo(f"Global Goal: {self.global_goal}")
 
-        rospy.loginfo(f"Direction to Goal: {dir_to_goal_odom_frame}")
-
         # Normalize direction vector
-        norm = np.linalg.norm(dir_to_goal_odom_frame[0:2]) # Only consider x and y for norm, Z we can assume is fine
+        norm = np.linalg.norm(rbt_to_goal_pos_odom_frame[0:2]) # Only consider x and y for norm, Z we can assume is fine
 
         if (norm < 0.25):
             rospy.loginfo("Goal reached or very close to goal. Stopping.")
@@ -60,19 +66,21 @@ class GlobalPathVelocityGenerator:
             self.velocity_publisher.publish(velocity_command)
             return
 
-        if norm != 0:
-            dir_to_goal_odom_frame = dir_to_goal_odom_frame / norm
+        rbt_to_goal_dir_odom_frame = rbt_to_goal_pos_odom_frame / norm
 
-        rospy.loginfo(f"Normalized Direction to Goal: {dir_to_goal_odom_frame}")
+        rospy.loginfo(f"Robot to Goal: {rbt_to_goal_pos_odom_frame}")
 
         # Transform into robot frame
+        
         yaw = current_pose[2]
         rotation_matrix = np.array([
-            [np.cos(-yaw), -np.sin(-yaw), 0],
-            [np.sin(-yaw),  np.cos(-yaw), 0],
-            [0,             0,            1]
+            [np.cos(-yaw), -np.sin(-yaw)],
+            [np.sin(-yaw),  np.cos(-yaw)]
         ])
-        dir_to_goal_robot_frame = rotation_matrix.dot(dir_to_goal_odom_frame)
+        
+        dir_to_goal_robot_frame = rotation_matrix.dot(rbt_to_goal_dir_odom_frame[0:2]) # Only x and y
+
+        rospy.loginfo(f"Direction to Goal in Robot Frame: {dir_to_goal_robot_frame}")
 
         lin_speed = 0.5  # m/s
         ang_speed = 0.5  # rad/s
@@ -86,6 +94,8 @@ class GlobalPathVelocityGenerator:
         velocity_command.linear.x = lin_speed * dir_to_goal_robot_frame[0]
         velocity_command.linear.y = lin_speed * dir_to_goal_robot_frame[1]
         velocity_command.angular.z = ang_command
+
+        rospy.loginfo(f"Publishing Velocity Command: linear_x={velocity_command.linear.x}, linear_y={velocity_command.linear.y}, angular_z={velocity_command.angular.z}")
         
         # Publish velocity command
         self.velocity_publisher.publish(velocity_command)
@@ -99,7 +109,10 @@ def main():
     generator = GlobalPathVelocityGenerator(world_name)
 
     # Start the generator
-    rospy.spin()
+    rate = rospy.Rate(10)  # 10 Hz
+    while not rospy.is_shutdown():
+        generator.send_velocity()
+        rate.sleep()
 
 
 if __name__ == "__main__":

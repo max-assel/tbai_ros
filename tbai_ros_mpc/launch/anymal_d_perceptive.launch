@@ -64,7 +64,7 @@
 
     <!-- Launch Gait command node -->
     <node pkg="tbai_ros_deploy_go2_mpc" type="go2_gait_node" name="go2_gait_node"
-          output="screen" launch-prefix="gnome-terminal --"/>
+          output="screen"/>
 
     <!-- Start Rviz visualizer -->
     <arg name="rvizconfig" default="$(find tbai_ros_mpc)/launch/rviz/robot.rviz" />

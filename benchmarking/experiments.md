@@ -25,3 +25,7 @@ contact_flags in state are not updated. Not sure why.
 # RAMP ENVIRONMENT
 
 Can just run straight up and see what we got
+
+Running with Gazebo GUI + RViz, I don't think this is the difference between a success and a failure for these methods though
+
+TODO: get what angle the ramp is at to report in paper

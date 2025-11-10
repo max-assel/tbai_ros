@@ -42,6 +42,7 @@
 
     <!-- Launch virtual joystick -->
     <!-- <node name="virtual_joystick" pkg="tbai_ros_utils" type="virtual_joystick.py" output="screen"/> -->
+    
     <!-- Start Rviz visualizer -->
     <arg name="rvizconfig" default="$(find tbai_ros_bob)/launch/rviz/robot.rviz" />
     <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen" />

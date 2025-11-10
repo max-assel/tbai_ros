@@ -140,7 +140,7 @@ rosservice call /gazebo/unpause_physics
 
 sleep 1
 
-if [ "$BASELINE" == "WBC" ]; then
+if [ "$BASELINE" == "MPC" ]; then
     rostopic pub /anymal_d/change_controller std_msgs/String "data: WBC" --once
     sleep 1
     rostopic pub /gait_command std_msgs/String "data: trot" --once
