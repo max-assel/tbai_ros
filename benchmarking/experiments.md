@@ -20,7 +20,20 @@ rosbag record -a
 ## GRID MAP DTC
 source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_dtc simple.launch gui:=true world:=ramp
 
-contact_flags in state are not updated. Not sure why.
+contact_flags in state are not updated. Not sure why. [FIXED]
+
+# Gap Stones Spaced Environment
+## GRID MAP MPC
+source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_mpc anymal_d_perceptive.launch gui:=true world:=gap_stones_spaced
+## GRID MAP RL
+source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_bob anymal_d_perceptive.launch gui:=true world:=gap_stones_spaced
+## GRID MAP DTC
+source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_dtc simple.launch gui:=true world:=gap_stones_spaced
+
+Need to set some guidelines. 
+- How long to let a trial run?
+
+Worth mentioning that stones are uniform here, so if the robot can time it luckily, can get across some or all. If we did random or added some noise or left some out, these would probably fail more.
 
 # RAMP ENVIRONMENT
 

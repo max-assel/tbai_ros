@@ -15,6 +15,8 @@ class GlobalPathVelocityGenerator:
             self.global_goal = [0.0, -5.70, 0.575]
         elif (self.world_name == "gap_stones"):
             self.global_goal = [0.0, -4.50, 0.575]
+        elif (self.world_name == "gap_stones_spaced"):
+            self.global_goal = [0.0, -4.50, 0.575]            
         elif (self.world_name == "ramp"):
             self.global_goal = [0.0, 4.15, 0.785]
         elif (self.world_name == "ramped_balance_beam"):

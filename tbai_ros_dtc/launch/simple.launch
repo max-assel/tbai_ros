@@ -28,7 +28,7 @@
 
     <!-- Launch Gait command node -->
     <node pkg="tbai_ros_deploy_go2_mpc" type="go2_gait_node" name="go2_gait_node"
-          output="screen" launch-prefix="gnome-terminal --"/>
+          output="screen" />
 
     <!-- Launch gazebo -->
     <include file="$(find tbai_ros_gazebo)/launch/world.launch">

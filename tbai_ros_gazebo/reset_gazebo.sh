@@ -38,6 +38,15 @@ elif [ "$ENV_NAME" == "gap_stones" ]; then
     ENV_QY=0
     ENV_QZ=-0.7071
     ENV_QW=0.7071   # PI / 2
+elif [ "$ENV_NAME" == "gap_stones_spaced" ]; then
+    echo "Setting up for gap_stones_spaced environment"
+    ENV_X=0.0
+    ENV_Y=-0.50
+    ENV_Z=0.20
+    ENV_QX=0
+    ENV_QY=0
+    ENV_QZ=-0.7071
+    ENV_QW=0.7071   # PI / 2
 elif [ "$ENV_NAME" == "ramp" ]; then
     echo "Setting up for ramp environment"
     ENV_X=0.0
