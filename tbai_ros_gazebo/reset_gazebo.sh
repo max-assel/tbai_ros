@@ -31,7 +31,7 @@ if [ "$ENV_NAME" == "balance_beam" ]; then
 elif [ "$ENV_NAME" == "gap_stones" ]; then
     echo "Setting up for gap_stones environment"
     ENV_X=0.0
-    ENV_Y=-0.10
+    ENV_Y=-0.50
     ENV_Z=0.20
     ENV_QX=0
     ENV_QY=0
@@ -142,7 +142,9 @@ rosservice call /gazebo/unpause_physics
 
 sleep 1
 
-rostopic pub /anymal_d/change_controller std_msgs/String "data: WBC" --once
+# rostopic pub /anymal_d/change_controller std_msgs/String "data: WBC" --once
+# rostopic pub /anymal_d/change_controller std_msgs/String "data: BOB" --once
+rostopic pub /anymal_d/change_controller std_msgs/String "data: DTC" --once
 
 sleep 1
 

@@ -11,7 +11,7 @@
     <!-- Gazebo parameters -->
     <arg name="gui" default="false"/>
     <arg name="paused" default="false"/>
-    <arg name="world" default="normal"/>
+    <arg name="world" default="gap_stones"/>
     <arg name="x" default="0.0"/>
     <arg name="y" default="0.0"/>
     <arg name="z" default="0.5"/>
@@ -41,8 +41,7 @@
     <node name="simple" pkg="tbai_ros_bob" type="simple_perceptive" output="screen"/>
 
     <!-- Launch virtual joystick -->
-    <node name="virtual_joystick" pkg="tbai_ros_utils" type="virtual_joystick.py" output="screen"/>
-
+    <!-- <node name="virtual_joystick" pkg="tbai_ros_utils" type="virtual_joystick.py" output="screen"/> -->
     <!-- Start Rviz visualizer -->
     <arg name="rvizconfig" default="$(find tbai_ros_bob)/launch/rviz/robot.rviz" />
     <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen" />
