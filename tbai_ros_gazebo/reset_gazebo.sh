@@ -20,44 +20,73 @@ ENV_QZ=0
 ENV_QW=1
 
 
-if [ "$ENV_NAME" == "balance_beam" ]; then
-    echo "Setting up for balance_beam environment"
+echo "Setting up for $ENV_NAME environment"
+
+if [ "$ENV_NAME" == "empty" ]; then
     ENV_X=0.0
-    ENV_Y=-0.10
+    ENV_Y=0.0
     ENV_Z=0.15
     ENV_QX=0
     ENV_QY=0
-    ENV_QZ=-0.7071
-    ENV_QW=0.7071   # PI / 2
+    ENV_QZ=0
+    ENV_QW=1   # PI / 2
+elif [ "$ENV_NAME" == "balance_beam" ]; then
+    ENV_X=-0.9
+    ENV_Y=2.1
+    ENV_Z=0.15
+    ENV_QX=0
+    ENV_QY=0
+    ENV_QZ=0
+    ENV_QW=1   # PI / 2
 elif [ "$ENV_NAME" == "gap_stones" ]; then
-    echo "Setting up for gap_stones environment"
     ENV_X=0.0
-    ENV_Y=-0.50
+    ENV_Y=-0.10
     ENV_Z=0.20
     ENV_QX=0
     ENV_QY=0
     ENV_QZ=-0.7071
     ENV_QW=0.7071   # PI / 2
 elif [ "$ENV_NAME" == "gap_stones_spaced" ]; then
-    echo "Setting up for gap_stones_spaced environment"
     ENV_X=0.0
-    ENV_Y=-0.50
+    ENV_Y=-0.10
     ENV_Z=0.20
     ENV_QX=0
     ENV_QY=0
     ENV_QZ=-0.7071
-    ENV_QW=0.7071   # PI / 2
-elif [ "$ENV_NAME" == "ramp" ]; then
-    echo "Setting up for ramp environment"
-    ENV_X=0.0
-    ENV_Y=-1.5
+    ENV_QW=0.7071   # PI / 2    
+elif [ "$ENV_NAME" == "pegboard" ]; then
+    ENV_X=-1.4
+    ENV_Y=2.0
     ENV_Z=0.20
     ENV_QX=0
     ENV_QY=0
-    ENV_QZ=0.7071
-    ENV_QW=0.7071   # PI / 2
+    ENV_QZ=0
+    ENV_QW=1   # PI / 2    
+elif [ "$ENV_NAME" == "ramp_10" ]; then
+    ENV_X=-1.4
+    ENV_Y=2.0
+    ENV_Z=0.20
+    ENV_QX=0
+    ENV_QY=0
+    ENV_QZ=0
+    ENV_QW=1   # PI / 2
+elif [ "$ENV_NAME" == "ramp_17" ]; then
+    ENV_X=-1.4
+    ENV_Y=2.0
+    ENV_Z=0.20
+    ENV_QX=0
+    ENV_QY=0
+    ENV_QZ=0
+    ENV_QW=1   # PI / 2
+elif [ "$ENV_NAME" == "ramp_25" ]; then
+    ENV_X=-1.4
+    ENV_Y=2.0
+    ENV_Z=0.20
+    ENV_QX=0
+    ENV_QY=0
+    ENV_QZ=0
+    ENV_QW=1   # PI / 2
 elif [ "$ENV_NAME" == "ramped_balance_beam" ]; then
-    echo "Setting up for ramped_balance_beam environment"
     ENV_X=0.0
     ENV_Y=0.5
     ENV_Z=0.20
@@ -66,7 +95,6 @@ elif [ "$ENV_NAME" == "ramped_balance_beam" ]; then
     ENV_QZ=1
     ENV_QW=0   # PI / 2
 elif [ "$ENV_NAME" == "ramped_stepping_stones" ]; then
-    echo "Setting up for ramped_stepping_stones environment"
     ENV_X=-1.0
     ENV_Y=7.5
     ENV_Z=0.20
@@ -75,14 +103,37 @@ elif [ "$ENV_NAME" == "ramped_stepping_stones" ]; then
     ENV_QZ=1
     ENV_QW=0   # PI / 2
 elif [ "$ENV_NAME" == "rubble" ]; then
-    echo "Setting up for rubble environment"
-    ENV_X=0.0
-    ENV_Y=0.0
+    ENV_X=-1.4
+    ENV_Y=2.0
     ENV_Z=0.20
     ENV_QX=0
     ENV_QY=0
-    ENV_QZ=1
-    ENV_QW=0   # PI / 2
+    ENV_QZ=0
+    ENV_QW=1   # PI / 2
+elif [ "$ENV_NAME" == "side_stones" ]; then
+    ENV_X=-1.4
+    ENV_Y=2.0
+    ENV_Z=0.20
+    ENV_QX=0
+    ENV_QY=0
+    ENV_QZ=0
+    ENV_QW=1   # PI / 2    
+elif [ "$ENV_NAME" == "sparse_stones" ]; then
+    ENV_X=-1.4
+    ENV_Y=2.0
+    ENV_Z=0.20
+    ENV_QX=0
+    ENV_QY=0
+    ENV_QZ=0
+    ENV_QW=1   # PI / 2    
+elif [ "$ENV_NAME" == "stairs" ]; then
+    ENV_X=-1.4
+    ENV_Y=2.0
+    ENV_Z=0.20
+    ENV_QX=0
+    ENV_QY=0
+    ENV_QZ=0
+    ENV_QW=1   # PI / 2    
 else
     echo "Unknown environment name: $ENV_NAME"
     exit 1
@@ -140,6 +191,7 @@ rosservice call /gazebo/set_model_configuration "
                 - -1.50
                 - 1.50
                 - -1.50"
+
 ## Set in ControlMode 1
 # rosservice call /ControlMode 1
 rostopic pub /anymal_d/change_controller std_msgs/String "data: STAND" --once
@@ -147,23 +199,23 @@ rostopic pub /anymal_d/change_controller std_msgs/String "data: STAND" --once
 ## Unause Gazebo physics
 rosservice call /gazebo/unpause_physics
 
-sleep 1
+# sleep 1
 
-if [ "$BASELINE" == "MPC" ]; then
-    rostopic pub /anymal_d/change_controller std_msgs/String "data: WBC" --once
-    sleep 1
-    rostopic pub /gait_command std_msgs/String "data: trot" --once
-elif [ "$BASELINE" == "RL" ]; then
-    rostopic pub /anymal_d/change_controller std_msgs/String "data: BOB" --once
-elif [ "$BASELINE" == "DTC" ]; then
-    rostopic pub /anymal_d/change_controller std_msgs/String "data: DTC" --once
-    sleep 1
-    rostopic pub /gait_command std_msgs/String "data: trot" --once    
-else
-    echo "Unknown baseline: $BASELINE"
-    exit 1
-fi
+# if [ "$BASELINE" == "MPC" ]; then
+#     rostopic pub /anymal_d/change_controller std_msgs/String "data: WBC" --once
+#     sleep 1
+#     rostopic pub /gait_command std_msgs/String "data: trot" --once
+# elif [ "$BASELINE" == "RL" ]; then
+#     rostopic pub /anymal_d/change_controller std_msgs/String "data: BOB" --once
+# elif [ "$BASELINE" == "DTC" ]; then
+#     rostopic pub /anymal_d/change_controller std_msgs/String "data: DTC" --once
+#     sleep 1
+#     rostopic pub /gait_command std_msgs/String "data: trot" --once    
+# else
+#     echo "Unknown baseline: $BASELINE"
+#     exit 1
+# fi
 
-sleep 1
+# sleep 1
 
-rosrun tbai_ros_utils global_path_velocity_generator.py __name:=global_path_velocity_generator _world:=$ENV_NAME
+# rosrun tbai_ros_utils global_path_velocity_generator.py __name:=global_path_velocity_generator _world:=$ENV_NAME

@@ -12,19 +12,27 @@ class GlobalPathVelocityGenerator:
         # Additional initialization code here
 
         if (self.world_name == "balance_beam"):
-            self.global_goal = [0.0, -5.70, 0.575]
+            self.global_goal = [5.0, 2.0, 0.575]
         elif (self.world_name == "gap_stones"):
             self.global_goal = [0.0, -4.50, 0.575]
         elif (self.world_name == "gap_stones_spaced"):
             self.global_goal = [0.0, -4.50, 0.575]            
-        elif (self.world_name == "ramp"):
-            self.global_goal = [0.0, 4.15, 0.785]
+        elif (self.world_name == "pegboard"):
+            self.global_goal = [3.5, 2.0, 0.575]                  
+        elif (self.world_name == "ramp_10"):
+            self.global_goal = [3.75, 2.0, 0.85]
         elif (self.world_name == "ramped_balance_beam"):
             self.global_goal = [-8.50, 0.50, 0.575]
         elif (self.world_name == "ramped_stepping_stones"):
             self.global_goal = [-8.0, 7.50, 0.575]     
         elif (self.world_name == "rubble"):
-            self.global_goal = [-5.50, 0.0, 0.575]                   
+            self.global_goal = [5.0, 2.0, 0.575]       
+        elif (self.world_name == "sparse_stones"):
+            self.global_goal = [5.0, 2.0, 0.575]             
+        elif (self.world_name == "side_stones"):
+            self.global_goal = [5.0, 2.0, 0.575]                        
+        elif (self.world_name == "stairs"):
+            self.global_goal = [3.15, 2.00, 1.10]                      
         else:
             rospy.logwarn(f"Unknown world name: {self.world_name}. Using default global goal.")
             raise Exception("[GlobalPathVelocityGenerator] Unknown world name")
@@ -84,8 +92,8 @@ class GlobalPathVelocityGenerator:
 
         rospy.loginfo(f"Direction to Goal in Robot Frame: {dir_to_goal_robot_frame}")
 
-        lin_speed = 0.5  # m/s
-        ang_speed = 0.5  # rad/s
+        lin_speed = 0.25  # m/s
+        ang_speed = 0.25  # rad/s
 
         angular_error = np.arctan2(dir_to_goal_robot_frame[1], dir_to_goal_robot_frame[0])
         rospy.loginfo(f"Angular Error: {angular_error}")

@@ -8,6 +8,8 @@ def is_goal_reached(msg, global_goal):
 
     dir_to_goal_odom_frame = np.array(global_goal) - np.array(current_position)
 
+    print(f"Current Position: {current_position}")
+
     # Normalize direction vector
     norm = np.linalg.norm(dir_to_goal_odom_frame[0:2]) # Only consider x and y for norm, Z we can assume is fine
 
@@ -68,17 +70,25 @@ def is_robot_unstable(current_state):
     roll_threshold = np.radians(30.0)  # 30 degrees
     pitch_threshold = np.radians(30.0)  # 30 degrees
 
-    return abs(roll) > roll_threshold or abs(pitch) > pitch_threshold
+    height = current_state.rbd_state[5]
 
+    height_threshold = 0.2  # Meters        
+
+    return abs(roll) > roll_threshold or abs(pitch) > pitch_threshold or height < height_threshold
 
 def parse_rosbag():
-    bagfilepath = "/home/masselmeier3/tbai_ws/bags/ramp/dtc/0.bag"
-    env = "ramp"
+    bagfilepath = "/home/masselmeier3/tbai_ws/bags/balance_beam/grid_map_mpc/2025-11-13-21-02-58.bag"
+    env = "balance_beam"
+
 
     if (env == "balance_beam"):
-        global_goal = [0.0, -5.70, 0.575]
+        global_goal = [5.0, 2.0, 0.575]
     elif (env == "gap_stones"):
         global_goal = [0.0, -4.50, 0.575]
+    elif (env == "gap_stones_spaced"):
+        global_goal = [0.0, -4.50, 0.575]            
+    elif (env == "pegboard"):
+        self.global_goal = [3.5, 2.0, 0.575]                  
     elif (env == "ramp"):
         global_goal = [0.0, 4.15, 0.785]
     elif (env == "ramped_balance_beam"):
@@ -86,7 +96,7 @@ def parse_rosbag():
     elif (env == "ramped_stepping_stones"):
         global_goal = [-8.0, 7.50, 0.575]     
     elif (env == "rubble"):
-        global_goal = [-5.50, 0.0, 0.575]      
+        global_goal = [5.0, 2.0, 0.575]        
     else:
         raise Exception("[GlobalPathVelocityGenerator] Unknown world name")
 
