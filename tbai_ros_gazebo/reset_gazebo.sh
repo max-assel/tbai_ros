@@ -31,8 +31,8 @@ if [ "$ENV_NAME" == "empty" ]; then
     ENV_QZ=0
     ENV_QW=1   # PI / 2
 elif [ "$ENV_NAME" == "balance_beam" ]; then
-    ENV_X=-0.9
-    ENV_Y=2.1
+    ENV_X=-2.5
+    ENV_Y=0.0
     ENV_Z=0.15
     ENV_QX=0
     ENV_QY=0
@@ -55,17 +55,17 @@ elif [ "$ENV_NAME" == "gap_stones_spaced" ]; then
     ENV_QZ=-0.7071
     ENV_QW=0.7071   # PI / 2    
 elif [ "$ENV_NAME" == "pegboard" ]; then
-    ENV_X=-1.4
-    ENV_Y=2.0
-    ENV_Z=0.20
+    ENV_X=-2.5
+    ENV_Y=1.4
+    ENV_Z=0.15
     ENV_QX=0
     ENV_QY=0
     ENV_QZ=0
     ENV_QW=1   # PI / 2    
 elif [ "$ENV_NAME" == "ramp_10" ]; then
-    ENV_X=-1.4
-    ENV_Y=2.0
-    ENV_Z=0.20
+    ENV_X=-3.0
+    ENV_Y=0.0
+    ENV_Z=0.15
     ENV_QX=0
     ENV_QY=0
     ENV_QZ=0
@@ -103,33 +103,33 @@ elif [ "$ENV_NAME" == "ramped_stepping_stones" ]; then
     ENV_QZ=1
     ENV_QW=0   # PI / 2
 elif [ "$ENV_NAME" == "rubble" ]; then
-    ENV_X=-1.4
-    ENV_Y=2.0
-    ENV_Z=0.20
+    ENV_X=-2.5
+    ENV_Y=1.4
+    ENV_Z=0.15
     ENV_QX=0
     ENV_QY=0
     ENV_QZ=0
     ENV_QW=1   # PI / 2
 elif [ "$ENV_NAME" == "side_stones" ]; then
-    ENV_X=-1.4
-    ENV_Y=2.0
-    ENV_Z=0.20
+    ENV_X=-2.5
+    ENV_Y=0
+    ENV_Z=0.15
     ENV_QX=0
     ENV_QY=0
     ENV_QZ=0
     ENV_QW=1   # PI / 2    
 elif [ "$ENV_NAME" == "sparse_stones" ]; then
-    ENV_X=-1.4
-    ENV_Y=2.0
-    ENV_Z=0.20
+    ENV_X=-2.5
+    ENV_Y=1.4
+    ENV_Z=0.15
     ENV_QX=0
     ENV_QY=0
     ENV_QZ=0
     ENV_QW=1   # PI / 2    
 elif [ "$ENV_NAME" == "stairs" ]; then
-    ENV_X=-1.4
-    ENV_Y=2.0
-    ENV_Z=0.20
+    ENV_X=-2.5
+    ENV_Y=0.0
+    ENV_Z=0.15
     ENV_QX=0
     ENV_QY=0
     ENV_QZ=0

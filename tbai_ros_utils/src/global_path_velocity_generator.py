@@ -12,27 +12,27 @@ class GlobalPathVelocityGenerator:
         # Additional initialization code here
 
         if (self.world_name == "balance_beam"):
-            self.global_goal = [5.0, 2.0, 0.575]
-        elif (self.world_name == "gap_stones"):
-            self.global_goal = [0.0, -4.50, 0.575]
-        elif (self.world_name == "gap_stones_spaced"):
-            self.global_goal = [0.0, -4.50, 0.575]            
+            self.global_goal = [2.0, 0.0, 0.575]
+        # elif (self.world_name == "gap_stones"):
+        #     self.global_goal = [0.0, -4.50, 0.575]
+        # elif (self.world_name == "gap_stones_spaced"):
+        #     self.global_goal = [0.0, -4.50, 0.575]            
         elif (self.world_name == "pegboard"):
-            self.global_goal = [3.5, 2.0, 0.575]                  
+            self.global_goal = [3.5, 1.4, 0.575]                  
         elif (self.world_name == "ramp_10"):
-            self.global_goal = [3.75, 2.0, 0.85]
+            self.global_goal = [3.5, 0.0, 0.85]
         elif (self.world_name == "ramped_balance_beam"):
             self.global_goal = [-8.50, 0.50, 0.575]
         elif (self.world_name == "ramped_stepping_stones"):
             self.global_goal = [-8.0, 7.50, 0.575]     
         elif (self.world_name == "rubble"):
-            self.global_goal = [5.0, 2.0, 0.575]       
+            self.global_goal = [3.5, 1.4, 0.575]       
         elif (self.world_name == "sparse_stones"):
-            self.global_goal = [5.0, 2.0, 0.575]             
+            self.global_goal = [2.0, 1.4, 0.575]             
         elif (self.world_name == "side_stones"):
-            self.global_goal = [5.0, 2.0, 0.575]                        
+            self.global_goal = [2.0, 0.0, 0.575]                        
         elif (self.world_name == "stairs"):
-            self.global_goal = [3.15, 2.00, 1.10]                      
+            self.global_goal = [3.0, 0.0, 2.0]                      
         else:
             rospy.logwarn(f"Unknown world name: {self.world_name}. Using default global goal.")
             raise Exception("[GlobalPathVelocityGenerator] Unknown world name")
