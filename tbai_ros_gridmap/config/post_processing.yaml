@@ -13,3 +13,12 @@ postprocessor_pipeline: # set by postprocessor_pipeline_name
        input_layer: elevation
        output_layer: inpaint
        radius: 0.05
+
+  # Reduce noise with a radial blurring filter.
+  #  - name: mean_in_radius
+  #    type: gridMapFilters/MeanInRadiusFilter
+  #    params:
+  #      input_layer: inpaint
+  #      output_layer: elevation_smooth
+  #      radius: 0.2
+
