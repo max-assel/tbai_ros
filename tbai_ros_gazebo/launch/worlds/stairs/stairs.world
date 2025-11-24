@@ -47,6 +47,7 @@
     <include>
         <uri>model://ground_plane</uri>
     </include>    
+   
     <model name="static_environment">
   <static>true</static>
   <link name="region_0">

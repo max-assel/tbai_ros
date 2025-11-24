@@ -64,17 +64,6 @@
             </friction>
         </surface>
         </collision>
-        <visual name="visual">
-        <geometry>
-            <box>
-            <size>100.0 100.0 0.1</size>
-            </box>
-        </geometry>
-        <material>
-            <ambient>1.0 1.0 1.0 1.0</ambient>
-            <diffuse>1.0 1.0 1.0 1.0</diffuse>
-        </material>
-        </visual>
     </link>   
     <link name="region_0">
     <pose>-26.5 0.0 -0.05 0.0 0.0 0.0</pose>
