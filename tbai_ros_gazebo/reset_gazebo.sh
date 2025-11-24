@@ -119,7 +119,7 @@ elif [ "$ENV_NAME" == "side_stones" ]; then
     ENV_QZ=0
     ENV_QW=1   # PI / 2    
 elif [ "$ENV_NAME" == "sparse_stones" ]; then
-    ENV_X=-2.5
+    ENV_X=-3.0
     ENV_Y=1.4
     ENV_Z=0.15
     ENV_QX=0

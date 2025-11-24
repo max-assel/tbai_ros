@@ -32,7 +32,7 @@ class GlobalPathVelocityGenerator:
         elif (self.world_name == "side_stones"):
             self.global_goal = [2.0, 0.0, 0.575]                        
         elif (self.world_name == "stairs"):
-            self.global_goal = [3.0, 0.0, 2.0]                      
+            self.global_goal = [3.0, 0.0, 1.5]                      
         else:
             rospy.logwarn(f"Unknown world name: {self.world_name}. Using default global goal.")
             raise Exception("[GlobalPathVelocityGenerator] Unknown world name")

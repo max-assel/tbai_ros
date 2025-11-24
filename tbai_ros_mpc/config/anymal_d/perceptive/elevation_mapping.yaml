@@ -29,8 +29,8 @@ multi_height_noise:                         0.001
 surface_normal_positive_axis:               z
 fused_map_publishing_rate:                  0.5
 enable_visibility_cleanup:                  true
-visibility_cleanup_rate:                    1.0
-scanning_duration:                          1.0
+visibility_cleanup_rate:                    0.01666 # 1.0
+scanning_duration:                          0.01666 # 1.0
 
 # Init submap
 initialize_elevation_map:                   false

@@ -50,11 +50,11 @@
     <model name="static_environment">
   <static>true</static>
   <link name="region_0">
-    <pose>0.0 0.0 0.05 0.0 0.0 0.0</pose>
+    <pose>0.0 0.0 0.025 0.0 0.0 0.0</pose>
     <collision name="region_0_collision">
       <geometry>
         <box>
-          <size>0.2 3.0 0.1</size>
+          <size>0.2 3.0 0.05</size>
         </box>
       </geometry>
       <surface>
@@ -69,7 +69,7 @@
     <visual name="region_0_visual">
       <geometry>
         <box>
-          <size>0.2 3.0 0.1</size>
+          <size>0.2 3.0 0.05</size>
         </box>
       </geometry>
       <material>
@@ -79,11 +79,11 @@
     </visual>
   </link>
   <link name="region_1">
-    <pose>0.2 0.0 0.15000000000000002 0.0 0.0 0.0</pose>
+    <pose>0.2 0.0 0.07500000000000001 0.0 0.0 0.0</pose>
     <collision name="region_1_collision">
       <geometry>
         <box>
-          <size>0.2 3.0 0.1</size>
+          <size>0.2 3.0 0.05</size>
         </box>
       </geometry>
       <surface>
@@ -98,7 +98,7 @@
     <visual name="region_1_visual">
       <geometry>
         <box>
-          <size>0.2 3.0 0.1</size>
+          <size>0.2 3.0 0.05</size>
         </box>
       </geometry>
       <material>
@@ -108,11 +108,11 @@
     </visual>
   </link>
   <link name="region_2">
-    <pose>0.4 0.0 0.25 0.0 0.0 0.0</pose>
+    <pose>0.4 0.0 0.125 0.0 0.0 0.0</pose>
     <collision name="region_2_collision">
       <geometry>
         <box>
-          <size>0.2 3.0 0.1</size>
+          <size>0.2 3.0 0.05</size>
         </box>
       </geometry>
       <surface>
@@ -127,7 +127,7 @@
     <visual name="region_2_visual">
       <geometry>
         <box>
-          <size>0.2 3.0 0.1</size>
+          <size>0.2 3.0 0.05</size>
         </box>
       </geometry>
       <material>
@@ -137,11 +137,11 @@
     </visual>
   </link>
   <link name="region_3">
-    <pose>0.6000000000000001 0.0 0.35 0.0 0.0 0.0</pose>
+    <pose>0.6000000000000001 0.0 0.175 0.0 0.0 0.0</pose>
     <collision name="region_3_collision">
       <geometry>
         <box>
-          <size>0.2 3.0 0.1</size>
+          <size>0.2 3.0 0.05</size>
         </box>
       </geometry>
       <surface>
@@ -156,7 +156,7 @@
     <visual name="region_3_visual">
       <geometry>
         <box>
-          <size>0.2 3.0 0.1</size>
+          <size>0.2 3.0 0.05</size>
         </box>
       </geometry>
       <material>
@@ -166,11 +166,11 @@
     </visual>
   </link>
   <link name="region_4">
-    <pose>0.8 0.0 0.44999999999999996 0.0 0.0 0.0</pose>
+    <pose>0.8 0.0 0.22499999999999998 0.0 0.0 0.0</pose>
     <collision name="region_4_collision">
       <geometry>
         <box>
-          <size>0.2 3.0 0.1</size>
+          <size>0.2 3.0 0.05</size>
         </box>
       </geometry>
       <surface>
@@ -185,7 +185,7 @@
     <visual name="region_4_visual">
       <geometry>
         <box>
-          <size>0.2 3.0 0.1</size>
+          <size>0.2 3.0 0.05</size>
         </box>
       </geometry>
       <material>
@@ -195,11 +195,11 @@
     </visual>
   </link>
   <link name="region_5">
-    <pose>1.0 0.0 0.5499999999999999 0.0 0.0 0.0</pose>
+    <pose>1.0 0.0 0.27499999999999997 0.0 0.0 0.0</pose>
     <collision name="region_5_collision">
       <geometry>
         <box>
-          <size>0.2 3.0 0.1</size>
+          <size>0.2 3.0 0.05</size>
         </box>
       </geometry>
       <surface>
@@ -214,7 +214,7 @@
     <visual name="region_5_visual">
       <geometry>
         <box>
-          <size>0.2 3.0 0.1</size>
+          <size>0.2 3.0 0.05</size>
         </box>
       </geometry>
       <material>
@@ -224,11 +224,11 @@
     </visual>
   </link>
   <link name="region_6">
-    <pose>1.2 0.0 0.6499999999999999 0.0 0.0 0.0</pose>
+    <pose>1.2 0.0 0.32499999999999996 0.0 0.0 0.0</pose>
     <collision name="region_6_collision">
       <geometry>
         <box>
-          <size>0.2 3.0 0.1</size>
+          <size>0.2 3.0 0.05</size>
         </box>
       </geometry>
       <surface>
@@ -243,7 +243,7 @@
     <visual name="region_6_visual">
       <geometry>
         <box>
-          <size>0.2 3.0 0.1</size>
+          <size>0.2 3.0 0.05</size>
         </box>
       </geometry>
       <material>
@@ -253,11 +253,11 @@
     </visual>
   </link>
   <link name="region_7">
-    <pose>1.4 0.0 0.7499999999999999 0.0 0.0 0.0</pose>
+    <pose>1.4 0.0 0.37499999999999994 0.0 0.0 0.0</pose>
     <collision name="region_7_collision">
       <geometry>
         <box>
-          <size>0.2 3.0 0.1</size>
+          <size>0.2 3.0 0.05</size>
         </box>
       </geometry>
       <surface>
@@ -272,7 +272,7 @@
     <visual name="region_7_visual">
       <geometry>
         <box>
-          <size>0.2 3.0 0.1</size>
+          <size>0.2 3.0 0.05</size>
         </box>
       </geometry>
       <material>
@@ -282,11 +282,11 @@
     </visual>
   </link>
   <link name="region_8">
-    <pose>1.5999999999999999 0.0 0.8499999999999999 0.0 0.0 0.0</pose>
+    <pose>1.5999999999999999 0.0 0.42499999999999993 0.0 0.0 0.0</pose>
     <collision name="region_8_collision">
       <geometry>
         <box>
-          <size>0.2 3.0 0.1</size>
+          <size>0.2 3.0 0.05</size>
         </box>
       </geometry>
       <surface>
@@ -301,7 +301,7 @@
     <visual name="region_8_visual">
       <geometry>
         <box>
-          <size>0.2 3.0 0.1</size>
+          <size>0.2 3.0 0.05</size>
         </box>
       </geometry>
       <material>
@@ -311,11 +311,11 @@
     </visual>
   </link>
   <link name="region_9">
-    <pose>1.7999999999999998 0.0 0.9499999999999998 0.0 0.0 0.0</pose>
+    <pose>1.7999999999999998 0.0 0.4749999999999999 0.0 0.0 0.0</pose>
     <collision name="region_9_collision">
       <geometry>
         <box>
-          <size>0.2 3.0 0.1</size>
+          <size>0.2 3.0 0.05</size>
         </box>
       </geometry>
       <surface>
@@ -330,7 +330,7 @@
     <visual name="region_9_visual">
       <geometry>
         <box>
-          <size>0.2 3.0 0.1</size>
+          <size>0.2 3.0 0.05</size>
         </box>
       </geometry>
       <material>
@@ -340,11 +340,11 @@
     </visual>
   </link>
   <link name="region_10">
-    <pose>3.4000000000000004 0.0 1.0 0.0 0.0 0.0</pose>
+    <pose>3.4000000000000004 0.0 0.5 0.0 0.0 0.0</pose>
     <collision name="region_10_collision">
       <geometry>
         <box>
-          <size>3.0 3.0 0.1</size>
+          <size>3.0 3.0 0.05</size>
         </box>
       </geometry>
       <surface>
@@ -359,7 +359,7 @@
     <visual name="region_10_visual">
       <geometry>
         <box>
-          <size>3.0 3.0 0.1</size>
+          <size>3.0 3.0 0.05</size>
         </box>
       </geometry>
       <material>
