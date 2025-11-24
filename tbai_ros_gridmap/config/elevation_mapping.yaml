@@ -9,7 +9,7 @@ input_sources:
 
 map_frame_id: "odom"
 robot_base_frame_id: "base"
-robot_pose_with_covariance_topic: "" # Leaving this empty skipps pose covariance updates.
+robot_pose_with_covariance_topic: "" # Leaving this empty skips pose covariance updates.
 robot_pose_cache_size: 40
 track_point_frame_id: "base"
 track_point_x: 0.0
@@ -17,8 +17,8 @@ track_point_y: 0.0
 track_point_z: 0.0
 
 # Map.
-length_in_x:                                4.0
-length_in_y:                                4.0
+length_in_x:                                3.0
+length_in_y:                                3.0
 position_x:                                 0.0
 position_y:                                 0.0
 resolution:                                 0.06
@@ -35,8 +35,8 @@ scanning_duration:                          1.0
 # Init submap
 initialize_elevation_map:                   false
 initialization_method:                      0
-length_in_x_init_submap:                    4.0
-length_in_y_init_submap:                    4.0
-init_submap_height_offset:                  -0.01
+length_in_x_init_submap:                    3.0
+length_in_y_init_submap:                    3.0
+init_submap_height_offset:                  0.0
 init_submap_variance:                       0.001
 target_frame_init_submap:                   odom
