@@ -31,7 +31,7 @@ if [ "$ENV_NAME" == "empty" ]; then
     ENV_QZ=0
     ENV_QW=1   # PI / 2
 elif [ "$ENV_NAME" == "balance_beam" ]; then
-    ENV_X=-2.5
+    ENV_X=-3.0
     ENV_Y=0.0
     ENV_Z=0.15
     ENV_QX=0

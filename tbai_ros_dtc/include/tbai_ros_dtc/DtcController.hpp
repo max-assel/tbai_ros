@@ -53,6 +53,8 @@ class DtcController final : public tbai::Controller {
    public:
     DtcController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriber);
 
+    ~DtcController() override;
+
     std::vector<MotorCommand> getMotorCommands(scalar_t currentTime, scalar_t dt) override;
 
     void postStep(scalar_t currentTime, scalar_t dt) override;
@@ -156,6 +158,26 @@ class DtcController final : public tbai::Controller {
     vector_t getHeightSamplesObservation(scalar_t currentTime, scalar_t dt);
 
     std::shared_ptr<tbai::StateSubscriber> stateSubscriberPtr_;
+
+    std::chrono::steady_clock::time_point totalStartTime_;
+    std::chrono::steady_clock::time_point totalEndTime_;
+    float totalTimeTaken = 0.0f;
+    int numberOfTotalCalls = 0;
+
+    std::chrono::steady_clock::time_point updateStartTime_;
+    std::chrono::steady_clock::time_point updateEndTime_;
+    float updateTimeTaken = 0.0f;
+    int numberOfUpdateCalls = 0;    
+
+    std::chrono::steady_clock::time_point preprocessStartTime_;
+    std::chrono::steady_clock::time_point preprocessEndTime_;
+    float preprocessTimeTaken = 0.0f;
+    int numberOfPreprocessCalls = 0;        
+
+    std::chrono::steady_clock::time_point forwardStartTime_;
+    std::chrono::steady_clock::time_point forwardEndTime_;
+    float forwardTimeTaken = 0.0f;
+    int numberOfForwardCalls = 0;      
 
     const scalar_t LIN_VEL_SCALE = 2.0;
     const scalar_t ANG_VEL_SCALE = 0.25;

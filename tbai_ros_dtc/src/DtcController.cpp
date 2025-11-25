@@ -103,15 +103,39 @@ DtcController::DtcController(const std::shared_ptr<tbai::StateSubscriber> &state
     TBAI_LOG_INFO(logger_, "Default joint angles: {}", (std::stringstream() << defaultJointAngles_.transpose()).str());
 }
 
+DtcController::~DtcController()
+{
+    std::chrono::steady_clock::time_point destructStartTime = std::chrono::steady_clock::now();
+    std::ofstream logFile;
+    logFile.open("/home/masselmeier3/Desktop/Research/quad_pips_experiments/timing/dtc/timing_log_" + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(destructStartTime.time_since_epoch()).count()) + ".csv", std::ios::out);
+
+    float averageUpdateTime = updateTimeTaken * 1.0e-3 / static_cast<float>(numberOfUpdateCalls);
+    float averagePreprocessTime = preprocessTimeTaken * 1.0e-3 / static_cast<float>(numberOfPreprocessCalls);
+    float averageForwardTime = forwardTimeTaken * 1.0e-3 / static_cast<float>(numberOfForwardCalls);
+    float averageTotalTime = totalTimeTaken * 1.0e-3 / static_cast<float>(numberOfTotalCalls);
+
+    logFile << "avg update time (ms), avg preprocess time (ms), avg forward pass time (ms), avg total time (ms), number of calls" << std::endl;
+    logFile << averageUpdateTime << ", " << averagePreprocessTime << ", " << averageForwardTime << ", " << averageTotalTime << ", " << numberOfTotalCalls << std::endl;
+    logFile.close();    
+}
+
 void DtcController::publishReference(const TargetTrajectories &targetTrajectories) {
     const auto mpcTargetTrajectoriesMsg = ocs2::ros_msg_conversions::createTargetTrajectoriesMsg(targetTrajectories);
     refPub_.publish(mpcTargetTrajectoriesMsg);
 }
 
-std::vector<MotorCommand> DtcController::getMotorCommands(scalar_t currentTime, scalar_t dt) {
+std::vector<MotorCommand> DtcController::getMotorCommands(scalar_t currentTime, scalar_t dt) 
+{
+    totalStartTime_ = std::chrono::steady_clock::now();
+
+    updateStartTime_ = std::chrono::steady_clock::now();
     mrt_.spinMRT();
     mrt_.updatePolicy();
+    updateEndTime_ = std::chrono::steady_clock::now();
+    updateTimeTaken += std::chrono::duration_cast<std::chrono::microseconds>(updateEndTime_ - updateStartTime_).count();
+    numberOfUpdateCalls++;
 
+    preprocessStartTime_ = std::chrono::steady_clock::now();
     vector3_t linearVelocityObservation = getLinearVelocityObservation(currentTime, dt);
     vector3_t angularVelocityObservation = getAngularVelocityObservation(currentTime, dt);
     vector3_t projectedGravityObservation = getProjectedGravityObservation(currentTime, dt);
@@ -152,11 +176,17 @@ std::vector<MotorCommand> DtcController::getMotorCommands(scalar_t currentTime, 
                         cpgObservation,
                         heightSamplesObservation;
     // clang-format on
+    preprocessEndTime_ = std::chrono::steady_clock::now();
+    preprocessTimeTaken += std::chrono::duration_cast<std::chrono::microseconds>(preprocessEndTime_ - preprocessStartTime_).count();
+    numberOfPreprocessCalls++;
 
+    forwardStartTime_ = std::chrono::steady_clock::now();
     torch::Tensor torchObservation = vector2torch(eigenObservation).view({1, -1});
     torch::Tensor torchAction = dtcModel_.forward({torchObservation}).toTensor().view({-1});
-
     pastAction_ = torch2vector(torchAction);
+    forwardEndTime_ = std::chrono::steady_clock::now();
+    forwardTimeTaken += std::chrono::duration_cast<std::chrono::microseconds>(forwardEndTime_ - forwardStartTime_).count();
+    numberOfForwardCalls++; 
 
     vector_t commandedJointAngles = defaultJointAngles_ + pastAction_ * ACTION_SCALE;
 
@@ -187,6 +217,10 @@ std::vector<MotorCommand> DtcController::getMotorCommands(scalar_t currentTime, 
         // TODO: Put this into its own thread
         publishReference(generateTargetTrajectories(currentTime, dt, commandObservation));
     }
+
+    totalEndTime_ = std::chrono::steady_clock::now();
+    totalTimeTaken += std::chrono::duration_cast<std::chrono::microseconds>(totalEndTime_ - totalStartTime_).count();
+    numberOfTotalCalls++;
 
     return commands;
 }

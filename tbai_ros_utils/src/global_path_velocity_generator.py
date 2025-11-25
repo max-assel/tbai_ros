@@ -39,7 +39,7 @@ class GlobalPathVelocityGenerator:
             raise Exception("[GlobalPathVelocityGenerator] Unknown world name")
 
         if (self.planner_name == "DTC"):
-            self.vel_offset = [0.0, 0.0, 0.0]
+            self.vel_offset = [0.0, 0.0, -0.05]
         else:
             self.vel_offset = [0.0, 0.0, 0.0]
 

@@ -80,6 +80,22 @@ MpcController::MpcController(const std::shared_ptr<tbai::StateSubscriber> &state
     tNow_ = 0.0;
 }
 
+MpcController::~MpcController()
+{
+    std::chrono::steady_clock::time_point destructStartTime = std::chrono::steady_clock::now();
+    std::ofstream logFile;
+    logFile.open("/home/masselmeier3/Desktop/Research/quad_pips_experiments/timing/mpc/timing_log_" + std::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(destructStartTime.time_since_epoch()).count()) + ".csv", std::ios::out);
+
+    float averageUpdateTime = updateTimeTaken * 1.0e-3 / static_cast<float>(numberOfUpdateCalls);
+    float averageEvaluateTime = evaluateTimeTaken * 1.0e-3 / static_cast<float>(numberOfEvaluateCalls);
+    float averageWbcTime = wbcTimeTaken * 1.0e-3 / static_cast<float>(numberOfWbcCalls);
+    float averageTotalTime = totalTimeTaken * 1.0e-3 / static_cast<float>(numberOfTotalCalls);
+
+    logFile << "avg update time (ms), avg evaluate time (ms), avg wbc time (ms), avg total time (ms), number of calls" << std::endl;
+    logFile << averageUpdateTime << ", " << averageEvaluateTime << ", " << averageWbcTime << ", " << averageTotalTime << ", " << numberOfTotalCalls << std::endl;
+    logFile.close();
+}
+
 void MpcController::spinOnceReferenceThread() {
     referenceThreadCallbackQueue_.callAvailable(ros::WallDuration(0.0));
 }
@@ -87,9 +103,15 @@ void MpcController::spinOnceReferenceThread() {
 std::vector<MotorCommand> MpcController::getMotorCommands(scalar_t currentTime, scalar_t dt) 
 {
     // ROS_INFO_STREAM("[MpcController::getMotorCommands] start");
+    totalStartTime_ = std::chrono::steady_clock::now();
 
     mrt_.spinMRT();
+
+    updateStartTime_ = std::chrono::steady_clock::now();
     mrt_.updatePolicy();
+    updateEndTime_ = std::chrono::steady_clock::now();
+    updateTimeTaken += std::chrono::duration_cast<std::chrono::microseconds>(updateEndTime_ - updateStartTime_).count();
+    numberOfUpdateCalls++;
 
     tNow_ = ros::Time::now().toSec() - initTime_;
 
@@ -120,7 +142,12 @@ std::vector<MotorCommand> MpcController::getMotorCommands(scalar_t currentTime, 
     ocs2::vector_t desiredState;
     ocs2::vector_t desiredInput;
     size_t desiredMode;
+
+    evaluateStartTime_ = std::chrono::steady_clock::now();
     mrt_.evaluatePolicy(tNow_, observation.state, desiredState, desiredInput, desiredMode);
+    evaluateEndTime_ = std::chrono::steady_clock::now();
+    evaluateTimeTaken += std::chrono::duration_cast<std::chrono::microseconds>(evaluateEndTime_ - evaluateStartTime_).count();
+    numberOfEvaluateCalls++;
 
     // ROS_INFO_STREAM("[MpcController::getMotorCommands] desired: ");
     // ROS_INFO_STREAM("[MpcController::getMotorCommands]      state: ");
@@ -148,7 +175,12 @@ std::vector<MotorCommand> MpcController::getMotorCommands(scalar_t currentTime, 
     ocs2::vector_t dummyState;
     ocs2::vector_t dummyInput;
     size_t dummyMode;
+
+    evaluateStartTime_ = std::chrono::steady_clock::now();
     mrt_.evaluatePolicy(tNow_ + time_eps, observation.state, dummyState, dummyInput, dummyMode);
+    evaluateEndTime_ = std::chrono::steady_clock::now();
+    evaluateTimeTaken += std::chrono::duration_cast<std::chrono::microseconds>(evaluateEndTime_ - evaluateStartTime_).count();
+    numberOfEvaluateCalls++;
 
     // ROS_INFO_STREAM("[MpcController::getMotorCommands] dummy: ");
     // ROS_INFO_STREAM("[MpcController::getMotorCommands]      input: ");
@@ -177,8 +209,12 @@ std::vector<MotorCommand> MpcController::getMotorCommands(scalar_t currentTime, 
     // ROS_INFO_STREAM("[MpcController::getMotorCommands]      [10]: " << joint_accelerations(10));
     // ROS_INFO_STREAM("[MpcController::getMotorCommands]      [11]: " << joint_accelerations(11));
 
+    wbcStartTime_ = std::chrono::steady_clock::now();
     auto commands = wbcPtr_->getMotorCommands(tNow_, observation.state, observation.input, observation.mode,
                                               desiredState, desiredInput, desiredMode, joint_accelerations, isStable_);
+    wbcEndTime_ =  std::chrono::steady_clock::now();
+    wbcTimeTaken += std::chrono::duration_cast<std::chrono::microseconds>(wbcEndTime_ - wbcStartTime_).count();
+    numberOfWbcCalls++;
 
     // ROS_INFO_STREAM("[MpcController::getMotorCommands] motor commands: ");
     // for (size_t i = 0; i < commands.size(); ++i) 
@@ -194,9 +230,14 @@ std::vector<MotorCommand> MpcController::getMotorCommands(scalar_t currentTime, 
 
     timeSinceLastMpcUpdate_ += dt;
     timeSinceLastVisualizationUpdate_ += dt;
-    if (timeSinceLastMpcUpdate_ >= 1.0 / mpcRate_) {
+    if (timeSinceLastMpcUpdate_ >= 1.0 / mpcRate_) 
+    {
         setObservation();
     }
+
+    totalEndTime_ = std::chrono::steady_clock::now();
+    totalTimeTaken += std::chrono::duration_cast<std::chrono::microseconds>(totalEndTime_ - totalStartTime_).count();
+    numberOfTotalCalls++;
 
     return commands;
 }

@@ -53,6 +53,8 @@ class MpcController final : public tbai::Controller {
     MpcController(const std::shared_ptr<tbai::StateSubscriber> &stateSubscriberPtr,
                   std::shared_ptr<tbai::reference::ReferenceVelocityGenerator> velocityGeneratorPtr);
 
+    ~MpcController() override;
+
     std::vector<MotorCommand> getMotorCommands(scalar_t currentTime, scalar_t dt) override;
 
     void postStep(scalar_t currentTime, scalar_t dt) override;
@@ -93,6 +95,26 @@ class MpcController final : public tbai::Controller {
     ros::CallbackQueue referenceThreadCallbackQueue_;
     void startReferenceThread();
     void stopReferenceThread();
+
+    std::chrono::steady_clock::time_point totalStartTime_;
+    std::chrono::steady_clock::time_point totalEndTime_;
+    float totalTimeTaken = 0.0f;
+    int numberOfTotalCalls = 0;
+
+    std::chrono::steady_clock::time_point updateStartTime_;
+    std::chrono::steady_clock::time_point updateEndTime_;
+    float updateTimeTaken = 0.0f;
+    int numberOfUpdateCalls = 0;
+
+    std::chrono::steady_clock::time_point evaluateStartTime_;
+    std::chrono::steady_clock::time_point evaluateEndTime_;
+    float evaluateTimeTaken = 0.0f;
+    int numberOfEvaluateCalls = 0;
+
+    std::chrono::steady_clock::time_point wbcStartTime_;
+    std::chrono::steady_clock::time_point wbcEndTime_;
+    float wbcTimeTaken = 0.0f;
+    int numberOfWbcCalls = 0;    
 
     std::atomic<bool> stopReferenceThread_;
     std::thread referenceThread_;
