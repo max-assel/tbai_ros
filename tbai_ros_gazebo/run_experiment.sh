@@ -28,4 +28,4 @@ fi
 
 sleep 1
 
-rosrun tbai_ros_utils global_path_velocity_generator.py __name:=global_path_velocity_generator _world:=$ENV_NAME
+rosrun tbai_ros_utils global_path_velocity_generator.py __name:=global_path_velocity_generator _world:=$ENV_NAME _planner:=$BASELINE

@@ -8,19 +8,22 @@ model_settings
 
   frictionCoefficient           0.5
   gripperForce                  0.0   ; [N] negative gripper force -> minimum force in normal direction
+
   muFrictionCone                0.1
   deltaFrictionCone             5.0
 
-  muFootPlacement               0.1   ; magnitude scaling
+  muFootPlacement               1.0  ; magnitude scaling
   deltaFootPlacement            0.01  ; [m] distance from constraint boundary where the barrier becomes quadratic.
 
-  muSdf                         0.1
-  deltaSdf                      0.005
+  muSdf                         0.0
+  deltaSdf                      0.0
 
   muJointsPosition              0.1
   deltaJointsPosition           0.01
+
   muJointsVelocity              0.1
   deltaJointsVelocity           0.1
+
   muJointsTorque                1.0
   deltaJointsTorque             1.0
 
@@ -96,7 +99,7 @@ joint_lower_limits
     touchdownAfterHorizon         0.2
     errorGain                     1.0
     swingTimeScale                0.15
-    sdfMidswingMargin             0.005
+    sdfMidswingMargin             0.0
     terrainMargin                 0.0
     previousFootholdFactor        0.333
     previousFootholdDeadzone      0.05

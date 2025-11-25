@@ -6,9 +6,10 @@ from tbai_ros_msgs.msg import RbdState
 import numpy as np
 
 class GlobalPathVelocityGenerator:
-    def __init__(self, world_name):
+    def __init__(self, world_name, planner_name):
         self.world_name = world_name
-        rospy.loginfo(f"GlobalPathVelocityGenerator initialized for world: {self.world_name}")
+        self.planner_name = planner_name
+        rospy.loginfo(f"GlobalPathVelocityGenerator initialized for world: {self.world_name} with planner: {self.planner_name}")
         # Additional initialization code here
 
         if (self.world_name == "balance_beam"):
@@ -20,7 +21,7 @@ class GlobalPathVelocityGenerator:
         elif (self.world_name == "pegboard"):
             self.global_goal = [3.5, 1.4, 0.575]                  
         elif (self.world_name == "ramp_10"):
-            self.global_goal = [3.5, 0.0, 0.85]
+            self.global_goal = [3.25, 0.0, 0.85]
         elif (self.world_name == "ramped_balance_beam"):
             self.global_goal = [-8.50, 0.50, 0.575]
         elif (self.world_name == "ramped_stepping_stones"):
@@ -36,6 +37,11 @@ class GlobalPathVelocityGenerator:
         else:
             rospy.logwarn(f"Unknown world name: {self.world_name}. Using default global goal.")
             raise Exception("[GlobalPathVelocityGenerator] Unknown world name")
+
+        if (self.planner_name == "DTC"):
+            self.vel_offset = [0.0, 0.0, 0.0]
+        else:
+            self.vel_offset = [0.0, 0.0, 0.0]
 
         self.state_subscriber = rospy.Subscriber("anymal_d/state", RbdState, self.state_callback)
         self.velocity_publisher = rospy.Publisher("cmd_vel", Twist, queue_size=10)
@@ -101,9 +107,9 @@ class GlobalPathVelocityGenerator:
 
         # Generate velocity command
         velocity_command = Twist()
-        velocity_command.linear.x = lin_speed * dir_to_goal_robot_frame[0]
-        velocity_command.linear.y = lin_speed * dir_to_goal_robot_frame[1]
-        velocity_command.angular.z = ang_command
+        velocity_command.linear.x = lin_speed * dir_to_goal_robot_frame[0] + self.vel_offset[0]
+        velocity_command.linear.y = lin_speed * dir_to_goal_robot_frame[1] + self.vel_offset[1]
+        velocity_command.angular.z = ang_command + self.vel_offset[2]
 
         rospy.loginfo(f"Publishing Velocity Command: linear_x={velocity_command.linear.x}, linear_y={velocity_command.linear.y}, angular_z={velocity_command.angular.z}")
         
@@ -115,8 +121,9 @@ def main():
 
     # Get environment argument
     world_name = rospy.get_param("~world", "default")
+    planner_name = rospy.get_param("~planner", "default_planner")
 
-    generator = GlobalPathVelocityGenerator(world_name)
+    generator = GlobalPathVelocityGenerator(world_name, planner_name)
 
     # Start the generator
     rate = rospy.Rate(10)  # 10 Hz
