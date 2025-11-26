@@ -95,7 +95,7 @@ elif [ "$ENV_NAME" == "ramped_balance_beam" ]; then
     ENV_QZ=1
     ENV_QW=0   # PI / 2
 elif [ "$ENV_NAME" == "ramped_stepping_stones" ]; then
-    ENV_X=-1.0
+    ENV_X=-0.5
     ENV_Y=7.5
     ENV_Z=0.20
     ENV_QX=0

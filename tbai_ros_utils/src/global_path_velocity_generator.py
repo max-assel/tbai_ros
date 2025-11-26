@@ -21,7 +21,7 @@ class GlobalPathVelocityGenerator:
         elif (self.world_name == "pegboard"):
             self.global_goal = [3.5, 1.4, 0.575]                  
         elif (self.world_name == "ramp_10"):
-            self.global_goal = [3.25, 0.0, 0.85]
+            self.global_goal = [2.5, 0.0, 0.85]
         elif (self.world_name == "ramped_balance_beam"):
             self.global_goal = [-8.50, 0.50, 0.575]
         elif (self.world_name == "ramped_stepping_stones"):
