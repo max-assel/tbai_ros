@@ -1,6 +1,8 @@
 # INSTRUCTIONS TO RUN
 Need to open four terminals to run.
+
 Different baselines: `MPC`, `RL`, `DTC`
+
 Different environments: `balance_beam`, `pegboard`, `ramp_10`, `ramped_balance_beam`, `ramped_stepping_stones`, `rubble`, `side_stones`, `sparse_stones`, `stairs`
 
 # Commands
