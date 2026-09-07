@@ -9,62 +9,86 @@ Different environments: `balance_beam`, `pegboard`, `ramp_10`, `ramped_balance_b
 ## MPC 
 ```
 # Terminal 1 - Gazebo
+cd /path/to/tbai_ros
+pixi shell --environment all-gpu-free
 source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_mpc anymal_d_perceptive.launch gui:=false world:=<ENV_NAME>
 ```
 
 ```
 # Terminal 2 - Reset Gazebo for experiment
+cd /path/to/tbai_ros/tbai_ros_gazebo
+pixi shell --environment all-gpu-free
 source $(catkin locate)/devel/setup.bash && ./reset_gazebo.sh <ENV_NAME> MPC
 ```
 
 ```
 # Terminal 3 - Elevation mapping
+cd /path/to/tbai_ros
+pixi shell --environment all-gpu-free
 source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_mpc elevation_mapping.launch 
 ```
 
 ```
 # Terminal 4 - Run experiment
+cd /path/to/tbai_ros/tbai_ros_gazebo
+pixi shell --environment all-gpu-free
 source $(catkin locate)/devel/setup.bash && ./run_experiment.sh <ENV_NAME> MPC
 ```
 
 ## RL
 ```
 # Terminal 1 - Gazebo
+cd /path/to/tbai_ros
+pixi shell --environment all-gpu-free
 source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_bob anymal_d_perceptive.launch gui:=false world:=<ENV_NAME>
 ```
 
 ```
 # Terminal 2 - Reset Gazebo for experiment
+cd /path/to/tbai_ros/tbai_ros_gazebo
+pixi shell --environment all-gpu-free
 source $(catkin locate)/devel/setup.bash && ./reset_gazebo.sh <ENV_NAME> RL
 ```
 
 ```
 # Terminal 3 - Elevation mapping
+cd /path/to/tbai_ros
+pixi shell --environment all-gpu-free
 source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_bob elevation_mapping.launch 
 ```
 
 ```
 # Terminal 4 - Run experiment
+cd /path/to/tbai_ros/tbai_ros_gazebo
+pixi shell --environment all-gpu-free
 source $(catkin locate)/devel/setup.bash && ./run_experiment.sh <ENV_NAME> RL
 ```
 
 ## DTC
 ```
 # Terminal 1 - Gazebo
+cd /path/to/tbai_ros
+pixi shell --environment all-gpu-free
 source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_dtc anymal_d_perceptive.launch gui:=false world:=<ENV_NAME>
 ```
 
 ```
 # Terminal 2 - Reset Gazebo for experiment
+cd /path/to/tbai_ros/tbai_ros_gazebo
+pixi shell --environment all-gpu-free
 source $(catkin locate)/devel/setup.bash && ./reset_gazebo.sh <ENV_NAME> DTC
 ```
 
 ```
 # Terminal 3 - Elevation mapping
+cd /path/to/tbai_ros
+pixi shell --environment all-gpu-free
 source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_dtc elevation_mapping.launch 
 ```
 
 ```
 # Terminal 4 - Run experiment
+cd /path/to/tbai_ros/tbai_ros_gazebo
+pixi shell --environment all-gpu-free
 source $(catkin locate)/devel/setup.bash && ./run_experiment.sh <ENV_NAME> DTC
 ```
