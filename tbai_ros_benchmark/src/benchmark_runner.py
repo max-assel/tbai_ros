@@ -30,8 +30,14 @@ def load_config(path):
   settings = config.get("world_settings", {})
   if not isinstance(settings, dict) or any(w not in settings for w in config["worlds"]):
     raise ValueError("Each world needs a world_settings entry")
-  if config.get("reset_mode") != "restart":
-    raise ValueError("Only restart mode is scaffolded")
+  reset_mode = config.get("reset_mode")
+  if reset_mode not in ("restart", "reuse"):
+    raise ValueError("reset_mode must be restart or reuse")
+  reset_equivalence_verified = config.get("reset_equivalence_verified", False)
+  if type(reset_equivalence_verified) is not bool:
+    raise ValueError("reset_equivalence_verified must be a boolean")
+  if reset_mode == "reuse" and not reset_equivalence_verified:
+    raise ValueError("reuse requires reset_equivalence_verified: true")
   # TODO: validate positive timeouts, poses, goals, failure rules and recording topics.
   return config
 

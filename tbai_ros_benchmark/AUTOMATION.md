@@ -57,6 +57,11 @@ is the scaffold entry point; catkin installation is not wired up yet.
 The initial design fully restarts each trial. Reusing Gazebo, automatic retries,
 parallel trials, timing instrumentation and random seed plumbing are later work.
 Do not assume resetting pose/joints also clears controller, estimator or map history.
+Configuration previews accept `reset_mode: reuse` only with
+`reset_equivalence_verified: true`. Set this flag only after verifying that reset
+restores the same robot, controller, estimator and map state as a fresh restart
+for every configured world and baseline. It records external verification; it
+does not perform it or enable the unimplemented execution hooks.
 
 ## Integration checks once implemented
 

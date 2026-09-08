@@ -67,6 +67,7 @@
           output="screen"/>
 
     <!-- Start Rviz visualizer -->
+    <arg name="rviz" default="true"/>
     <arg name="rvizconfig" default="$(find tbai_ros_mpc)/launch/rviz/robot.rviz" />
-    <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen" />
+    <node if="$(arg rviz)" pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen" />
 </launch>

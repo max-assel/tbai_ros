@@ -1,10 +1,11 @@
 # Example values, not validated benchmark criteria.
-worlds: [balance_beam]
+worlds: [balance_beam, pegboard, ramp_10, ramped_balance_beam, ramped_stepping_stones, rubble, side_stones, sparse_stones, stairs]
 baselines: [MPC, RL, DTC]
 repetitions: 3
-reset_mode: restart  # TODO: support reuse only after reset equivalence is verified.
-gazebo_gui: false
-rviz: false  # TODO: add this argument to the controller launch files.
+reset_mode: restart
+reset_equivalence_verified: false
+gazebo_gui: false  # Show the simulation window for live trial viewing.
+rviz: true
 startup_timeout_wall_sec: 120
 trial_timeout_sim_sec: 60
 trial_timeout_wall_sec: 180
@@ -17,8 +18,27 @@ world_settings:
     start_position: [-3.0, 0.0, 0.15]
     start_orientation_xyzw: [0.0, 0.0, 0.0, 1.0]
     goal_position: [2.0, 0.0, 0.575]
-    # TODO: define terrain-specific fall, course-boundary and no-progress rules.
-    failure: {}
+    failure:
+      fall:
+        min_base_height_world_m: 0.10
+        max_abs_roll_rad: 0.80
+        max_abs_pitch_rad: 0.80
+        hold_sim_sec: 0.5
+      course_boundary:
+        frame: world
+        x_bounds_m: [-3.5, 2.5]
+        y_bounds_m: [-0.75, 0.75]
+        # Restrict the base center to the beam width while crossing its span.
+        segments:
+          - x_bounds_m: [-1.0, 1.0]
+            y_bounds_m: [-0.25, 0.25]
+        hold_sim_sec: 0.5
+      no_progress:
+        metric: best_goal_xy_distance_reduction
+        min_progress_m: 0.10
+        window_sim_sec: 10.0
+        grace_sim_sec: 5.0
+        exclude_goal_tolerance: true
 record_topics:
   - /clock
   - /anymal_d/state
