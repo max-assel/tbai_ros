@@ -1,0 +1,26 @@
+# Example values, not validated benchmark criteria.
+worlds: [balance_beam]
+baselines: [MPC, RL, DTC]
+repetitions: 3
+reset_mode: restart  # TODO: support reuse only after reset equivalence is verified.
+gazebo_gui: false
+rviz: false  # TODO: add this argument to the controller launch files.
+startup_timeout_wall_sec: 120
+trial_timeout_sim_sec: 60
+trial_timeout_wall_sec: 180
+output_dir: results  # Proposed output location, relative to this config file.
+success:
+  xy_tolerance_m: 0.25
+  hold_sim_sec: 1.0
+world_settings:
+  balance_beam:
+    start_position: [-3.0, 0.0, 0.15]
+    start_orientation_xyzw: [0.0, 0.0, 0.0, 1.0]
+    goal_position: [2.0, 0.0, 0.575]
+    # TODO: define terrain-specific fall, course-boundary and no-progress rules.
+    failure: {}
+record_topics:
+  - /clock
+  - /anymal_d/state
+  - /cmd_vel
+  # TODO: add controller timing, command, mapping and diagnostic topics as needed.

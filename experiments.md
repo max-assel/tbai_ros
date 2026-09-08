@@ -1,5 +1,18 @@
 # INSTRUCTIONS TO RUN
 
+## Automation scaffold
+
+See [the benchmark automation guide](tbai_ros_benchmark/AUTOMATION.md) for skeleton
+files and the implementation checklist. From this repository directory, preview
+the configured trial matrix with:
+
+```bash
+python3 tbai_ros_benchmark/src/benchmark_runner.py --dry-run
+```
+
+The preview requires Python 3 and PyYAML. It launches no ROS processes; real
+execution remains blocked until the lifecycle and monitoring TODOs are implemented.
+
 ## GRID MAP MPC
 source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_mpc anymal_d_perceptive.launch gui:=true world:=ramp
 
