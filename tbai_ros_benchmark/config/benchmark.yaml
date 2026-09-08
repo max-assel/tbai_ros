@@ -13,6 +13,10 @@ output_dir: results  # Proposed output location, relative to this config file.
 success:
   xy_tolerance_m: 0.25
   hold_sim_sec: 1.0
+# Reset poses: ../tbai_ros_gazebo/reset_gazebo.sh (paths relative to package).
+# Goals: ../tbai_ros_utils/src/global_path_velocity_generator.py.
+# Course corridors and failure thresholds are provisional tuning values.
+# World-height limits only detect low falls; elevated terrain also relies on tilt.
 world_settings:
   balance_beam:
     start_position: [-3.0, 0.0, 0.15]
@@ -37,6 +41,174 @@ world_settings:
         metric: best_goal_xy_distance_reduction
         min_progress_m: 0.10
         window_sim_sec: 10.0
+        grace_sim_sec: 5.0
+        exclude_goal_tolerance: true
+  pegboard:
+    start_position: [-2.5, 1.4, 0.15]
+    start_orientation_xyzw: [0.0, 0.0, 0.0, 1.0]
+    goal_position: [3.5, 1.4, 0.575]
+    failure:
+      fall:
+        min_base_height_world_m: 0.10
+        max_abs_roll_rad: 0.80
+        max_abs_pitch_rad: 0.80
+        hold_sim_sec: 0.5
+      course_boundary:
+        frame: world
+        x_bounds_m: [-3.0, 4.0]
+        y_bounds_m: [0.15, 2.65]
+        hold_sim_sec: 0.5
+      no_progress:
+        metric: best_goal_xy_distance_reduction
+        min_progress_m: 0.10
+        window_sim_sec: 15.0
+        grace_sim_sec: 5.0
+        exclude_goal_tolerance: true
+  ramp_10:
+    start_position: [-3.0, 0.0, 0.15]
+    start_orientation_xyzw: [0.0, 0.0, 0.0, 1.0]
+    goal_position: [2.5, 0.0, 0.85]
+    failure:
+      fall:
+        min_base_height_world_m: 0.10
+        max_abs_roll_rad: 0.80
+        max_abs_pitch_rad: 1.00
+        hold_sim_sec: 0.5
+      course_boundary:
+        frame: world
+        x_bounds_m: [-3.5, 3.0]
+        y_bounds_m: [-1.25, 1.25]
+        hold_sim_sec: 0.5
+      no_progress:
+        metric: best_goal_xy_distance_reduction
+        min_progress_m: 0.10
+        window_sim_sec: 12.0
+        grace_sim_sec: 5.0
+        exclude_goal_tolerance: true
+  ramped_balance_beam:
+    start_position: [0.0, 0.5, 0.2]
+    start_orientation_xyzw: [0.0, 0.0, 1.0, 0.0]
+    goal_position: [-8.5, 0.5, 0.575]
+    failure:
+      fall:
+        min_base_height_world_m: 0.10
+        max_abs_roll_rad: 0.80
+        max_abs_pitch_rad: 1.10
+        hold_sim_sec: 0.5
+      course_boundary:
+        frame: world
+        x_bounds_m: [-9.0, 0.5]
+        y_bounds_m: [0.0, 1.0]
+        hold_sim_sec: 0.5
+      no_progress:
+        metric: best_goal_xy_distance_reduction
+        min_progress_m: 0.10
+        window_sim_sec: 15.0
+        grace_sim_sec: 5.0
+        exclude_goal_tolerance: true
+  ramped_stepping_stones:
+    start_position: [-0.5, 7.5, 0.2]
+    start_orientation_xyzw: [0.0, 0.0, 1.0, 0.0]
+    goal_position: [-8.0, 7.5, 0.575]
+    failure:
+      fall:
+        min_base_height_world_m: 0.10
+        max_abs_roll_rad: 0.80
+        max_abs_pitch_rad: 1.10
+        hold_sim_sec: 0.5
+      course_boundary:
+        frame: world
+        x_bounds_m: [-8.5, 0.0]
+        y_bounds_m: [6.75, 8.25]
+        hold_sim_sec: 0.5
+      no_progress:
+        metric: best_goal_xy_distance_reduction
+        min_progress_m: 0.10
+        window_sim_sec: 15.0
+        grace_sim_sec: 5.0
+        exclude_goal_tolerance: true
+  rubble:
+    start_position: [-2.5, 1.4, 0.15]
+    start_orientation_xyzw: [0.0, 0.0, 0.0, 1.0]
+    goal_position: [3.5, 1.4, 0.575]
+    failure:
+      fall:
+        min_base_height_world_m: 0.10
+        max_abs_roll_rad: 0.80
+        max_abs_pitch_rad: 0.90
+        hold_sim_sec: 0.5
+      course_boundary:
+        frame: world
+        x_bounds_m: [-3.0, 4.0]
+        y_bounds_m: [0.15, 2.65]
+        hold_sim_sec: 0.5
+      no_progress:
+        metric: best_goal_xy_distance_reduction
+        min_progress_m: 0.10
+        window_sim_sec: 15.0
+        grace_sim_sec: 5.0
+        exclude_goal_tolerance: true
+  side_stones:
+    start_position: [-2.5, 0.0, 0.15]
+    start_orientation_xyzw: [0.0, 0.0, 0.0, 1.0]
+    goal_position: [2.0, 0.0, 0.575]
+    failure:
+      fall:
+        min_base_height_world_m: 0.10
+        max_abs_roll_rad: 0.80
+        max_abs_pitch_rad: 0.80
+        hold_sim_sec: 0.5
+      course_boundary:
+        frame: world
+        x_bounds_m: [-3.0, 2.5]
+        y_bounds_m: [-0.75, 0.75]
+        hold_sim_sec: 0.5
+      no_progress:
+        metric: best_goal_xy_distance_reduction
+        min_progress_m: 0.10
+        window_sim_sec: 15.0
+        grace_sim_sec: 5.0
+        exclude_goal_tolerance: true
+  sparse_stones:
+    start_position: [-3.0, 1.4, 0.15]
+    start_orientation_xyzw: [0.0, 0.0, 0.0, 1.0]
+    goal_position: [2.0, 1.4, 0.575]
+    failure:
+      fall:
+        min_base_height_world_m: 0.10
+        max_abs_roll_rad: 0.80
+        max_abs_pitch_rad: 0.80
+        hold_sim_sec: 0.5
+      course_boundary:
+        frame: world
+        x_bounds_m: [-3.5, 2.5]
+        y_bounds_m: [0.15, 2.65]
+        hold_sim_sec: 0.5
+      no_progress:
+        metric: best_goal_xy_distance_reduction
+        min_progress_m: 0.10
+        window_sim_sec: 15.0
+        grace_sim_sec: 5.0
+        exclude_goal_tolerance: true
+  stairs:
+    start_position: [-2.5, 0.0, 0.15]
+    start_orientation_xyzw: [0.0, 0.0, 0.0, 1.0]
+    goal_position: [3.0, 0.0, 1.5]
+    failure:
+      fall:
+        min_base_height_world_m: 0.10
+        max_abs_roll_rad: 0.80
+        max_abs_pitch_rad: 1.00
+        hold_sim_sec: 0.5
+      course_boundary:
+        frame: world
+        x_bounds_m: [-3.0, 3.5]
+        y_bounds_m: [-1.25, 1.25]
+        hold_sim_sec: 0.5
+      no_progress:
+        metric: best_goal_xy_distance_reduction
+        min_progress_m: 0.10
+        window_sim_sec: 15.0
         grace_sim_sec: 5.0
         exclude_goal_tolerance: true
 record_topics:
