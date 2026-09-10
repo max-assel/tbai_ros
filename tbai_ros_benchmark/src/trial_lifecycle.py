@@ -1,5 +1,14 @@
 """Fill-in hooks for ROS/Gazebo orchestration. No processes are launched yet."""
 
+from datetime import datetime, timezone
+import os
+from pathlib import Path
+import socket
+import subprocess
+import tempfile
+
+import yaml
+
 from trial_monitor import TrialMonitor
 
 BASELINES = {
@@ -23,7 +32,18 @@ class TrialLifecycle:
     self.baseline = baseline
     self.repetition = repetition
     self.processes = []
+    self.env = os.environ.copy()
     self.monitor = TrialMonitor(config, world)
+
+  def _spawn_process(self, arguments, **kwargs):
+    """Launch and track a child with this attempt's master endpoints."""
+    env = self.env.copy()
+    env.update(kwargs.pop("env", {}))
+    for name in ("ROS_MASTER_URI", "GAZEBO_MASTER_URI"):
+      env[name] = self.env[name]
+    process = subprocess.Popen(arguments, env=env, **kwargs)
+    self.processes.append(process)
+    return process
 
   @staticmethod
   def check_implementation():
@@ -34,8 +54,42 @@ class TrialLifecycle:
 
   def start_stack(self):
     """Start an isolated ROS/Gazebo stack and register every owned process."""
-    # TODO: create unique batch/attempt directories; snapshot config and code revision.
-    # TODO: allocate separate ROS_MASTER_URI and GAZEBO_MASTER_URI; propagate to all children.
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as ros_socket, \
+         socket.socket(socket.AF_INET, socket.SOCK_STREAM) as gazebo_socket:
+      ros_socket.bind(("127.0.0.1", 0))
+      gazebo_socket.bind(("127.0.0.1", 0))
+      self.env["ROS_MASTER_URI"] = f"http://127.0.0.1:{ros_socket.getsockname()[1]}"
+      self.env["GAZEBO_MASTER_URI"] = f"http://127.0.0.1:{gazebo_socket.getsockname()[1]}"
+    output_dir = Path(self.config.get("output_dir", "results")).expanduser()
+    if not output_dir.is_absolute():
+      output_dir = Path(__file__).resolve().parents[1] / "config" / output_dir
+    output_dir.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
+    self.batch_dir = Path(tempfile.mkdtemp(prefix=f"batch_{timestamp}_", dir=output_dir))
+    self.attempt_dir = Path(tempfile.mkdtemp(prefix="attempt_", dir=self.batch_dir))
+    with (self.attempt_dir / "config.yaml").open("x", encoding="utf-8") as stream:
+      yaml.safe_dump(self.config, stream, sort_keys=True)
+    revision = {}
+    for name, arguments in (
+      ("commit", ["rev-parse", "HEAD"]),
+      ("status", ["status", "--porcelain", "--untracked-files=no"]),
+    ):
+      try:
+        revision[name] = subprocess.run(
+          ["git", *arguments], cwd=Path(__file__).resolve().parent,
+          check=True, capture_output=True, text=True, timeout=10, env=self.env,
+        ).stdout.strip()
+      except (OSError, subprocess.SubprocessError) as exc:
+        revision[name] = None
+        revision[f"{name}_error"] = str(exc)
+    with (self.attempt_dir / "metadata.yaml").open("x", encoding="utf-8") as stream:
+      yaml.safe_dump({
+        "created_at": timestamp,
+        "world": self.world,
+        "baseline": self.baseline,
+        "repetition": self.repetition,
+        "code_revision": revision,
+      }, stream, sort_keys=True)
     # TODO: launch BASELINES[self.baseline]['package']/anymal_d_perceptive.launch.
     # TODO: add conditional RViz support to launch files before passing rviz:=false.
     # TODO: use Popen argument lists, start_new_session=True, per-process log files.

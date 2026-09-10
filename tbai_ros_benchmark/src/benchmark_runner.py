@@ -2,7 +2,9 @@
 """Preview a benchmark matrix; execution remains blocked by explicit TODO hooks."""
 
 import argparse
+import math
 from pathlib import Path
+import re
 
 import yaml
 
@@ -38,7 +40,85 @@ def load_config(path):
     raise ValueError("reset_equivalence_verified must be a boolean")
   if reset_mode == "reuse" and not reset_equivalence_verified:
     raise ValueError("reuse requires reset_equivalence_verified: true")
-  # TODO: validate positive timeouts, poses, goals, failure rules and recording topics.
+  def mapping(value, name):
+    if not isinstance(value, dict):
+      raise ValueError(f"{name} must be a mapping")
+    return value
+
+  def number(value, name, minimum=None, strict=False):
+    if type(value) not in (int, float) or not math.isfinite(value):
+      raise ValueError(f"{name} must be a finite number")
+    if minimum is not None and (value < minimum or (strict and value == minimum)):
+      relation = "greater than" if strict else "at least"
+      raise ValueError(f"{name} must be {relation} {minimum}")
+
+  def vector(value, name, size):
+    if not isinstance(value, list) or len(value) != size:
+      raise ValueError(f"{name} must contain {size} numbers")
+    for index, component in enumerate(value):
+      number(component, f"{name}[{index}]")
+    return value
+
+  def bounds(value, name):
+    for axis in ("x_bounds_m", "y_bounds_m"):
+      lower, upper = vector(value.get(axis), f"{name}.{axis}", 2)
+      if lower >= upper:
+        raise ValueError(f"{name}.{axis} must have increasing bounds")
+
+  for key in ("startup_timeout_wall_sec", "trial_timeout_sim_sec", "trial_timeout_wall_sec"):
+    number(config.get(key), key, 0, strict=True)
+  success = mapping(config.get("success"), "success")
+  for key in ("xy_tolerance_m", "hold_sim_sec"):
+    number(success.get(key), f"success.{key}", 0, strict=True)
+
+  for world in config["worlds"]:
+    name = f"world_settings.{world}"
+    entry = mapping(settings[world], name)
+    for key in ("start_position", "goal_position"):
+      vector(entry.get(key), f"{name}.{key}", 3)
+    orientation = vector(entry.get("start_orientation_xyzw"), f"{name}.start_orientation_xyzw", 4)
+    if not math.isclose(math.hypot(*orientation), 1.0, rel_tol=1e-3):
+      raise ValueError(f"{name}.start_orientation_xyzw must be a unit quaternion")
+    failure = mapping(entry.get("failure"), f"{name}.failure")
+    for rule in ("fall", "course_boundary", "no_progress"):
+      rule_name = f"{name}.failure.{rule}"
+      values = mapping(failure.get(rule), rule_name)
+      if rule == "fall":
+        number(values.get("min_base_height_world_m"), f"{rule_name}.min_base_height_world_m")
+        for key in ("max_abs_roll_rad", "max_abs_pitch_rad"):
+          number(values.get(key), f"{rule_name}.{key}", 0, strict=True)
+          if values[key] > math.pi:
+            raise ValueError(f"{rule_name}.{key} must not exceed pi")
+      elif rule == "course_boundary":
+        if values.get("frame") != "world":
+          raise ValueError(f"{rule_name}.frame must be world")
+        bounds(values, rule_name)
+        segments = values.get("segments", [])
+        if not isinstance(segments, list):
+          raise ValueError(f"{rule_name}.segments must be a list")
+        for index, segment in enumerate(segments):
+          segment_name = f"{rule_name}.segments[{index}]"
+          bounds(mapping(segment, segment_name), segment_name)
+      else:
+        if values.get("metric") != "best_goal_xy_distance_reduction":
+          raise ValueError(f"{rule_name}.metric must be best_goal_xy_distance_reduction")
+        for key in ("min_progress_m", "window_sim_sec"):
+          number(values.get(key), f"{rule_name}.{key}", 0, strict=True)
+        number(values.get("grace_sim_sec"), f"{rule_name}.grace_sim_sec", 0)
+        if type(values.get("exclude_goal_tolerance")) is not bool:
+          raise ValueError(f"{rule_name}.exclude_goal_tolerance must be a boolean")
+      if rule != "no_progress":
+        number(values.get("hold_sim_sec"), f"{rule_name}.hold_sim_sec", 0, strict=True)
+
+  topics = config.get("record_topics")
+  if not isinstance(topics, list) or not topics:
+    raise ValueError("record_topics must be a nonempty list of ROS topic names")
+  for topic in topics:
+    if not isinstance(topic, str) or not re.fullmatch(r"[A-Za-z/~][A-Za-z0-9_/]*", topic) or topic in ("/", "~"):
+      raise ValueError("record_topics must contain valid ROS topic names")
+  if len(set(topics)) != len(topics):
+    raise ValueError("record_topics must not contain duplicates")
+
   return config
 
 
