@@ -4,8 +4,9 @@ This replaces the previous in-progress implementation with wrappers around exist
 commands. Robot reset, controller/gait selection and path following remain in
 reset_gazebo.sh and run_experiment.sh. Existing main.py/helpers.py are unchanged.
 
-Only configuration loading and command preview work. --execute fails explicitly
-before launching anything. From src/tbai_ros, with Python 3.8+ and PyYAML:
+Configuration loading, command preview and lifecycle preparation are implemented.
+--execute still fails explicitly before launching anything because the remaining
+execution hooks are unfinished. From src/tbai_ros, with Python 3.8+ and PyYAML:
 
     python3 tbai_ros_benchmark/src/benchmark_runner.py --dry-run
 
@@ -45,8 +46,19 @@ stop the batch if owned processes remain. Always clean up partial startup too.
 Use simulation time for duration/time-to-goal and monotonic wall time for watchdogs.
 Recovery does not restart the duration clock. Define tie precedence and sustained,
 terrain-specific termination criteria; current thresholds are provisional.
-RViz currently launches unconditionally: add optional launch support before passing
-an rviz argument. gui:=false controls only Gazebo.
+The three baseline launches support the configured rviz argument; gui:=false
+controls only Gazebo.
+
+prepare() requires a sourced ROS 1 catkin devel environment. It validates scripts,
+world files, launch files and generator goals, then creates a unique attempt with
+metadata.yaml containing the resolved configuration and repository revision.
+Sequential attempts sharing a loaded config share its generated batch directory;
+load a fresh config to start another batch. Attempt names include a unique suffix.
+Future subprocess calls must use the prepared subprocess_kwargs (workspace cwd,
+isolated environment and new session), file logs and tracked process handles.
+Cleanup must track descendants even if they create new sessions. The selected
+localhost master ports are free at preparation time; launch must detect a later
+port collision. Preparation does not start ROS or Gazebo.
 
 ## Selected data and outputs
 

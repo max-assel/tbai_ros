@@ -42,6 +42,7 @@ def load_config(path):
     raise ValueError("record_topics must contain absolute topic names")
   if type(config.get("gazebo_gui")) is not bool:
     raise ValueError("gazebo_gui must be a boolean")
+  config["_config_path"] = str(path.resolve())
   # TODO: Validate finite positive deadlines, monitor thresholds, topic fields and output path.
   # Suggestion: validate before creating processes; check goals match the existing path generator.
   return config
