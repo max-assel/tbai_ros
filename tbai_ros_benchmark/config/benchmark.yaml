@@ -1,6 +1,5 @@
 # Configuration contract for the script-wrapper benchmark.
-# Preview consumes matrix/scripts/gui/record_topics today; execution settings below
-# take effect only when the lifecycle, monitor and metrics hooks are implemented.
+# Execute runs sequential fresh stacks; preview only prints the command plan.
 # Thresholds are initial tuning values, not experimentally validated criteria.
 schema_version: 1
 worlds: [balance_beam, pegboard]
@@ -34,8 +33,6 @@ readiness:
   state_stale_wall_sec: 1.0
   clock_stall_wall_sec: 5.0
   reset_timeout_wall_sec: 30
-  mapping_timeout_wall_sec: 60
-  recorder_timeout_wall_sec: 15
   stable_stand_hold_sim_sec: 1.0
   reset_xy_tolerance_m: 0.15
   # Check XY against script spawn pose; standing height differs from reset height.
@@ -283,8 +280,6 @@ record_topics:
   - /elevation_mapping/elevation_map_raw
   - /rosout_agg
 recording:
-  required_before_motion: [/clock, /anymal_d/state, /anymal_d/command]
-  # cmd_vel starts with the trial script; do not wait for it before starting that script.
   require_motion_topic_after_activation: true
   missing_optional_topic_policy: record_unavailable
   compression: none

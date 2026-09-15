@@ -1,88 +1,96 @@
-# Script-based trial automation skeleton
+# Script-based trial automation
 
-This replaces the previous in-progress implementation with wrappers around existing
-commands. Robot reset, controller/gait selection and path following remain in
-reset_gazebo.sh and run_experiment.sh. Existing main.py/helpers.py are unchanged.
+Run from the sourced ROS 1 catkin workspace with Python 3, PyYAML and psutil.
+The observer also uses the workspace's rospy and ROS message packages;
+bag analysis uses rosbag. Preview is the default and does not import ROS:
 
-Configuration loading, command preview and lifecycle preparation are implemented.
---execute still fails explicitly before launching anything because the remaining
-execution hooks are unfinished. From src/tbai_ros, with Python 3.8+ and PyYAML:
+```bash
+python3 src/tbai_ros/tbai_ros_benchmark/src/benchmark_runner.py --dry-run
+python3 src/tbai_ros/tbai_ros_benchmark/src/benchmark_runner.py --execute
+```
 
-    python3 tbai_ros_benchmark/src/benchmark_runner.py --dry-run
+Use `--config /path/to/benchmark.yaml` to select another configuration. Preparation
+assumes the environment, scripts and world settings are correct. It does not
+preflight packages or compare generator goals. Keep configured goals consistent
+with `global_path_velocity_generator.py`.
 
-The preview is not a runnable shell script: readiness checks belong between the
-commands, and long-running processes require ownership and cleanup.
+## Trial sequence
 
-## Files and fill-in order
+1. Create a unique attempt directory under the batch, snapshot configuration, and
+   select separate localhost ROS and Gazebo master ports.
+2. Start a ROS master and the observer, then launch the selected controller stack.
+   Wait for advancing clock, fresh state and Gazebo reset services.
+3. Run the existing `reset_gazebo.sh` with `bash -e`. Confirm the configured start
+   XY and sustained standing posture/low speed using fresh state.
+4. Start the shared elevation mapping launch.
+5. Start rosbag. Mapping coverage and incoming recording streams are not checked
+   before continuing.
+6. Arm the monitor, then invoke `run_experiment.sh` with `bash -e`. The first
+   nonzero velocity request starts measurement.
+7. Stop on sustained goal arrival, fall, course departure, no progress, or duration
+   limit. Stale state, stalled/regressing clock and process exits are errors.
+8. Stop the motion script and its descendants, publish zero velocity, finalize
+   rosbag, and stop mapping, controllers, observer and master. Escalate SIGINT to
+   SIGTERM and SIGKILL using the configured wall deadlines.
+9. Save the outcome, analyze the finalized bag, and append one batch summary row.
+   Continue sequentially only for configured outcomes with successful cleanup.
 
-1. config/benchmark.yaml: preserved world/controller selections and world settings.
-   Tune deadlines/criteria and configure verified action, timing and recovery topics.
-   Reset poses are expectations, not overrides passed to the script. Monitor goals
-   must match the existing global_path_velocity_generator.py.
-2. src/trial_lifecycle.py: implement ownership and cleanup together, then launch,
-   readiness, calling reset_gazebo.sh, reset verification and mapping readiness.
-   Invoke run_experiment.sh for motion. Use workspace cwd and sourced ROS environment
-   because the scripts call catkin locate. Do not recreate their service calls.
-3. src/trial_monitor.py: fixed maximum simulation duration plus early success/failure;
-   record intermediate events and recovery already performed by existing controllers.
-4. src/trial_metrics.py: summarize finalized bags and persist selected metrics.
-5. src/benchmark_runner.py: wire sequential attempts, partial results and cleanup.
+Robot reset, controller/gait selection and path following remain in the existing
+scripts. `main.py` and `helpers.py` are unchanged. `rviz` controls RViz and
+`gazebo_gui` controls the Gazebo window independently.
 
-Each TODO section contains implementation suggestions. Execution hooks deliberately
-raise NotImplementedError. Catkin installation is not wired up yet.
+## Implementation
 
-## Outcomes and failure handling
+- `trial_lifecycle.py`: process ownership, readiness, script invocation, cleanup
+  and per-attempt execution. Children inherit the attempt's environment and cwd.
+  Process identities and inherited attempt tags identify owned descendants even
+  if they start new sessions or are reparented. No global kill commands are used.
+- `trial_ros.py`: one observer subprocess per attempt, avoiding rospy reinitialization
+  across masters. It writes atomic snapshots for the parent and handles zero velocity.
+- `trial_monitor.py`: evaluates snapshots at `readiness.poll_wall_sec`. Simulation
+  time governs sustained conditions and measured duration; monotonic wall time
+  governs startup, freshness and process shutdown. Precedence is error, failure,
+  success, timeout. Failure candidates generate onset/clearance events.
+- `trial_metrics.py`: analyzes native state timestamps within motion start through
+  termination, leaving actions at their original timestamps in the raw bag.
+- `benchmark_runner.py`: executes the configured world/baseline/repetition matrix.
 
-Final outcomes: success, failure, timeout, error, interrupted. Recoverable robot events
-remain separate: success may include recoveries. Do not add recovery control here or
-infer recovery success from a controller switch. Without an event source, recovery
-metrics are unavailable. Keep incomplete episodes in the record.
+The implementation targets the supplied configuration: sequential fresh stacks,
+world-frame RbdState, XY trajectory, uncompressed bags and no CSV stream export.
+Recovery remains unavailable because there is no verified event source; candidate
+clearances and controller switches are not counted as recoveries. No recovery
+control or runtime instrumentation is added. Configured runtime topics are recorded
+and summarized; the default null sources yield unavailable statistics.
 
-Startup/reset/mapping/recorder problems are stage-tagged infrastructure errors.
-Check reset exit status AND resulting state because intermediate service failures
-may be masked by the script. Keep cleanup errors separate from the robot outcome;
-stop the batch if owned processes remain. Always clean up partial startup too.
+## Outputs and failure handling
 
-Use simulation time for duration/time-to-goal and monotonic wall time for watchdogs.
-Recovery does not restart the duration clock. Define tie precedence and sustained,
-terrain-specific termination criteria; current thresholds are provisional.
-The three baseline launches support the configured rviz argument; gui:=false
-controls only Gazebo.
+Each attempt uses `results/<batch>/<world>/<baseline>/trial_001_<unique>/` and stores
+`metadata.yaml`, `result.json`, `events.jsonl`, `runtime_summary.json`,
+`recording.bag`, observer snapshots and process logs. A shared loaded config shares
+one batch directory; loading a fresh config starts a new batch. Git is not queried.
 
-prepare() requires a sourced ROS 1 catkin devel environment. It validates scripts,
-world files, launch files and generator goals, then creates a unique attempt with
-metadata.yaml containing the resolved configuration and repository revision.
-Sequential attempts sharing a loaded config share its generated batch directory;
-load a fresh config to start another batch. Attempt names include a unique suffix.
-Future subprocess calls must use the prepared subprocess_kwargs (workspace cwd,
-isolated environment and new session), file logs and tracked process handles.
-Cleanup must track descendants even if they create new sessions. The selected
-localhost master ports are free at preparation time; launch must detect a later
-port collision. Preparation does not start ROS or Gazebo.
+The result records infrastructure stage/reason separately from cleanup errors.
+Ctrl+C/SIGTERM triggers cleanup and persistence. Another interrupt during cleanup
+is ignored so it cannot abandon owned processes. Any cleanup error stops the batch.
+An unfinalized `.bag.active` is preserved rather than analyzed. Analysis errors are
+saved without replacing the original trial outcome or deleting the raw bag.
 
-## Selected data and outputs
+XY distance sums consecutive valid state samples. Duplicate timestamps keep the
+first sample; gaps, time regressions and implausible jumps make distance unavailable.
+Reset and cleanup samples are excluded. Missing measurements are null with reasons.
+Runtime summaries use measured durations, convert to milliseconds and report count,
+mean, median, p95, p99 and maximum with linear percentile interpolation.
 
-- Outcome/reason, intermediate failures, recovery start/end/outcome.
-- Trial simulation/wall duration and confirmed time to goal.
-- Timestamped robot state and high-level/low-level actions in rosbag.
-- XY path length and final XY goal distance in a verified common frame.
-- MPC/WBC/policy runtime count, mean, median, p95, p99 and maximum.
+## Validation
 
-Distance calculations exclude reset/cleanup. Document filtering, gaps, frames and
-sample alignment; do not bridge teleports. Missing data is null with a reason, not
-zero. Publication frequency is not runtime: use measured call durations, defining
-units, warmup exclusion, percentile method and GPU completion timing if relevant.
+Offline checks:
 
-Each unique results/<batch>/<world>/<baseline>/trial_001 directory should contain:
-metadata.yaml, result.json, events.jsonl, runtime_summary.json, recording.bag and
-per-process logs. Append one batch summary.csv row per attempt. Record/arm monitor
-before motion, finalize bag before analysis, preserve raw artifacts on analysis
-failure. Automatic retries, resume, stack reuse and parallel trials are later work.
+```bash
+python3 -m unittest discover -s src/tbai_ros/tbai_ros_benchmark/tests -v
+```
 
-## Validation after implementation
-
-Start with three trials for one controller. Exercise early success, terminal failure,
-intermediate recovery, timeout, reset failure, stale state, clock stall, recorder
-crash and Ctrl+C during startup/motion. Verify partial results, bag finalization and
-no owned children left; never advance after failed cleanup. Check metrics against a
-known recording before expanding to more worlds/controllers.
+These exercise termination rules, candidate events, timestamp windows, runtime
+summaries, partial failures, interruption persistence and actual descendant cleanup.
+ROS/Gazebo integration still needs a live run. Begin with one world and baseline;
+verify reset, map coverage, goal arrival, bag finalization and no remaining children
+before expanding the matrix. Terrain thresholds in the configuration need tuning.

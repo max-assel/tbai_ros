@@ -1,16 +1,17 @@
-"""Skeleton: automate existing scripts; do not duplicate robot reset/control logic."""
+"""Run one benchmark attempt using the existing robot scripts."""
 
-import ast
 from datetime import datetime, timezone
-import math
 import os
+import json
+import math
+import signal
+import sys
+import time
+from urllib.parse import urlparse
 from pathlib import Path
-import re
-import shutil
 import socket
 import subprocess
 import tempfile
-import xml.etree.ElementTree as ET
 
 import yaml
 
@@ -26,96 +27,39 @@ class TrialLifecycle:
     self.config, self.world, self.baseline = config, world, baseline
     self.repetition = repetition
     self.processes = {}
+    self.process_logs = {}
+    self.process_descendants = {}
+    self.stage = "prepare"
+    self.monitor = None
 
   def command_plan(self):
-    """Return existing commands for preview only."""
+    """Return argument lists for preview and execution."""
     return {
       "launch": ["roslaunch", BASELINES[self.baseline], "anymal_d_perceptive.launch",
                  f"world:={self.world}", f"gui:={str(self.config['gazebo_gui']).lower()}",
                  f"rviz:={str(self.config.get('rviz', True)).lower()}"],
-      "reset": ["bash", self.config["scripts"]["reset"], self.world, self.baseline],
+      "reset": ["bash", "-e", self.config["scripts"]["reset"], self.world, self.baseline],
       "mapping": ["roslaunch", "tbai_ros_gridmap", "elevation_mapping.launch"],
       "record": ["rosbag", "record", "-O",
                  str(self.attempt_dir / "recording.bag") if hasattr(self, "attempt_dir")
-                 else "<attempt-dir>/recording.bag", *self.config["record_topics"]],
-      "run": ["bash", self.config["scripts"]["run"], self.world, self.baseline],
+                 else "<attempt-dir>/recording.bag", *dict.fromkeys(
+                   self.config["record_topics"] + [source['topic'] for source in
+                     self.config.get('runtime_sources', {}).values() if source])],
+      "run": ["bash", "-e", self.config["scripts"]["run"], self.world, self.baseline],
     }
 
   def prepare(self):
-    """Prepare paths, process ownership and execution prerequisites."""
+    """Set up one attempt, assuming a sourced workspace and valid configuration."""
     if hasattr(self, "attempt_dir"):
       raise ValueError("prepare may only be called once per attempt")
-    if self.baseline not in BASELINES or not re.fullmatch(r"[A-Za-z0-9_-]+", self.world):
-      raise ValueError("Invalid baseline or world name")
-    if type(self.repetition) is not int or self.repetition < 1:
-      raise ValueError("repetition must be a positive integer")
-    for key in ("gazebo_gui", "rviz"):
-      if type(self.config.get(key, True)) is not bool:
-        raise ValueError(f"{key} must be a boolean")
-
     self.env = os.environ.copy()
-    if self.env.get("ROS_VERSION") != "1" or not self.env.get("ROS_DISTRO"):
-      raise ValueError("Source the ROS 1 and catkin workspace setup.bash before preparing")
-    for executable in ("bash", "catkin", "rospack", "roslaunch", "rosrun", "rosbag",
-                       "rostopic", "rosservice", "gzserver", "git"):
-      if not shutil.which(executable, path=self.env.get("PATH")):
-        raise ValueError(f"Missing required executable: {executable}")
     self.workspace = Path(self._probe(["catkin", "locate"], Path.cwd())).resolve()
-    if not (self.workspace / "devel/setup.bash").is_file():
-      raise ValueError("Existing experiment scripts require workspace/devel/setup.bash")
-    prefixes = [Path(p).resolve() for p in self.env.get("CMAKE_PREFIX_PATH", "").split(os.pathsep) if p]
-    if (self.workspace / "devel").resolve() not in prefixes:
-      raise ValueError(f"Source {self.workspace / 'devel/setup.bash'} first")
 
     config_path = Path(self.config.get("_config_path",
       Path(__file__).resolve().parents[1] / "config/benchmark.yaml"))
     for name in ("reset", "run"):
       script = (config_path.parent / self.config["scripts"][name]).resolve()
-      if not script.is_file() or not os.access(script, os.R_OK):
-        raise ValueError(f"Missing or unreadable {name} script: {script}")
-      self._probe(["bash", "-n", str(script)], self.workspace)
       self.config["scripts"][name] = str(script)
-
-    packages = {name: Path(self._probe(["rospack", "find", name], self.workspace))
-                for name in (BASELINES[self.baseline], "tbai_ros_gazebo", "tbai_ros_utils",
-                             "tbai_ros_gridmap")}
-    launch = packages[BASELINES[self.baseline]] / "launch/anymal_d_perceptive.launch"
-    root = ET.parse(launch).getroot()
-    if not any(arg.get("name") == "rviz" for arg in root.findall("arg")) or not any(
-      node.get("if") == "$(arg rviz)" for node in root.iter("node") if node.get("pkg") == "rviz"
-    ):
-      raise ValueError(f"Launch must support conditional RViz: {launch}")
-    ET.parse(packages["tbai_ros_gridmap"] / "launch/elevation_mapping.launch")
-    world_file = packages["tbai_ros_gazebo"] / f"launch/worlds/{self.world}/{self.world}.world"
-    if not world_file.is_file():
-      raise ValueError(f"Missing world file: {world_file}")
-    reset_source = Path(self.config["scripts"]["reset"]).read_text()
-    if self.world not in re.findall(r'\[\s*"\$ENV_NAME"\s*==\s*"([^"]+)"\s*\]', reset_source):
-      raise ValueError(f"Reset script does not explicitly support {self.world}")
-    # Read literal goals without importing ROS or executing the generator.
-    generator = packages["tbai_ros_utils"] / "src/global_path_velocity_generator.py"
-    goals = {}
-    for node in ast.walk(ast.parse(generator.read_text())):
-      if not isinstance(node, ast.If) or not isinstance(node.test, ast.Compare):
-        continue
-      test = node.test
-      if (ast.dump(test.left) != ast.dump(ast.parse("self.world_name", mode="eval").body)
-          or len(test.ops) != 1 or not isinstance(test.ops[0], ast.Eq)
-          or not isinstance(test.comparators[0], ast.Constant)):
-        continue
-      for statement in node.body:
-        if isinstance(statement, ast.Assign) and any(
-          isinstance(target, ast.Attribute) and target.attr == "global_goal"
-          for target in statement.targets
-        ):
-          goals[test.comparators[0].value] = ast.literal_eval(statement.value)
-    goal = self.config["world_settings"][self.world]["goal_position"]
-    if (self.world not in goals or len(goal) != 3 or any(
-      not isinstance(a, (int, float)) or not math.isfinite(a) or
-      not math.isclose(a, b, rel_tol=0, abs_tol=1e-6)
-      for a, b in zip(goal, goals[self.world])
-    )):
-      raise ValueError(f"Monitor goal for {self.world} must match the existing generator")
 
     output = (config_path.parent / self.config["output_dir"]).resolve()
     output.mkdir(parents=True, exist_ok=True)
@@ -140,6 +84,7 @@ class TrialLifecycle:
         ROS_IP="127.0.0.1", ROS_HOME=str(self.attempt_dir / "ros_home"),
         ROS_LOG_DIR=str(self.attempt_dir / "ros_logs"),
       )
+    self.env["TBAI_BENCHMARK_ATTEMPT"] = str(self.attempt_dir)
     self.env.pop("ROS_HOSTNAME", None)
     self.env.pop("ROS_NAMESPACE", None)
     # All future launch/reset/mapping/record/run/probe calls must use these kwargs.
@@ -147,16 +92,11 @@ class TrialLifecycle:
                               "start_new_session": True}
     self.process_logs = {}
     self.process_descendants = {}  # Cleanup must retain descendants that change sessions.
-    try:
-      revision = self._probe(["git", "rev-parse", "HEAD"], packages[BASELINES[self.baseline]])
-      dirty = bool(self._probe(["git", "status", "--porcelain"], packages[BASELINES[self.baseline]]))
-    except (ValueError, OSError):
-      revision, dirty = None, None
     metadata = {"world": self.world, "baseline": self.baseline, "repetition": self.repetition,
                 "created_at": datetime.now(timezone.utc).isoformat(),
-                "workspace": str(self.workspace), "revision": revision, "dirty": dirty,
+                "workspace": str(self.workspace),
                 "config_path": str(config_path), "commands": self.command_plan(),
-                "environment": {key: self.env[key] for key in
+                "environment": {key: self.env.get(key) for key in
                   ("ROS_DISTRO", "ROS_MASTER_URI", "GAZEBO_MASTER_URI", "ROS_IP", "ROS_HOME", "ROS_LOG_DIR")},
                 "config": {key: value for key, value in self.config.items() if not key.startswith("_")}}
     with (self.attempt_dir / "metadata.yaml").open("x") as stream:
@@ -164,52 +104,274 @@ class TrialLifecycle:
     return self.attempt_dir
 
   def _probe(self, command, cwd):
-    """Run a bounded preflight command without shell expansion or ROS initialization."""
+    """Read setup command output with a timeout and no shell expansion."""
     try:
       result = subprocess.run(command, cwd=str(cwd), env=self.env, capture_output=True,
                               text=True, timeout=15, check=True)
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
-      raise ValueError(f"Preflight failed: {command}: {exc.stderr}") from exc
+      raise ValueError(f"Setup command failed: {command}: {exc.stderr}") from exc
     return result.stdout.strip()
 
+  def _start(self, name, command):
+    import psutil
+    log = (self.attempt_dir / f'{name}.log').open('xb')
+    self.process_logs[name] = log
+    kwargs = dict(self.subprocess_kwargs)
+    kwargs['env'] = dict(self.env, TBAI_BENCHMARK_PROCESS=name)
+    process = subprocess.Popen(command, stdout=log, stderr=subprocess.STDOUT, **kwargs)
+    self.processes[name] = process
+    self.process_descendants[name] = set()
+    try:
+      self.process_descendants[name].add(psutil.Process(process.pid))
+    except psutil.NoSuchProcess:
+      pass  # The next health check reports an immediate startup failure.
+    return process
+
+  def _track(self, scan=False):
+    """Retain process identities, including children that start another session."""
+    import psutil
+    for owned in self.process_descendants.values():
+      for process in list(owned):
+        try:
+          owned.update(process.children(recursive=True))
+        except psutil.NoSuchProcess:
+          pass
+    if scan:
+      # Find reparented children by the unique environment inherited at launch.
+      for process in psutil.process_iter():
+        try:
+          env = process.environ()
+          if env.get('TBAI_BENCHMARK_ATTEMPT') == str(self.attempt_dir):
+            name = env.get('TBAI_BENCHMARK_PROCESS')
+            if name in self.process_descendants:
+              self.process_descendants[name].add(process)
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+          pass
+
+  def _health(self, allow_exit=()):
+    self._track()
+    for name, process in self.processes.items():
+      if name not in allow_exit and process.poll() is not None:
+        raise RuntimeError(f'{name} exited with code {process.returncode}; see {name}.log')
+
+  def _snapshot(self):
+    try:
+      return json.loads((self.attempt_dir / 'observer.json').read_text())
+    except FileNotFoundError:
+      return {}
+
+  def _wait(self, condition, timeout, reason, allow_exit=()):
+    deadline = time.monotonic() + timeout
+    while True:
+      self._health(allow_exit)
+      snapshot = self._snapshot()
+      if condition(snapshot):
+        return snapshot
+      if time.monotonic() >= deadline:
+        raise RuntimeError(reason)
+      time.sleep(self.config['readiness']['poll_wall_sec'])
+
+  def _fresh(self, snapshot):
+    now = time.monotonic()
+    state = snapshot.get('state')
+    return (state is not None and snapshot.get('clock') is not None and
+            now - state['wall'] <= self.config['readiness']['state_stale_wall_sec'] and
+            now - snapshot.get('clock_wall', 0) <= self.config['readiness']['clock_stall_wall_sec'] and
+            now - snapshot.get('wall', 0) <= self.config['readiness']['state_stale_wall_sec'])
+
   def launch_and_reset(self):
-    """Launch the selected stack and call the existing reset_gazebo.sh."""
-    # TODO: Start command_plan()['launch']; wait for fresh state, clock and reset services.
-    # Suggestion: use a bounded ROS probe plus monotonic wall deadline; check child health.
-    # TODO: Run command_plan()['reset'] to completion with a timeout; do not port its service calls.
-    # Suggestion: check exit status AND verify expected pose/stable standing afterward since
-    # the script may mask intermediate failures. Improve error reporting in the script if needed.
-    # world_settings.start_* are expectations, not reset overrides passed to this script.
-    # TODO: Start mapping and wait for fresh usable map coverage.
-    # Suggestion: verify shared tbai_ros_gridmap launch compatibility for each baseline;
-    # report errors with the stage, e.g. reset_failed or mapping_timeout.
-    raise NotImplementedError("Wrap launch, reset and mapping")
+    """Launch, wait for ROS, run reset, verify standing, then start mapping."""
+    plan = self.command_plan()
+    readiness = self.config['readiness']
+    self.stage = 'launch'
+    port = urlparse(self.env['ROS_MASTER_URI']).port
+    self._start('master', ['roscore', '-p', str(port)])
+    self._start('observer', [sys.executable, str(Path(__file__).with_name('trial_ros.py').resolve()),
+                             str(self.attempt_dir)])
+    self._wait(lambda s: bool(s.get('wall')), self.config['startup_timeout_wall_sec'], 'master_timeout')
+    self._start('launch', plan['launch'])
+    self.stage = 'readiness'
+    services = {'/gazebo/pause_physics', '/gazebo/unpause_physics',
+                '/gazebo/set_model_state', '/gazebo/set_model_configuration'}
+    self._wait(lambda s: self._fresh(s) and s['clock'] > 0 and services <= set(s.get('services', [])),
+               self.config['startup_timeout_wall_sec'], 'startup_timeout')
+    self.stage = 'reset_script'
+    reset = self._start('reset', plan['reset'])
+    self._wait(lambda s: reset.poll() is not None, readiness['reset_timeout_wall_sec'],
+               'reset_timeout', allow_exit=('reset',))
+    if reset.returncode:
+      raise RuntimeError(f'reset_failed: exit {reset.returncode}; see reset.log')
+    self.stage = 'verify_reset'
+    reset_done = time.monotonic()
+    standing_since = None
+    previous_sim = None
+    start_x, start_y = self.config['world_settings'][self.world]['start_position'][:2]
+
+    def standing(snapshot):
+      nonlocal standing_since, previous_sim
+      if not self._fresh(snapshot) or snapshot['state']['wall'] <= reset_done:
+        standing_since = None
+        return False
+      sim = snapshot['clock']
+      values = snapshot['state']['values']
+      stable = (len(values) == 36 and all(math.isfinite(v) for v in values) and
+                math.hypot(values[3] - start_x, values[4] - start_y) <= readiness['reset_xy_tolerance_m'] and
+                abs(values[0]) <= readiness['stable_stand_max_abs_roll_rad'] and
+                abs(values[1]) <= readiness['stable_stand_max_abs_pitch_rad'] and
+                math.sqrt(sum(v * v for v in values[9:12])) <= readiness['stable_stand_max_base_speed_mps'] and
+                values[5] > self.config['world_settings'][self.world]['failure']['fall']['min_base_height_world_m'])
+      if not stable or (previous_sim is not None and sim < previous_sim):
+        standing_since = None
+      elif standing_since is None:
+        standing_since = sim
+      previous_sim = sim
+      return standing_since is not None and sim - standing_since >= readiness['stable_stand_hold_sim_sec']
+
+    self._wait(standing, readiness['reset_timeout_wall_sec'], 'reset_verification_timeout', ('reset',))
+    self.stage = 'mapping'
+    self._start('mapping', plan['mapping'])
+
 
   def record_and_run(self):
-    """Start recording and monitoring before invoking existing run_experiment.sh."""
-    # TODO: Start recorder and confirm subscriptions/readiness.
-    # Suggestion: include verified low-level action, runtime and recovery topics when available.
-    # TODO: Arm TrialMonitor, then start command_plan()['run'] in the background.
-    # Suggestion: leave controller/gait/path behavior inside the existing script; monitor first
-    # qualifying motion command after activation as the measured start, with activation timeout.
-    # TODO: Wait for duration cap or monitor success/failure while checking process health.
-    # Suggestion: generator stays alive at goal; process exit is not the success signal.
-    raise NotImplementedError("Wrap recording and trial execution")
+    """Start the recorder, arm the monitor, and start motion."""
+    from trial_monitor import TrialMonitor
+    self.stage = 'record'
+    plan = self.command_plan()
+    self._start('record', plan['record'] + ['__name:=benchmark_recorder'])
+    self.stage = 'arm_monitor'
+    self.monitor = TrialMonitor(self.config, self.world)
+    (self.attempt_dir / 'arm').touch()
+    self._wait(lambda s: s.get('armed', False), self.config['activation_timeout_wall_sec'],
+               'monitor_arm_timeout', ('reset',))
+    self.stage = 'run_script'
+    self._start('run', plan['run'])
+    self.stage = 'monitor'
+    return self.monitor.wait_for_result(self._snapshot, lambda: self._health(('reset',)))
+
+  def _stop(self, name):
+    import psutil
+    if name not in self.processes:
+      return
+    settings = self.config['cleanup']
+    steps = [(signal.SIGINT, settings['recorder_sigint_timeout_wall_sec'] if name == 'record'
+              else settings['process_sigint_timeout_wall_sec']),
+             (signal.SIGTERM, settings['process_sigterm_timeout_wall_sec']),
+             (signal.SIGKILL, settings['process_sigkill_timeout_wall_sec'])]
+
+    def alive():
+      self.processes[name].poll()  # Reap the direct child.
+      running = []
+      for process in self.process_descendants[name]:
+        try:
+          if process.is_running() and process.status() != psutil.STATUS_ZOMBIE:
+            running.append(process)
+        except psutil.NoSuchProcess:
+          pass
+      return running
+
+    for sig, timeout in steps:
+      self._track(scan=True)
+      targets = alive()
+      if not targets:
+        return
+      for process in targets:
+        try:
+          process.send_signal(sig)
+        except psutil.NoSuchProcess:
+          pass
+      deadline = time.monotonic() + timeout
+      while time.monotonic() < deadline:
+        if not alive():
+          return
+        time.sleep(0.05)
+    if alive():
+      raise RuntimeError(f'{name}: processes still alive after SIGKILL')
 
   def cleanup(self):
-    """Release partial or complete trials, including error and interruption paths."""
-    # TODO: Stop owned motion publisher, publish zero command, finalize bag, stop remaining children.
-    # Suggestion: bounded SIGINT -> SIGTERM -> SIGKILL; allow bag finalization before stack shutdown.
-    # Track descendants even when roslaunch creates separate sessions; never use global killall.
-    # TODO: Attempt every cleanup step and report all errors, verifying owned children exited.
-    # Suggestion: keep cleanup errors separate from outcome; abort batch if any processes remain.
-    raise NotImplementedError("Owned-process cleanup")
+    """Stop motion, finalize the bag, then stop all other owned processes."""
+    errors = []
+
+    def stop(name):
+      try:
+        self._stop(name)
+      except Exception as exc:
+        errors.append(f'{name}: {exc}')
+
+    stop('run')
+    stop('reset')
+    if 'observer' in self.processes and 'launch' in self.processes:
+      try:
+        (self.attempt_dir / 'zero').touch()
+        deadline = time.monotonic() + self.config['cleanup']['process_sigint_timeout_wall_sec']
+        while not self._snapshot().get('zero_sent', False):
+          if self.processes['observer'].poll() is not None or time.monotonic() >= deadline:
+            raise RuntimeError('zero velocity could not be confirmed')
+          time.sleep(0.05)
+      except Exception as exc:
+        errors.append(str(exc))
+    stop('record')
+    if 'record' in self.processes and not (self.attempt_dir / 'recording.bag').is_file():
+      errors.append('recording.bag was not finalized; preserve recording.bag.active')
+    for name in ('mapping', 'launch', 'observer', 'master'):
+      stop(name)
+    # One final sweep catches descendants reparented during shutdown.
+    for name in self.processes:
+      stop(name)
+    for log in self.process_logs.values():
+      try:
+        log.close()
+      except OSError as exc:
+        errors.append(f'closing process log: {exc}')
+    return errors
 
   def execute(self):
-    """Wire the wrappers and collectors together once implemented."""
-    # TODO: Call prepare -> launch_and_reset -> record_and_run -> monitor outcome.
-    # Suggestion: catch stage-specific errors, handle SIGINT/SIGTERM, always cleanup in finally.
-    # Persist available results/events even on partial startup or cleanup failure.
-    # TODO: Run TrialMetrics only after recording finalizes.
-    # Suggestion: preserve raw bag and original outcome if postprocessing fails.
-    raise NotImplementedError("Skeleton only: implement wrappers, monitor and metrics before execution")
+    """Always clean up and save the outcome, including partial startup failures."""
+    from trial_monitor import TrialResult
+    from dataclasses import asdict
+    from trial_metrics import TrialMetrics, write_json
+    previous_handlers = {}
+
+    def interrupted(signum, frame):
+      raise KeyboardInterrupt(f'signal {signum}')
+
+    result = None
+    cleanup_errors = []
+    try:
+      for sig in (signal.SIGINT, signal.SIGTERM):
+        previous_handlers[sig] = signal.signal(sig, interrupted)
+      self.prepare()
+      self.launch_and_reset()
+      result = self.record_and_run()
+    except (Exception, KeyboardInterrupt) as exc:
+      status = 'interrupted' if isinstance(exc, KeyboardInterrupt) else 'error'
+      if self.monitor is not None:
+        result = self.monitor.finish(status, str(exc), self._snapshot().get('clock'),
+                                     time.monotonic(), self.stage)
+      else:
+        result = TrialResult(status, str(exc), self.stage)
+    finally:
+      # A second Ctrl+C must not abandon bag finalization or process cleanup.
+      for sig in previous_handlers:
+        signal.signal(sig, signal.SIG_IGN)
+      try:
+        try:
+          cleanup_errors = self.cleanup()
+        except Exception as exc:
+          cleanup_errors = [f'cleanup failed: {exc}']
+      finally:
+        for sig, handler in previous_handlers.items():
+          signal.signal(sig, handler)
+    result.cleanup_errors.extend(cleanup_errors)
+    if hasattr(self, 'attempt_dir'):
+      # Preserve the outcome before potentially expensive bag analysis.
+      write_json(self.attempt_dir / 'result.json', asdict(result))
+      metrics = TrialMetrics()
+      summary = {'analysis_error': 'bag unavailable'}
+      bag = self.attempt_dir / 'recording.bag'
+      if bag.is_file():
+        try:
+          summary = metrics.summarize(bag, result, self.config, self.world)
+        except Exception as exc:
+          summary = {'analysis_error': str(exc)}
+      metrics.save(self.attempt_dir, result, summary)
+    return result
