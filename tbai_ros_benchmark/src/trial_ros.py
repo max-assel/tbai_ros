@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""One ROS node per attempt; exchange snapshots with the non-ROS batch runner."""
 
 import json
 from pathlib import Path
@@ -36,7 +35,6 @@ def main():
   def state(message):
     with lock:
       stamp = message.stamp.to_sec()
-      # Repeated old samples must not keep the state freshness watchdog alive.
       if snapshot['state'] is None or stamp != snapshot['state']['stamp']:
         snapshot['state'] = {'stamp': stamp, 'wall': time.monotonic(),
                              'values': list(message.rbd_state)}
@@ -65,7 +63,7 @@ def main():
         with lock:
           snapshot['services'] = [name for name, _ in services]
       except Exception:
-        pass  # Parent's bounded readiness wait reports a master that is unavailable.
+        pass 
       time.sleep(0.25)
 
   threading.Thread(target=graph, daemon=True).start()

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Preview or execute sequential benchmark trials using the existing robot scripts."""
 
 import argparse
 from pathlib import Path
@@ -11,7 +10,6 @@ from trial_lifecycle import STAGES, TrialLifecycle
 
 
 def load_config(path):
-  """Read the configuration and resolve script paths relative to its file."""
   path = path.resolve()
   with path.open() as stream:
     config = yaml.safe_load(stream)
@@ -22,7 +20,6 @@ def load_config(path):
 
 
 def execute_batch(config):
-  """Run the matrix sequentially; never advance after uncertain cleanup."""
   results = []
   for world in config['worlds']:
     for baseline in config['baselines']:
@@ -37,7 +34,6 @@ def execute_batch(config):
 
 
 def main():
-  """Default to a preview; execute only when requested."""
   parser = argparse.ArgumentParser(description=__doc__)
   parser.add_argument("--config", type=Path, default=Path(__file__).resolve().parents[1] / "config/benchmark.yaml")
   mode = parser.add_mutually_exclusive_group()

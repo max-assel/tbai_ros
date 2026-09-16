@@ -1,4 +1,3 @@
-"""Offline behavior tests; no ROS master or robot required."""
 
 import json
 import os
@@ -206,6 +205,48 @@ class LifecycleTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, 'reset_failed'):
           self.trial.launch_and_reset()
       self.assertNotIn('mapping', [call.args[0] for call in start.call_args_list])
+
+  def test_rl_and_dtc_wait_for_their_map_before_activation(self):
+    for baseline, topic in [('RL', '/elevation_mapping/elevation_map_raw'),
+                            ('DTC', '/convex_plane_decomposition_ros/filtered_map')]:
+      with self.subTest(baseline=baseline), tempfile.TemporaryDirectory() as tmp:
+        trial = TrialLifecycle(self.config, 'balance_beam', baseline, 1)
+        trial.attempt_dir = Path(tmp)
+        trial.env = {'ROS_MASTER_URI': 'http://127.0.0.1:23456'}
+        probe_codes = iter([None, 0])
+        probe = SimpleNamespace(poll=lambda: next(probe_codes), returncode=0)
+        def start(name, command):
+          return probe if name == 'mapping_ready' else SimpleNamespace(returncode=0)
+        def wait(condition, timeout, reason, allow_exit=()):
+          if reason == 'mapping_timeout':
+            self.assertFalse(condition({}))
+            self.assertTrue(condition({}))
+            self.assertEqual(timeout, self.config['readiness']['mapping_timeout_wall_sec'])
+        with patch.object(trial, '_start', side_effect=start) as launch, \
+             patch.object(trial, '_wait', side_effect=wait):
+          trial.launch_and_reset()
+        self.assertEqual(launch.call_args.args,
+                         ('mapping_ready', ['rostopic', 'echo', '-n', '1', '--noarr', topic]))
+        self.assertIn('mapping_ready', trial.completed_processes)
+        trial.processes['mapping_ready'] = SimpleNamespace(poll=lambda: 0)
+        with patch.object(trial, '_track'):
+          trial._health()  # Successful one-shot exit is not a controller crash.
+
+  def test_mapping_timeout_stops_before_run(self):
+    with tempfile.TemporaryDirectory() as tmp:
+      trial = TrialLifecycle(self.config, 'balance_beam', 'RL', 1)
+      trial.attempt_dir = Path(tmp) / 'batch/balance_beam/RL/trial_001'
+      trial.attempt_dir.mkdir(parents=True)
+      trial.env = {'ROS_MASTER_URI': 'http://127.0.0.1:23456'}
+      def wait(condition, timeout, reason, allow_exit=()):
+        if reason == 'mapping_timeout':
+          raise RuntimeError(reason)
+      with patch.object(trial, 'prepare'), patch.object(trial, '_wait', side_effect=wait), \
+           patch.object(trial, '_start', return_value=SimpleNamespace(returncode=0)), \
+           patch.object(trial, 'cleanup', return_value=[]), patch.object(trial, 'record_and_run') as run:
+        result = trial.execute()
+      run.assert_not_called()
+      self.assertEqual((result.status, result.stage, result.reason), ('error', 'mapping', 'mapping_timeout'))
 
   def test_recorder_and_arm_before_run(self):
     with tempfile.TemporaryDirectory() as tmp:

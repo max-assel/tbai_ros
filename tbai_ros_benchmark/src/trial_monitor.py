@@ -97,7 +97,6 @@ class TrialMonitor:
     outside |= any(segment['x_bounds_m'][0] <= x <= segment['x_bounds_m'][1] and
                    not segment['y_bounds_m'][0] <= y <= segment['y_bounds_m'][1]
                    for segment in boundary.get('segments', []))
-    # Keep the best distance at the start of a sliding simulation-time window.
     self.best_distance = min(self.best_distance, distance)
     self.progress.append((sim, self.best_distance))
     progress = failure['no_progress']

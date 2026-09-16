@@ -1,4 +1,3 @@
-"""Run one benchmark attempt using the existing robot scripts."""
 
 from datetime import datetime, timezone
 import os
@@ -29,11 +28,11 @@ class TrialLifecycle:
     self.processes = {}
     self.process_logs = {}
     self.process_descendants = {}
+    self.completed_processes = set()
     self.stage = "prepare"
     self.monitor = None
 
   def command_plan(self):
-    """Return argument lists for preview and execution."""
     return {
       "launch": ["roslaunch", BASELINES[self.baseline], "anymal_d_perceptive.launch",
                  f"world:={self.world}", f"gui:={str(self.config['gazebo_gui']).lower()}",
@@ -49,7 +48,6 @@ class TrialLifecycle:
     }
 
   def prepare(self):
-    """Set up one attempt, assuming a sourced workspace and valid configuration."""
     if hasattr(self, "attempt_dir"):
       raise ValueError("prepare may only be called once per attempt")
     self.env = os.environ.copy()
@@ -63,7 +61,6 @@ class TrialLifecycle:
 
     output = (config_path.parent / self.config["output_dir"]).resolve()
     output.mkdir(parents=True, exist_ok=True)
-    # The shared config holds the batch path for subsequent sequential attempts.
     if "_batch_dir" not in self.config:
       stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
       self.config["_batch_dir"] = tempfile.mkdtemp(prefix=f"batch_{stamp}_", dir=output)
@@ -73,8 +70,7 @@ class TrialLifecycle:
     self.attempt_dir = Path(tempfile.mkdtemp(prefix=f"trial_{self.repetition:03d}_", dir=parent))
     (self.attempt_dir / "ros_logs").mkdir()
     (self.attempt_dir / "ros_home").mkdir()
-    # Bind both simultaneously so the OS selects distinct available ports.
-    # Launch must still detect bind failures: ports cannot be reserved across exec.
+
     with socket.socket() as ros_socket, socket.socket() as gazebo_socket:
       ros_socket.bind(("127.0.0.1", 0))
       gazebo_socket.bind(("127.0.0.1", 0))
@@ -91,7 +87,7 @@ class TrialLifecycle:
     self.subprocess_kwargs = {"cwd": str(self.workspace), "env": self.env,
                               "start_new_session": True}
     self.process_logs = {}
-    self.process_descendants = {}  # Cleanup must retain descendants that change sessions.
+    self.process_descendants = {} 
     metadata = {"world": self.world, "baseline": self.baseline, "repetition": self.repetition,
                 "created_at": datetime.now(timezone.utc).isoformat(),
                 "workspace": str(self.workspace),
@@ -104,7 +100,6 @@ class TrialLifecycle:
     return self.attempt_dir
 
   def _probe(self, command, cwd):
-    """Read setup command output with a timeout and no shell expansion."""
     try:
       result = subprocess.run(command, cwd=str(cwd), env=self.env, capture_output=True,
                               text=True, timeout=15, check=True)
@@ -124,7 +119,7 @@ class TrialLifecycle:
     try:
       self.process_descendants[name].add(psutil.Process(process.pid))
     except psutil.NoSuchProcess:
-      pass  # The next health check reports an immediate startup failure.
+      pass  
     return process
 
   def _track(self, scan=False):
@@ -151,7 +146,7 @@ class TrialLifecycle:
   def _health(self, allow_exit=()):
     self._track()
     for name, process in self.processes.items():
-      if name not in allow_exit and process.poll() is not None:
+      if name not in allow_exit and name not in self.completed_processes and process.poll() is not None:
         raise RuntimeError(f'{name} exited with code {process.returncode}; see {name}.log')
 
   def _snapshot(self):
@@ -230,6 +225,17 @@ class TrialLifecycle:
     self._wait(standing, readiness['reset_timeout_wall_sec'], 'reset_verification_timeout', ('reset',))
     self.stage = 'mapping'
     self._start('mapping', plan['mapping'])
+    map_topics = {'RL': '/elevation_mapping/elevation_map_raw',
+                  'DTC': '/convex_plane_decomposition_ros/filtered_map'}
+    if self.baseline in map_topics:
+      probe = self._start('mapping_ready', ['rostopic', 'echo', '-n', '1', '--noarr',
+                                             map_topics[self.baseline]])
+      self._wait(lambda s: probe.poll() is not None,
+                 readiness['mapping_timeout_wall_sec'], 'mapping_timeout',
+                 ('reset', 'mapping_ready'))
+      if probe.returncode:
+        raise RuntimeError(f'mapping_ready exited with code {probe.returncode}; see mapping_ready.log')
+      self.completed_processes.add('mapping_ready')
 
 
   def record_and_run(self):
@@ -259,7 +265,7 @@ class TrialLifecycle:
              (signal.SIGKILL, settings['process_sigkill_timeout_wall_sec'])]
 
     def alive():
-      self.processes[name].poll()  # Reap the direct child.
+      self.processes[name].poll()  
       running = []
       for process in self.process_descendants[name]:
         try:
@@ -288,7 +294,6 @@ class TrialLifecycle:
       raise RuntimeError(f'{name}: processes still alive after SIGKILL')
 
   def cleanup(self):
-    """Stop motion, finalize the bag, then stop all other owned processes."""
     errors = []
 
     def stop(name):
@@ -314,7 +319,6 @@ class TrialLifecycle:
       errors.append('recording.bag was not finalized; preserve recording.bag.active')
     for name in ('mapping', 'launch', 'observer', 'master'):
       stop(name)
-    # One final sweep catches descendants reparented during shutdown.
     for name in self.processes:
       stop(name)
     for log in self.process_logs.values():
@@ -325,7 +329,6 @@ class TrialLifecycle:
     return errors
 
   def execute(self):
-    """Always clean up and save the outcome, including partial startup failures."""
     from trial_monitor import TrialResult
     from dataclasses import asdict
     from trial_metrics import TrialMetrics, write_json
@@ -350,7 +353,6 @@ class TrialLifecycle:
       else:
         result = TrialResult(status, str(exc), self.stage)
     finally:
-      # A second Ctrl+C must not abandon bag finalization or process cleanup.
       for sig in previous_handlers:
         signal.signal(sig, signal.SIG_IGN)
       try:
@@ -363,7 +365,6 @@ class TrialLifecycle:
           signal.signal(sig, handler)
     result.cleanup_errors.extend(cleanup_errors)
     if hasattr(self, 'attempt_dir'):
-      # Preserve the outcome before potentially expensive bag analysis.
       write_json(self.attempt_dir / 'result.json', asdict(result))
       metrics = TrialMetrics()
       summary = {'analysis_error': 'bag unavailable'}

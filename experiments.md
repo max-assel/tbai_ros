@@ -32,22 +32,26 @@ source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_dtc simple.launch
 contact_flags in state are not updated. Not sure why. [FIXED]
 
 # Balance Beam Environment
+
+Run each command in a separate terminal. Elevation mapping is shared by all three
+controllers and is launched from `tbai_ros_gridmap`.
+
 ## GRID MAP MPC
 source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_mpc anymal_d_perceptive.launch gui:=false world:=balance_beam
 source $(catkin locate)/devel/setup.bash && ./reset_gazebo.sh balance_beam MPC
-source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_mpc elevation_mapping.launch 
+source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_gridmap elevation_mapping.launch
 source $(catkin locate)/devel/setup.bash && ./run_experiment.sh balance_beam MPC
 
 ## GRID MAP RL
 source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_bob anymal_d_perceptive.launch gui:=false world:=balance_beam
 source $(catkin locate)/devel/setup.bash && ./reset_gazebo.sh balance_beam RL
-source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_bob elevation_mapping.launch 
+source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_gridmap elevation_mapping.launch
 source $(catkin locate)/devel/setup.bash && ./run_experiment.sh balance_beam RL
 
 ## GRID MAP DTC
 source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_dtc anymal_d_perceptive.launch gui:=false world:=balance_beam
 source $(catkin locate)/devel/setup.bash && ./reset_gazebo.sh balance_beam DTC
-source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_dtc elevation_mapping.launch 
+source $(catkin locate)/devel/setup.bash && roslaunch tbai_ros_gridmap elevation_mapping.launch
 source $(catkin locate)/devel/setup.bash && ./run_experiment.sh balance_beam DTC
 
 Need to set some guidelines. 

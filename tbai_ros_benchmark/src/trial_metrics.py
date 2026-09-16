@@ -1,4 +1,3 @@
-"""Summarize finalized bags, keeping unavailable measurements explicit."""
 
 import csv
 from dataclasses import asdict
@@ -32,7 +31,6 @@ def percentile(values, fraction):
 
 class TrialMetrics:
   def summarize(self, bag_path, result, config, world):
-    """Use native state timestamps within the measured motion interval."""
     import rosbag
     starts = [e.sim_time_sec for e in result.events if e.kind == 'motion_start']
     ends = [e.sim_time_sec for e in result.events if e.kind == 'termination']

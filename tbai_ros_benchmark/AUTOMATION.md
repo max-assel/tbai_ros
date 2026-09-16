@@ -13,7 +13,7 @@ Use `--config /path/to/benchmark.yaml` to select another configuration. Preparat
 assumes the environment, scripts and world settings are correct. It does not
 preflight packages or compare generator goals. Keep configured goals consistent
 with `global_path_velocity_generator.py`.
-
+      
 ## Trial sequence
 
 1. Create a unique attempt directory under the batch, snapshot configuration, and
@@ -22,7 +22,10 @@ with `global_path_velocity_generator.py`.
    Wait for advancing clock, fresh state and Gazebo reset services.
 3. Run the existing `reset_gazebo.sh` with `bash -e`. Confirm the configured start
    XY and sustained standing posture/low speed using fresh state.
-4. Start the shared elevation mapping launch.
+4. Start the shared elevation mapping launch. Before switching out of STAND,
+   RL waits for its first raw elevation map and DTC waits for its first filtered
+   map (up to `readiness.mapping_timeout_wall_sec`). Their controller switch blocks
+   until a map exists, and STAND supplies TF needed to produce that map.
 5. Start rosbag. Mapping coverage and incoming recording streams are not checked
    before continuing.
 6. Arm the monitor, then invoke `run_experiment.sh` with `bash -e`. The first
