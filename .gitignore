@@ -5,3 +5,6 @@ pixi.lock
 
 *.mp4
 *.gif
+
+# Generated benchmark artifacts stay local.
+/tbai_ros_benchmark/results/
