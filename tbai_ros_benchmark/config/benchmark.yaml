@@ -1,5 +1,3 @@
-
-schema_version: 1
 worlds: [balance_beam]
 # other worlds: pegboard, ramped_balance_beam, ramped_stepping_stones, rubble, side_stones, sparse_stones, stairs, ramp_10
 baselines: [MPC, RL, DTC]
@@ -16,14 +14,10 @@ trial_timeout_sim_sec: 60  # Maximum duration; success/failure may end it earlie
 trial_timeout_wall_sec: 180
 output_dir: ../results  
 
+# Trials run sequentially with fresh processes, no retries, and unique output directories.
+# Cleanup errors always stop the batch.
 execution:
-  reset_mode: restart
-  parallel_trials: 1
-  automatic_retries: 0
   continue_after: [success, failure, timeout]
-  stop_after: [error, interrupted]
-  stop_on_cleanup_error: true
-  overwrite_attempts: false
 
 # All timeouts here use monotonic wall time; task duration uses /clock.
 readiness:
@@ -48,17 +42,9 @@ monitor:
   clock_topic: /clock
   state_topic: /anymal_d/state
   motion_topic: /cmd_vel
-  model_name: robot
-  measurement_start: first_nonzero_cmd_vel_after_run_script
   motion_linear_epsilon_mps: 0.001
   motion_angular_epsilon_radps: 0.001
-  terminal_precedence: [error, failure, success, timeout]
-  clock_regression_outcome: error
-  stale_state_outcome: error
-  stalled_clock_outcome: error
   record_intermediate_events: true
-  intermediate_events: [failure_candidate_started, failure_candidate_cleared]
-  reset_clock_on_recovery: false
 success:
   xy_tolerance_m: 0.25
   hold_sim_sec: 1.0
@@ -66,10 +52,11 @@ success:
   max_abs_roll_rad: 0.5
   max_abs_pitch_rad: 0.6
 
+# Positions are XYZ; only XY is used for reset verification and goal checks.
+# Reset poses are set by reset_gazebo.sh.
 world_settings:
   balance_beam:
     start_position: [-3.0, 0.0, 0.15]
-    start_orientation_xyzw: [0.0, 0.0, 0.0, 1.0]
     goal_position: [2.0, 0.0, 0.575]
     failure:
       fall:
@@ -78,7 +65,6 @@ world_settings:
         max_abs_pitch_rad: 0.80
         hold_sim_sec: 0.5
       course_boundary:
-        frame: world
         x_bounds_m: [-3.5, 2.5]
         y_bounds_m: [-0.75, 0.75]
         segments:
@@ -86,14 +72,12 @@ world_settings:
             y_bounds_m: [-0.25, 0.25]
         hold_sim_sec: 0.5
       no_progress:
-        metric: best_goal_xy_distance_reduction
         min_progress_m: 0.10
         window_sim_sec: 10.0
         grace_sim_sec: 5.0
         exclude_goal_tolerance: true
   pegboard:
     start_position: [-2.5, 1.4, 0.15]
-    start_orientation_xyzw: [0.0, 0.0, 0.0, 1.0]
     goal_position: [3.5, 1.4, 0.575]
     failure:
       fall:
@@ -102,19 +86,16 @@ world_settings:
         max_abs_pitch_rad: 0.80
         hold_sim_sec: 0.5
       course_boundary:
-        frame: world
         x_bounds_m: [-3.0, 4.0]
         y_bounds_m: [0.15, 2.65]
         hold_sim_sec: 0.5
       no_progress:
-        metric: best_goal_xy_distance_reduction
         min_progress_m: 0.10
         window_sim_sec: 15.0
         grace_sim_sec: 5.0
         exclude_goal_tolerance: true
   ramp_10:
     start_position: [-3.0, 0.0, 0.15]
-    start_orientation_xyzw: [0.0, 0.0, 0.0, 1.0]
     goal_position: [2.5, 0.0, 0.85]
     failure:
       fall:
@@ -123,19 +104,16 @@ world_settings:
         max_abs_pitch_rad: 1.00
         hold_sim_sec: 0.5
       course_boundary:
-        frame: world
         x_bounds_m: [-3.5, 3.0]
         y_bounds_m: [-1.25, 1.25]
         hold_sim_sec: 0.5
       no_progress:
-        metric: best_goal_xy_distance_reduction
         min_progress_m: 0.10
         window_sim_sec: 12.0
         grace_sim_sec: 5.0
         exclude_goal_tolerance: true
   ramped_balance_beam:
     start_position: [0.0, 0.5, 0.2]
-    start_orientation_xyzw: [0.0, 0.0, 1.0, 0.0]
     goal_position: [-8.5, 0.5, 0.575]
     failure:
       fall:
@@ -144,19 +122,16 @@ world_settings:
         max_abs_pitch_rad: 1.10
         hold_sim_sec: 0.5
       course_boundary:
-        frame: world
         x_bounds_m: [-9.0, 0.5]
         y_bounds_m: [0.0, 1.0]
         hold_sim_sec: 0.5
       no_progress:
-        metric: best_goal_xy_distance_reduction
         min_progress_m: 0.10
         window_sim_sec: 15.0
         grace_sim_sec: 5.0
         exclude_goal_tolerance: true
   ramped_stepping_stones:
     start_position: [-0.5, 7.5, 0.2]
-    start_orientation_xyzw: [0.0, 0.0, 1.0, 0.0]
     goal_position: [-8.0, 7.5, 0.575]
     failure:
       fall:
@@ -165,19 +140,16 @@ world_settings:
         max_abs_pitch_rad: 1.10
         hold_sim_sec: 0.5
       course_boundary:
-        frame: world
         x_bounds_m: [-8.5, 0.0]
         y_bounds_m: [6.75, 8.25]
         hold_sim_sec: 0.5
       no_progress:
-        metric: best_goal_xy_distance_reduction
         min_progress_m: 0.10
         window_sim_sec: 15.0
         grace_sim_sec: 5.0
         exclude_goal_tolerance: true
   rubble:
     start_position: [-2.5, 1.4, 0.15]
-    start_orientation_xyzw: [0.0, 0.0, 0.0, 1.0]
     goal_position: [3.5, 1.4, 0.575]
     failure:
       fall:
@@ -186,19 +158,16 @@ world_settings:
         max_abs_pitch_rad: 0.90
         hold_sim_sec: 0.5
       course_boundary:
-        frame: world
         x_bounds_m: [-3.0, 4.0]
         y_bounds_m: [0.15, 2.65]
         hold_sim_sec: 0.5
       no_progress:
-        metric: best_goal_xy_distance_reduction
         min_progress_m: 0.10
         window_sim_sec: 15.0
         grace_sim_sec: 5.0
         exclude_goal_tolerance: true
   side_stones:
     start_position: [-2.5, 0.0, 0.15]
-    start_orientation_xyzw: [0.0, 0.0, 0.0, 1.0]
     goal_position: [2.0, 0.0, 0.575]
     failure:
       fall:
@@ -207,19 +176,16 @@ world_settings:
         max_abs_pitch_rad: 0.80
         hold_sim_sec: 0.5
       course_boundary:
-        frame: world
         x_bounds_m: [-3.0, 2.5]
         y_bounds_m: [-0.75, 0.75]
         hold_sim_sec: 0.5
       no_progress:
-        metric: best_goal_xy_distance_reduction
         min_progress_m: 0.10
         window_sim_sec: 15.0
         grace_sim_sec: 5.0
         exclude_goal_tolerance: true
   sparse_stones:
     start_position: [-3.0, 1.4, 0.15]
-    start_orientation_xyzw: [0.0, 0.0, 0.0, 1.0]
     goal_position: [2.0, 1.4, 0.575]
     failure:
       fall:
@@ -228,19 +194,16 @@ world_settings:
         max_abs_pitch_rad: 0.80
         hold_sim_sec: 0.5
       course_boundary:
-        frame: world
         x_bounds_m: [-3.5, 2.5]
         y_bounds_m: [0.15, 2.65]
         hold_sim_sec: 0.5
       no_progress:
-        metric: best_goal_xy_distance_reduction
         min_progress_m: 0.10
         window_sim_sec: 15.0
         grace_sim_sec: 5.0
         exclude_goal_tolerance: true
   stairs:
     start_position: [-2.5, 0.0, 0.15]
-    start_orientation_xyzw: [0.0, 0.0, 0.0, 1.0]
     goal_position: [3.0, 0.0, 1.5]
     failure:
       fall:
@@ -249,12 +212,10 @@ world_settings:
         max_abs_pitch_rad: 1.00
         hold_sim_sec: 0.5
       course_boundary:
-        frame: world
         x_bounds_m: [-3.0, 3.5]
         y_bounds_m: [-1.25, 1.25]
         hold_sim_sec: 0.5
       no_progress:
-        metric: best_goal_xy_distance_reduction
         min_progress_m: 0.10
         window_sim_sec: 15.0
         grace_sim_sec: 5.0
@@ -271,88 +232,26 @@ record_topics:
   - /tf_static
   - /elevation_mapping/elevation_map_raw
   - /rosout_agg
-recording:
-  require_motion_topic_after_activation: true
-  missing_optional_topic_policy: record_unavailable
-  compression: none
-  export_csv: false
-
 data_sources:
   state:
     topic: /anymal_d/state
-    message_type: tbai_ros_msgs/RbdState
     timestamp_field: stamp
     array_field: rbd_state
     expected_array_length: 36
-    position_frame: world
-    orientation_convention: roll_pitch_yaw_zyx
-    orientation_indices: [0, 1, 2]
     position_indices: [3, 4, 5]
-    angular_velocity_base_indices: [6, 7, 8]
-    linear_velocity_base_indices: [9, 10, 11]
-    joint_position_slice: [12, 24]  
-    joint_velocity_slice: [24, 36]
-    contacts_field: contact_flags
-    contact_order: [LF, RF, LH, RH]
   action:
     topic: /anymal_d/command
-    message_type: tbai_ros_msgs/JointCommandArray
-    timestamp_source: bag_receipt_time  
-    array_field: joint_commands
-    joint_key: joint_name
-    fields: [desired_position, desired_velocity, kp, kd, torque_ff]
 
   velocity_request:
     topic: /cmd_vel
-    message_type: geometry_msgs/Twist
-    timestamp_source: bag_receipt_time
 
-trajectory_metric: xy
 trajectory:
-  frame: world
-  window: motion_start_to_termination
-  sampling: native_state_timestamps
-  smoothing: none
   max_sample_gap_sim_sec: 0.5
   max_segment_speed_mps: 5.0  
-  invalid_sample_policy: mark_distance_unavailable
-  duplicate_timestamp_policy: keep_first
-  alignment: preserve_independent_timestamps
-  unsuccessful_time_to_goal: null
 
 runtime_sources:
   mpc: null
   wbc: null
   policy: null
-runtime_statistics: [count, mean, median, p95, p99, max]
 runtime_summary:
-  output_unit: ms
-  percentile_method: linear
   warmup_exclusion_sim_sec: 0.0
-  window: motion_start_to_termination
-  group_by: [trial, baseline, component]
-  missing_source_policy: unavailable
-  invalid_sample_policy: exclude_and_report_count
-  required_measurement: completed_call_wall_duration
-
-recovery:
-  enabled: false  
-  event_topic: null
-  recoverable_rules: []  
-  grace_sim_sec: null 
-  max_attempts: null
-  missing_source_policy: unavailable
-  controller_switch_is_recovery: false
-  preserve_incomplete_episodes: true
-
-artifacts:
-  metadata: metadata.yaml
-  outcome: result.json
-  events: events.jsonl
-  runtimes: runtime_summary.json
-  bag: recording.bag
-  batch_summary: summary.csv
-  process_log_pattern: "{process}.log"
-  save_partial_results: true
-  preserve_bag_on_analysis_error: true
-  missing_metric_value: null
