@@ -1,5 +1,6 @@
 
 from datetime import datetime, timezone
+import codecs
 import os
 import json
 import math
@@ -11,6 +12,7 @@ from pathlib import Path
 import socket
 import subprocess
 import tempfile
+import threading
 
 import yaml
 
@@ -27,6 +29,8 @@ class TrialLifecycle:
     self.repetition = repetition
     self.processes = {}
     self.process_logs = {}
+    self.output_threads = []
+    self.output_stop = threading.Event()
     self.process_descendants = {}
     self.completed_processes = set()
     self.stage = "prepare"
@@ -43,7 +47,8 @@ class TrialLifecycle:
                  str(self.attempt_dir / "recording.bag") if hasattr(self, "attempt_dir")
                  else "<attempt-dir>/recording.bag", *dict.fromkeys(
                    self.config["record_topics"] + [source['topic'] for source in
-                     self.config.get('runtime_sources', {}).values() if source])],
+                     self.config.get('runtime_sources', {}).values()
+                     if source and self.baseline in source.get('baselines', BASELINES)])],
       "run": ["bash", "-e", self.config["scripts"]["run"], self.world, self.baseline],
     }
 
@@ -113,6 +118,8 @@ class TrialLifecycle:
     self.process_logs[name] = log
     kwargs = dict(self.subprocess_kwargs)
     kwargs['env'] = dict(self.env, TBAI_BENCHMARK_PROCESS=name)
+    if name in ('reset', 'mapping'):
+      kwargs['env']['PYTHONUNBUFFERED'] = '1'
     process = subprocess.Popen(command, stdout=log, stderr=subprocess.STDOUT, **kwargs)
     self.processes[name] = process
     self.process_descendants[name] = set()
@@ -120,7 +127,32 @@ class TrialLifecycle:
       self.process_descendants[name].add(psutil.Process(process.pid))
     except psutil.NoSuchProcess:
       pass  
+    if name in ('reset', 'mapping'):
+      thread = threading.Thread(target=self._display_log,
+                                args=(Path(log.name), sys.stdout), daemon=True)
+      self.output_threads.append(thread)
+      thread.start()
     return process
+
+  def _display_log(self, path, output):
+    """Follow the saved log without putting a pipe in the child's output path."""
+    decoder = codecs.getincrementaldecoder('utf-8')(errors='replace')
+    try:
+      with path.open('rb') as stream:
+        while True:
+          chunk = stream.read(65536)
+          if chunk:
+            output.write(decoder.decode(chunk))
+            output.flush()
+          elif self.output_stop.is_set():
+            output.write(decoder.decode(b'', final=True))
+            output.flush()
+            return
+          else:
+            self.output_stop.wait(0.1)
+    except (OSError, ValueError):
+      # A closed console must not interfere with the trial or its saved log.
+      return
 
   def _track(self, scan=False):
     """Retain process identities, including children that start another session."""
@@ -321,6 +353,12 @@ class TrialLifecycle:
       stop(name)
     for name in self.processes:
       stop(name)
+    # Processes have stopped: drain final output, including mapping shutdown stats.
+    self.output_stop.set()
+    for thread in self.output_threads:
+      thread.join(timeout=2)
+      if thread.is_alive():
+        errors.append('process output display did not stop')
     for log in self.process_logs.values():
       try:
         log.close()
@@ -371,7 +409,7 @@ class TrialLifecycle:
       bag = self.attempt_dir / 'recording.bag'
       if bag.is_file():
         try:
-          summary = metrics.summarize(bag, result, self.config, self.world)
+          summary = metrics.summarize(bag, result, self.config, self.world, self.baseline)
         except Exception as exc:
           summary = {'analysis_error': str(exc)}
       metrics.save(self.attempt_dir, result, summary)

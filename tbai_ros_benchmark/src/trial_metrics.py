@@ -30,12 +30,15 @@ def percentile(values, fraction):
 
 
 class TrialMetrics:
-  def summarize(self, bag_path, result, config, world):
+  def summarize(self, bag_path, result, config, world, baseline=None):
     import rosbag
     starts = [e.sim_time_sec for e in result.events if e.kind == 'motion_start']
     ends = [e.sim_time_sec for e in result.events if e.kind == 'termination']
     start, end = (starts[0] if starts else None), (ends[-1] if ends else None)
     sources = config['runtime_sources']
+    applicable = {name: not source or baseline is None or
+                  baseline in source.get('baselines', [baseline])
+                  for name, source in sources.items()}
     runtimes = {name: [] for name in sources}
     invalid_runtime = {name: 0 for name in sources}
     stream_topics = {name: config['data_sources'][name]['topic']
@@ -64,7 +67,7 @@ class TrialMetrics:
               if not points or stamp != points[-1][0]:
                 points.append((stamp, x, y))
         for name, source in sources.items():
-          if not source or source['topic'] != topic:
+          if not source or not applicable[name] or source['topic'] != topic:
             continue
           timestamp = field(message, source['timestamp_field']).to_sec()
           if start + config['runtime_summary']['warmup_exclusion_sim_sec'] <= timestamp <= end:
@@ -112,7 +115,8 @@ class TrialMetrics:
       values.sort()
       summary['components'][name] = {
         'available': bool(values),
-        'reason': None if values else ('source_not_configured' if not sources[name] else 'no_valid_samples'),
+        'reason': None if values else ('not_applicable' if not applicable[name] else
+                                       'source_not_configured' if not sources[name] else 'no_valid_samples'),
         'unit': 'ms', 'count': len(values), 'invalid_samples': invalid_runtime[name],
         'mean': statistics.mean(values) if values else None,
         'median': statistics.median(values) if values else None,
@@ -138,6 +142,15 @@ class TrialMetrics:
                distance_traveled_xy_m=result.distance_traveled_xy_m,
                final_goal_distance_xy_m=result.final_goal_distance_xy_m,
                cleanup_errors='; '.join(result.cleanup_errors))
+    # Fixed columns keep successful and failed attempts compatible in one batch.
+    for component in ('mpc', 'wbc'):
+      stats = runtime_summary.get('components', {}).get(component, {})
+      row[f'{component}_runtime_available'] = stats.get('available', False)
+      row[f'{component}_runtime_reason'] = stats.get('reason', runtime_summary.get('analysis_error', 'unavailable'))
+      row[f'{component}_runtime_count'] = stats.get('count', 0)
+      row[f'{component}_runtime_invalid_samples'] = stats.get('invalid_samples', 0)
+      for statistic in ('mean', 'median', 'p95', 'p99', 'max'):
+        row[f'{component}_runtime_{statistic}_ms'] = stats.get(statistic)
     summary_path = attempt_dir.parents[2] / 'summary.csv'
     exists = summary_path.exists()
     with summary_path.open('a', newline='') as stream:

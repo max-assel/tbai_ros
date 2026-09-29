@@ -1,20 +1,20 @@
-worlds: [balance_beam]
-# other worlds: pegboard, ramped_balance_beam, ramped_stepping_stones, rubble, side_stones, sparse_stones, stairs, ramp_10
-baselines: [MPC, RL, DTC]
-repetitions: 1
+worlds: [side_stones, sparse_stones, stairs, ramp_10]
+# other worlds:  pegboard, ramped_balance_beam, ramped_stepping_stones, rubble, side_stones, sparse_stones, stairs, ramp_10
+baselines: [MPC]
+repetitions: 10
 
 scripts: 
   reset: ../../tbai_ros_gazebo/reset_gazebo.sh
   run: ../../tbai_ros_gazebo/run_experiment.sh
 activation_timeout_wall_sec: 30
-gazebo_gui: true  
+gazebo_gui: false  
 rviz: true
 startup_timeout_wall_sec: 120
 trial_timeout_sim_sec: 60  # Maximum duration; success/failure may end it earlier.
 trial_timeout_wall_sec: 180
 output_dir: ../results  
 
-# Trials run sequentially with fresh processes, no retries, and unique output directories.
+# Trials run sequentially with no retries and unique output directories.
 # Cleanup errors always stop the batch.
 execution:
   continue_after: [success, failure, timeout]
@@ -250,8 +250,18 @@ trajectory:
   max_segment_speed_mps: 5.0  
 
 runtime_sources:
-  mpc: null
-  wbc: null
+  mpc:
+    topic: /benchmark/runtime/mpc
+    field: duration_ms
+    timestamp_field: header.stamp
+    unit: ms
+    baselines: [MPC, DTC]
+  wbc:
+    topic: /benchmark/runtime/wbc
+    field: duration_ms
+    timestamp_field: header.stamp
+    unit: ms
+    baselines: [MPC]
   policy: null
 runtime_summary:
   warmup_exclusion_sim_sec: 0.0

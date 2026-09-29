@@ -4,6 +4,7 @@
 // clang-format on
 
 #include "tbai_ros_mpc/MpcController.hpp"
+#include <tbai_ros_msgs/Runtime.h>
 
 #include <string>
 #include <vector>
@@ -34,6 +35,7 @@ MpcController::MpcController(const std::shared_ptr<tbai::StateSubscriber> &state
 
     const std::string robotName = "anymal";
     ros::NodeHandle nh;
+    wbcRuntimePublisher_ = nh.advertise<tbai_ros_msgs::Runtime>("/benchmark/runtime/wbc", 1000);
 
     // Load default joint state
     std::string targetCommandConfig;
@@ -209,12 +211,16 @@ std::vector<MotorCommand> MpcController::getMotorCommands(scalar_t currentTime, 
     // ROS_INFO_STREAM("[MpcController::getMotorCommands]      [10]: " << joint_accelerations(10));
     // ROS_INFO_STREAM("[MpcController::getMotorCommands]      [11]: " << joint_accelerations(11));
 
+    tbai_ros_msgs::Runtime wbcRuntime;
+    wbcRuntime.header.stamp = ros::Time::now();
     wbcStartTime_ = std::chrono::steady_clock::now();
     auto commands = wbcPtr_->getMotorCommands(tNow_, observation.state, observation.input, observation.mode,
                                               desiredState, desiredInput, desiredMode, joint_accelerations, isStable_);
     wbcEndTime_ =  std::chrono::steady_clock::now();
     wbcTimeTaken += std::chrono::duration_cast<std::chrono::microseconds>(wbcEndTime_ - wbcStartTime_).count();
     numberOfWbcCalls++;
+    wbcRuntime.duration_ms = std::chrono::duration<double, std::milli>(wbcEndTime_ - wbcStartTime_).count();
+    wbcRuntimePublisher_.publish(wbcRuntime);
 
     // ROS_INFO_STREAM("[MpcController::getMotorCommands] motor commands: ");
     // for (size_t i = 0; i < commands.size(); ++i) 

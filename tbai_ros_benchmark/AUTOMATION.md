@@ -58,12 +58,12 @@ scripts. `main.py` and `helpers.py` are unchanged. `rviz` controls RViz and
   termination, leaving actions at their original timestamps in the raw bag.
 - `benchmark_runner.py`: executes the configured world/baseline/repetition matrix.
 
-The implementation targets the supplied configuration: sequential fresh stacks,
+The implementation targets the supplied configuration: sequential trials,
 world-frame RbdState, XY trajectory, uncompressed bags and no CSV stream export.
 Recovery remains unavailable because there is no verified event source; candidate
 clearances and controller switches are not counted as recoveries. No recovery
-control or runtime instrumentation is added. Configured runtime topics are recorded
-and summarized; the default null sources yield unavailable statistics.
+control is added. MPC and WBC runtime topics are recorded and summarized by default.
+Policy runtime remains unconfigured.
 
 ## Outputs and failure handling
 
@@ -97,3 +97,33 @@ summaries, partial failures, interruption persistence and actual descendant clea
 ROS/Gazebo integration still needs a live run. Begin with one world and baseline;
 verify reset, map coverage, goal arrival, bag finalization and no remaining children
 before expanding the matrix. Terrain thresholds in the configuration need tuning.
+
+Reset and elevation-mapping stdout/stderr are displayed live in the automated
+trial terminal and retained in `reset.log` and `mapping.log`. Other subprocess
+output remains in its per-process log file. Mapping shutdown output is drained
+before the attempt finishes.
+
+## MPC and WBC computation time
+
+Rebuild `tbai_ros_msgs` and `tbai_ros_mpc` before running automated trials.
+Both timing topics use `tbai_ros_msgs/Runtime`: `header.stamp` is ROS time at
+computation start, and `duration_ms` is elapsed steady-clock wall time.
+
+- `/benchmark/runtime/mpc`: one sample per successful `MPC_BASE::run()` call,
+  including solver preparation and synchronized modules, excluding ROS policy
+  copying/publication and runtime-message publication. Used by MPC and DTC.
+- `/benchmark/runtime/wbc`: one sample per whole-body `getMotorCommands()` call,
+  excluding MPC policy receipt/evaluation and runtime-message publication.
+  Used by the MPC baseline only; DTC generates commands with its learned policy.
+
+These are per-call computation durations, not controller frequencies or total
+trial durations. Samples are selected by their start timestamps within the motion
+interval, after `runtime_summary.warmup_exclusion_sim_sec` (default zero).
+`runtime_summary.json` contains count, invalid-sample count, mean, median, p95,
+p99 and maximum in milliseconds for each component. The batch `summary.csv`
+includes corresponding `mpc_runtime_*` and `wbc_runtime_*` columns, with `_ms`
+suffixes for duration statistics. Availability and reason columns distinguish
+`not_applicable`, `source_not_configured` and `no_valid_samples`; missing durations
+remain blank rather than zero. Analysis failures also retain the same CSV columns.
+RL has neither MPC nor WBC samples. Existing result files are not retroactively
+populated; timing requires newly recorded trials using the rebuilt executables.

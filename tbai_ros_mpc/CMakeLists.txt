@@ -72,6 +72,9 @@ target_link_libraries(anymal_mpc_node
 )
 target_compile_options(anymal_mpc_node PRIVATE ${OCS2_CXX_FLAGS})
 
+add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
+add_dependencies(anymal_mpc_node ${catkin_EXPORTED_TARGETS})
+
 add_executable(simple_blind
     src/simple_blind.cpp
 )

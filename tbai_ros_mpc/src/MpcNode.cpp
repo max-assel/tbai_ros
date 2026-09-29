@@ -1,3 +1,4 @@
+#include <tbai_ros_mpc/TimedMpc.hpp>
 #include <ocs2_anymal_mpc/AnymalInterface.h>
 #include <ocs2_ddp/DDP_Settings.h>
 #include <ocs2_mpc/MPC_Settings.h>
@@ -52,14 +53,18 @@ int main(int argc, char *argv[]) {
                           "Failed to get parameter /sqp_settings_file");
         const auto sqpSettings = ocs2::sqp::loadSettings(sqpSettingsFile);
         auto mpcPtr = switched_model::getSqpMpc(*quadrupedInterface, mpcSettings, sqpSettings);
-        switched_model::quadrupedMpcNode(nodeHandle, *quadrupedInterface, std::move(mpcPtr));
+        switched_model::quadrupedMpcNode(
+            nodeHandle, *quadrupedInterface,
+            std::make_unique<tbai::mpc::TimedMpc>(nodeHandle, std::move(mpcPtr)));
     }
 
     if (quadrupedInterface->modelSettings().algorithm_ == switched_model::Algorithm::DDP) {
         TBAI_GLOBAL_LOG_INFO("Using DDP MPC");
         const auto ddpSettings = ocs2::ddp::loadSettings(taskSettingsFile);
         auto mpcPtr = switched_model::getDdpMpc(*quadrupedInterface, mpcSettings, ddpSettings);
-        switched_model::quadrupedMpcNode(nodeHandle, *quadrupedInterface, std::move(mpcPtr));
+        switched_model::quadrupedMpcNode(
+            nodeHandle, *quadrupedInterface,
+            std::make_unique<tbai::mpc::TimedMpc>(nodeHandle, std::move(mpcPtr)));
     }
 
     return EXIT_SUCCESS;

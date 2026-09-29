@@ -1,5 +1,8 @@
 
 import json
+import csv
+import io
+from contextlib import redirect_stdout
 import os
 from pathlib import Path
 import subprocess
@@ -95,14 +98,14 @@ class MetricsTests(unittest.TestCase):
     self.result = TrialResult('success', 'goal_reached', 'monitor', time_to_goal_sim_sec=1,
                              events=[TrialEvent('motion_start', '', 1), TrialEvent('termination', '', 2)])
 
-  def summarize(self, samples):
+  def summarize(self, samples, baseline=None):
     class Bag:
       def __init__(self, *args): pass
       def __enter__(self): return self
       def __exit__(self, *args): pass
       def read_messages(self, topics): return iter(samples)
     with patch.dict(sys.modules, rosbag=SimpleNamespace(Bag=Bag)):
-      return TrialMetrics().summarize('recording.bag', self.result, self.config, 'balance_beam')
+      return TrialMetrics().summarize('recording.bag', self.result, self.config, 'balance_beam', baseline)
 
   def state(self, stamp, x):
     timestamp = SimpleNamespace(to_sec=lambda: stamp)
@@ -132,10 +135,62 @@ class MetricsTests(unittest.TestCase):
     self.assertEqual(summary['invalid_samples'], 1)
 
 
+  def test_runtime_defaults_window_warmup_and_applicability(self):
+    self.config['runtime_summary']['warmup_exclusion_sim_sec'] = 0.2
+    samples = []
+    for component in ('mpc', 'wbc'):
+      for stamp, duration in ((0.9, 100), (1.1, 200), (1.3, 2), (1.7, 4), (2.1, 300)):
+        timestamp = SimpleNamespace(to_sec=lambda stamp=stamp: stamp)
+        message = SimpleNamespace(header=SimpleNamespace(stamp=timestamp), duration_ms=duration)
+        samples.append((self.config['runtime_sources'][component]['topic'], message, timestamp))
+    summary = self.summarize(samples, 'MPC')
+    for component in ('mpc', 'wbc'):
+      stats = summary['components'][component]
+      self.assertEqual(stats['count'], 2)
+      self.assertEqual(stats['mean'], 3)
+      self.assertEqual(stats['median'], 3)
+      self.assertAlmostEqual(stats['p95'], 3.9)
+      self.assertAlmostEqual(stats['p99'], 3.98)
+      self.assertEqual(stats['max'], 4)
+    dtc = self.summarize(samples, 'DTC')['components']
+    self.assertTrue(dtc['mpc']['available'])
+    self.assertEqual(dtc['wbc']['reason'], 'not_applicable')
+    rl = self.summarize(samples, 'RL')['components']
+    self.assertTrue(all(rl[c]['reason'] == 'not_applicable' for c in ('mpc', 'wbc')))
+    self.assertEqual(self.summarize([], 'MPC')['components']['mpc']['reason'], 'no_valid_samples')
+
+  def test_runtime_csv_includes_statistics_and_analysis_failures(self):
+    timestamp = SimpleNamespace(to_sec=lambda: 1.5)
+    sample = SimpleNamespace(header=SimpleNamespace(stamp=timestamp), duration_ms=2.5)
+    summary = self.summarize([('/benchmark/runtime/mpc', sample, timestamp)], 'MPC')
+    with tempfile.TemporaryDirectory() as tmp:
+      attempt = Path(tmp) / 'batch/world/MPC/trial_001'
+      attempt.mkdir(parents=True)
+      metrics = TrialMetrics()
+      metrics.save(attempt, self.result, summary)
+      metrics.save(attempt, self.result, {'analysis_error': 'bag unavailable'})
+      with (attempt.parents[2] / 'summary.csv').open() as stream:
+        rows = list(csv.DictReader(stream))
+      self.assertEqual(rows[0]['mpc_runtime_mean_ms'], '2.5')
+      self.assertEqual(rows[0]['mpc_runtime_count'], '1')
+      self.assertEqual(rows[0]['wbc_runtime_reason'], 'no_valid_samples')
+      self.assertEqual(rows[1]['mpc_runtime_mean_ms'], '')
+      self.assertEqual(rows[1]['mpc_runtime_reason'], 'bag unavailable')
+      self.assertNotIn(None, rows[1])
+      self.assertFalse(any(key.startswith('policy_runtime_') for key in rows[0]))
+
+
 class LifecycleTests(unittest.TestCase):
   def setUp(self):
     self.config = load_config(CONFIG)
     self.trial = TrialLifecycle(self.config, 'balance_beam', 'MPC', 1)
+
+  def test_recorder_includes_applicable_runtime_topics(self):
+    for baseline, components in (('MPC', ('mpc', 'wbc')), ('DTC', ('mpc',)), ('RL', ())):
+      trial = TrialLifecycle(self.config, 'balance_beam', baseline, 1)
+      command = trial.command_plan()['record']
+      for component in ('mpc', 'wbc'):
+        self.assertEqual(f'/benchmark/runtime/{component}' in command, component in components)
 
   def test_prepare_failure_cleans_up_and_returns_error(self):
     with patch.object(self.trial, 'prepare', side_effect=OSError('catkin missing')), \
@@ -270,6 +325,40 @@ class LifecycleTests(unittest.TestCase):
     with patch('benchmark_runner.TrialLifecycle.execute', return_value=bad) as execute:
       self.assertEqual(len(execute_batch(self.config)), 1)
       execute.assert_called_once()
+
+  def test_reset_and_mapping_output_is_live_and_preserved(self):
+    for name in ('reset', 'mapping', 'run'):
+      with self.subTest(process=name), tempfile.TemporaryDirectory() as tmp:
+        trial = TrialLifecycle(self.config, 'balance_beam', 'RL', 1)
+        trial.attempt_dir = Path(tmp)
+        trial.env = dict(os.environ, TBAI_BENCHMARK_ATTEMPT=tmp)
+        trial.subprocess_kwargs = {'cwd': tmp, 'start_new_session': True}
+        output = io.StringIO()
+        code = ('import sys,time; from pathlib import Path; '
+                'print("ready", flush=True); '
+                '\nwhile not Path("finish").exists(): time.sleep(0.01)'
+                '\nsys.stderr.write("final message without newline")')
+        with redirect_stdout(output):
+          try:
+            process = trial._start(name, [sys.executable, '-c', code])
+            deadline = time.monotonic() + 5
+            while time.monotonic() < deadline:
+              if (trial.attempt_dir / f'{name}.log').read_bytes() and (
+                  name == 'run' or 'ready' in output.getvalue()):
+                break
+              time.sleep(0.01)
+            self.assertIsNone(process.poll())
+            if name != 'run':
+              self.assertEqual(output.getvalue(), 'ready\n')
+            (trial.attempt_dir / 'finish').touch()
+            process.wait(timeout=5)
+          finally:
+            errors = trial.cleanup()
+        self.assertEqual(errors, [])
+        expected = 'ready\nfinal message without newline'
+        self.assertEqual((trial.attempt_dir / f'{name}.log').read_text(), expected)
+        self.assertEqual(output.getvalue(), expected if name != 'run' else '')
+        self.assertTrue(all(not thread.is_alive() for thread in trial.output_threads))
 
   def test_stop_detached_descendant_and_preserve_unrelated_process(self):
     import psutil

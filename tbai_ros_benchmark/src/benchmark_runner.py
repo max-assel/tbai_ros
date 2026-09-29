@@ -53,7 +53,7 @@ def main():
           print(f"{world}/{baseline}/trial_{repetition:03d}: {' -> '.join(STAGES)}")
           for stage, command in TrialLifecycle(config, world, baseline, repetition).command_plan().items():
             print(f"  {stage}: {shlex.join(command)}")
-  except (OSError, ValueError, yaml.YAMLError) as exc:
+  except (OSError, ValueError, RuntimeError, yaml.YAMLError) as exc:
     parser.exit(2, f"benchmark_runner: {exc}\n")
 
 

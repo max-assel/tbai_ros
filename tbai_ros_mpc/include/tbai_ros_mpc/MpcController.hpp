@@ -87,6 +87,7 @@ class MpcController final : public tbai::Controller {
     std::unique_ptr<switched_model::QuadrupedVisualizer> visualizerPtr_;
     std::unique_ptr<ContactVisualizer> contactVisualizerPtr_;
     std::unique_ptr<switched_model::WbcBase> wbcPtr_;
+    ros::Publisher wbcRuntimePublisher_;
     std::unique_ptr<reference::ReferenceTrajectoryGenerator> referenceTrajectoryGeneratorPtr_;
 
     void referenceThread();

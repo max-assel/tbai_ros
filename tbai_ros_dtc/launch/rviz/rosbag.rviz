@@ -506,15 +506,16 @@ Visualization Manager:
       Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
+      Cell Walls: true
       Class: grid_map_rviz_plugin/GridMap
       Color: 200; 200; 200
-      Color Layer: elevation
+      Color Layer: elevation_before_postprocess
       Color Transformer: GridMapLayer
       ColorMap: default
       Enabled: true
       Grid Cell Decimation: 1
       Grid Line Thickness: 0.10000000149011612
-      Height Layer: elevation
+      Height Layer: elevation_before_postprocess
       Height Transformer: GridMapLayer
       History Length: 1
       Invert ColorMap: false

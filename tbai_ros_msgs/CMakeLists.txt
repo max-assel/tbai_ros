@@ -16,6 +16,7 @@ add_message_files(
     RbdState.msg
     RobotState.msg
     EstimatedState.msg
+    Runtime.msg
 )
 
 generate_messages(
