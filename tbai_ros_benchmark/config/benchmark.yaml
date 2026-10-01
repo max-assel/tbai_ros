@@ -1,7 +1,7 @@
-worlds: [side_stones, sparse_stones, stairs, ramp_10]
+worlds: [pegboard]
 # other worlds:  pegboard, ramped_balance_beam, ramped_stepping_stones, rubble, side_stones, sparse_stones, stairs, ramp_10
 baselines: [MPC]
-repetitions: 10
+repetitions: 2
 
 scripts: 
   reset: ../../tbai_ros_gazebo/reset_gazebo.sh
