@@ -10,6 +10,7 @@
 
     <!-- Gazebo parameters -->
     <arg name="gui" default="false"/>
+    <arg name="rviz" default="true"/>
     <arg name="paused" default="false"/>
     <arg name="world" default="gap_stones"/>
     <arg name="x" default="-0.9"/>
@@ -45,6 +46,6 @@
     
     <!-- Start Rviz visualizer -->
     <arg name="rvizconfig" default="$(find tbai_ros_bob)/launch/rviz/robot.rviz" />
-    <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen" />
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen" if="$(arg rviz)" />
 
 </launch>

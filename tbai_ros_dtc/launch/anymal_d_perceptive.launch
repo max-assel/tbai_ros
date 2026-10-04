@@ -10,6 +10,7 @@
 
     <!-- Gazebo parameters -->
     <arg name="gui" default="false"/>
+    <arg name="rviz" default="true"/>
     <arg name="paused" default="false"/>
     <arg name="world" default="gap_stones"/>
     <arg name="x" default="-0.9"/>
@@ -54,7 +55,7 @@
     <param name="urdfFile"          value="$(find ocs2_robotic_assets)/resources/anymal_d/urdf/anymal.urdf" />
 
     <arg name="rvizconfig" default="$(find tbai_ros_dtc)/launch/rviz/dtc.rviz" />
-      <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen" /> 
+      <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rvizconfig)" output="screen" if="$(arg rviz)" />
 
     <arg name="sqp_settings_file" default="$(find tbai_ros_dtc)/config/dtc/sqp.info"/>
     <arg name="frame_declaration_file" default="$(find tbai_ros_dtc)/config/dtc/frame_declarations.info"/>
