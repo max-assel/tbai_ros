@@ -38,3 +38,5 @@ Each attempt writes process logs, `recording.bag`, and `result.json` beneath
 `output_dir`. 
 
 Recovery events are posture-based estimates confirmed by resumed progress. Leaving the configured terrain footprint for 0.5 simulation seconds produces `status: failure` with `reason: fell_off_terrain`. This check is armed only after the base crosses `terrain_entry_x_m` toward the goal.
+
+

@@ -5,3 +5,4 @@ pixi.lock
 
 *.mp4
 *.gif
+/tbai_ros_benchmark/results/
