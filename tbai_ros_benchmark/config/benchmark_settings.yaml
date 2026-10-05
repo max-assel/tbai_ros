@@ -1,0 +1,202 @@
+worlds: [pegboard]
+# other worlds: , ramped_balance_beam, ramped_stepping_stones, rubble, side_stones, sparse_stones, stairs, ramp_10
+controllers: [MPC]
+repetitions: 1
+
+gazebo_gui: false
+rviz: true
+
+scripts: 
+  reset: /home/aiyer334/TBAI/src/tbai_ros/tbai_ros_gazebo/reset_gazebo.sh
+  run: /home/aiyer334/TBAI/src/tbai_ros/tbai_ros_gazebo/run_experiment.sh
+
+activation_timeout_wall_sec: 30
+startup_timeout_sec: 120
+timeout_sim_sec: 60
+timeout_wall_sec: 180
+output_dir: ../results
+
+execution:
+  continue_after: [success, failure, timeout]
+
+# Posture-based estimates; these do not prove a missed foot touchdown.
+recovery:
+  disturbance_roll_rad: 0.4
+  disturbance_pitch_rad: 0.5
+  min_progress_m: 0.1
+  hold_sim_sec: 1.0
+
+robot_readiness:
+  poll_wall_sec: 0.05
+  state_stale_wall_sec: 1.0
+  reset_timeout_wall_sec: 30  
+  mapping_timeout_wall_sec: 60  
+  stable_stand_hold_sim_sec: 1.0
+  reset_xy_tolerance_m: 0.15
+  stable_stand_max_abs_roll_rad: 0.2
+  stable_stand_max_abs_pitch_rad: 0.2
+  stable_stand_max_base_speed_mps: 0.1
+
+cleanup:
+  recorder_sigint_timeout_wall_sec: 30
+  process_sigint_timeout_wall_sec: 10
+  process_sigterm_timeout_wall_sec: 5
+  process_sigkill_timeout_wall_sec: 5
+
+monitor:
+  state_topic: /anymal_d/state
+  motion_topic: /cmd_vel
+  motion_linear_epsilon_mps: 0.001
+  motion_angular_epsilon_radps: 0.001
+
+success:
+  xy_tolerance_m: 0.25
+  hold_sim_sec: 1.0
+  max_abs_roll_rad: 0.5
+  max_abs_pitch_rad: 0.6
+
+# YAML merges preserve complete thresholds for each world.
+failure_defaults:
+  fall: &fall_defaults
+    min_base_height_world_m: 0.10
+    max_abs_roll_rad: 0.80
+    max_abs_pitch_rad: 0.80
+    hold_sim_sec: 0.5
+  course_boundary: &boundary_defaults
+    hold_sim_sec: 0.5
+  no_progress: &progress_defaults
+    min_progress_m: 0.10
+    window_sim_sec: 15.0
+    grace_sim_sec: 5.0
+
+world_settings:
+  balance_beam:
+    start_position: [-3.0, 0.0, 0.15]
+    goal_position: [2.0, 0.0, 0.575]
+    failure:
+      fall:
+        <<: *fall_defaults
+      course_boundary:
+        <<: *boundary_defaults
+        x_bounds_m: [-3.5, 2.5]
+        y_bounds_m: [-0.75, 0.75]
+        segments:
+          - x_bounds_m: [-1.0, 1.0]
+            y_bounds_m: [-0.25, 0.25]
+      no_progress:
+        <<: *progress_defaults
+        window_sim_sec: 10.0
+  pegboard:
+    start_position: [-2.5, 1.4, 0.15]
+    goal_position: [3.5, 1.4, 0.575]
+    failure:
+      fall:
+        <<: *fall_defaults
+      course_boundary:
+        <<: *boundary_defaults
+        x_bounds_m: [-3.0, 4.0]
+        y_bounds_m: [0.15, 2.65]
+      no_progress:
+        <<: *progress_defaults
+  ramp_10:
+    start_position: [-3.0, 0.0, 0.15]
+    goal_position: [2.5, 0.0, 0.85]
+    failure:
+      fall:
+        <<: *fall_defaults
+        max_abs_pitch_rad: 1.00
+      course_boundary:
+        <<: *boundary_defaults
+        x_bounds_m: [-3.5, 3.0]
+        y_bounds_m: [-1.25, 1.25]
+      no_progress:
+        <<: *progress_defaults
+        window_sim_sec: 12.0
+  ramped_balance_beam:
+    start_position: [0.0, 0.5, 0.2]
+    goal_position: [-8.5, 0.5, 0.575]
+    failure:
+      fall:
+        <<: *fall_defaults
+        max_abs_pitch_rad: 1.10
+      course_boundary:
+        <<: *boundary_defaults
+        x_bounds_m: [-9.0, 0.5]
+        y_bounds_m: [0.0, 1.0]
+      no_progress:
+        <<: *progress_defaults
+  ramped_stepping_stones:
+    start_position: [-0.5, 7.5, 0.2]
+    goal_position: [-8.0, 7.5, 0.575]
+    failure:
+      fall:
+        <<: *fall_defaults
+        max_abs_pitch_rad: 1.10
+      course_boundary:
+        <<: *boundary_defaults
+        x_bounds_m: [-8.5, 0.0]
+        y_bounds_m: [6.75, 8.25]
+      no_progress:
+        <<: *progress_defaults
+  rubble:
+    start_position: [-2.5, 1.4, 0.15]
+    goal_position: [3.5, 1.4, 0.575]
+    failure:
+      fall:
+        <<: *fall_defaults
+        max_abs_pitch_rad: 0.90
+      course_boundary:
+        <<: *boundary_defaults
+        x_bounds_m: [-3.0, 4.0]
+        y_bounds_m: [0.15, 2.65]
+      no_progress:
+        <<: *progress_defaults
+  side_stones:
+    start_position: [-2.5, 0.0, 0.15]
+    goal_position: [2.0, 0.0, 0.575]
+    failure:
+      fall:
+        <<: *fall_defaults
+      course_boundary:
+        <<: *boundary_defaults
+        x_bounds_m: [-3.0, 2.5]
+        y_bounds_m: [-0.75, 0.75]
+      no_progress:
+        <<: *progress_defaults
+  sparse_stones:
+    start_position: [-3.0, 1.4, 0.15]
+    goal_position: [2.0, 1.4, 0.575]
+    failure:
+      fall:
+        <<: *fall_defaults
+      course_boundary:
+        <<: *boundary_defaults
+        x_bounds_m: [-3.5, 2.5]
+        y_bounds_m: [0.15, 2.65]
+      no_progress:
+        <<: *progress_defaults
+  stairs:
+    start_position: [-2.5, 0.0, 0.15]
+    goal_position: [3.0, 0.0, 1.5]
+    failure:
+      fall:
+        <<: *fall_defaults
+        max_abs_pitch_rad: 1.00
+      course_boundary:
+        <<: *boundary_defaults
+        x_bounds_m: [-3.0, 3.5]
+        y_bounds_m: [-1.25, 1.25]
+      no_progress:
+        <<: *progress_defaults
+record_topics:
+  - /clock
+  - /anymal_d/state
+  - /anymal_d/command
+  - /cmd_vel
+  - /anymal_d/change_controller
+  - /gait_command
+  - /gazebo/model_states
+  - /tf
+  - /tf_static
+  - /elevation_mapping/elevation_map_raw
+  - /rosout_agg
