@@ -1,9 +1,9 @@
-worlds: [pegboard]
+worlds: [balance beam, pegboard, ramped_balance_beam, rubble, side_stones, sparse_stones, stairs, ramp_10]
 # other worlds: , ramped_balance_beam, ramped_stepping_stones, rubble, side_stones, sparse_stones, stairs, ramp_10
-controllers: [MPC]
+controllers: [MPC, DTC]
 repetitions: 1
 
-gazebo_gui: false
+gazebo_gui: T=true
 rviz: true
 
 scripts: 
