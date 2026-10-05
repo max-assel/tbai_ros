@@ -30,6 +30,7 @@ class TrialMonitor:
         self.events = []
         self.disturbance = None
         self.duration = 0.0
+        self.terrain_entered = False
 
     def held(self, name, condition, stamp, seconds):
         if not condition:
@@ -40,6 +41,13 @@ class TrialMonitor:
 
     def result(self, status, reason):
         return TrialResult(status, reason, self.duration, list(self.events))
+
+    def on_terrain(self, x, y):
+        # Footprints are convex polygons with counterclockwise vertices.
+        return any(all((b[0] - a[0]) * (y - a[1])
+                       - (b[1] - a[1]) * (x - a[0]) >= -1e-9
+                       for a, b in zip(polygon, polygon[1:] + polygon[:1]))
+                   for polygon in self.boundary['polygons_m'])
 
     def update(self, state):
         stamp, values, _ = state
@@ -59,19 +67,17 @@ class TrialMonitor:
         upright = (abs(roll) <= success['max_abs_roll_rad']
                    and abs(pitch) <= success['max_abs_pitch_rad'])
         at_goal = math.hypot(x - goal[0], y - goal[1]) <= success['xy_tolerance_m']
+        boundary = self.boundary
+        self.terrain_entered |= ((x - boundary['terrain_entry_x_m'])
+                                 * self.route[0] >= 0)
+        outside = self.terrain_entered and not self.on_terrain(x, y)
+        if self.held('boundary', outside, stamp, boundary['hold_sim_sec']):
+            return self.result('failure', 'fell_off_terrain')
         if self.held('tip', abs(roll) > fall['max_abs_roll_rad'] or
                      abs(pitch) > fall['max_abs_pitch_rad'], stamp, fall['hold_sim_sec']):
             return self.result('failure', 'tipped_over')
         if self.held('low', z < fall['min_base_height_world_m'], stamp, fall['hold_sim_sec']):
             return self.result('failure', 'base_below_height_limit')
-        boundary = self.boundary
-        outside = not (boundary['x_bounds_m'][0] <= x <= boundary['x_bounds_m'][1]
-                       and boundary['y_bounds_m'][0] <= y <= boundary['y_bounds_m'][1])
-        outside |= any(segment['x_bounds_m'][0] <= x <= segment['x_bounds_m'][1]
-                       and not segment['y_bounds_m'][0] <= y <= segment['y_bounds_m'][1]
-                       for segment in boundary.get('segments', ()))
-        if self.held('boundary', outside, stamp, boundary['hold_sim_sec']):
-            return self.result('failure', 'course_boundary_exit')
 
         dx, dy, length = self.route
         progress = ((x - start[0]) * dx + (y - start[1]) * dy) / length
