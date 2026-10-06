@@ -37,6 +37,13 @@ python3 src/tbai_ros/tbai_ros_benchmark/src/trial_executor.py \
 Each attempt writes process logs, `recording.bag`, and `result.json` beneath
 `output_dir`. 
 
+The terminal and `result.json` also report `forward_progress_m`: the final base
+position projected onto the configured start-to-goal route, clamped to the route
+length. For failed trials this is progress before failure, rather than total
+distance walked.
+
+Recovery thresholds are configured under `recovery`, with optional per-world
+overrides under `world_settings.<world>.recovery`. Balance beam uses lower tilt
+thresholds to capture smaller posture disturbances.
+
 Recovery events are posture-based estimates confirmed by resumed progress. Leaving the configured terrain footprint for 0.5 simulation seconds produces `status: failure` with `reason: fell_off_terrain`. This check is armed only after the base crosses `terrain_entry_x_m` toward the goal.
-
-

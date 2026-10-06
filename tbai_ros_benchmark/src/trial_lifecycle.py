@@ -8,6 +8,13 @@ import math
 import subprocess
 import time
 from threading import Event
+
+import rosgraph
+import rospy
+import rosservice
+from geometry_msgs.msg import Twist
+from tbai_ros_msgs.msg import RbdState
+
 from trial_monitor import TrialMonitor, TrialResult
 
 CONTROLLERS = {"MPC": "tbai_ros_mpc", "RL": "tbai_ros_bob", "DTC": "tbai_ros_dtc"}
@@ -77,8 +84,6 @@ class TrialLifecycle:
                 and now - self.last_state_advance < limit)
 
     def wait(self, cond, timeout, reason):
-        import rospy
-
         deadline = time.monotonic() + timeout
         while True:
             if rospy.is_shutdown():
@@ -135,17 +140,12 @@ class TrialLifecycle:
                         angular > settings["motion_angular_epsilon_radps"])
 
     def recording_ready(self):
-        import rospy
-        import rosgraph
-
         _, subscriptions, _ = rosgraph.Master(rospy.get_name()).getSystemState()
         topics = {topic for topic, nodes in subscriptions if "/benchmark_recorder" in nodes}
         return (set(self.config["record_topics"]) <= topics
                 and (self.attempt_dir / "recording.bag.active").exists())
 
     def monitor_until_finished(self):
-        import rospy
-
         armed = time.monotonic()
         while True:
             now = time.monotonic()
@@ -179,18 +179,29 @@ class TrialLifecycle:
             except ProcessLookupError:
                 process.wait()
                 return
-            try:
-                timeout = settings[limit]
-                if sig == signal.SIGINT and name in ("launch", "mapping"):
-                    timeout += (settings["process_sigterm_timeout_wall_sec"]
-                                + settings["process_sigkill_timeout_wall_sec"])
-                process.wait(timeout=timeout)
-            except subprocess.TimeoutExpired:
-                continue
-            try:
-                os.killpg(process.pid, 0)
-            except ProcessLookupError:
-                return
+            timeout = settings[limit]
+            if sig == signal.SIGINT and name in ("launch", "mapping"):
+                timeout += (settings["process_sigterm_timeout_wall_sec"]
+                            + settings["process_sigkill_timeout_wall_sec"])
+            deadline = time.monotonic() + timeout
+            while True:
+                process.poll()  # Reap the parent, but also wait for its children.
+                for stat_path in Path("/proc").glob("[0-9]*/stat"):
+                    try:
+                        stat = stat_path.read_text()
+                    except (ProcessLookupError, FileNotFoundError):
+                        continue
+                    fields = stat[stat.rfind(")") + 2:].split()
+                    # /proc/<pid>/stat fields: state, parent PID, process group.
+                    # Zombies have exited and cannot respond to more signals.
+                    if int(fields[2]) == process.pid and fields[0] not in ("Z", "X"):
+                        break
+                else:
+                    return
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    break
+                time.sleep(min(0.05, remaining))
         raise RuntimeError(f"{name} process group did not stop")
 
     def cleanup(self):
@@ -208,11 +219,6 @@ class TrialLifecycle:
         return errors
 
     def execute(self):
-        import rospy
-        import rosservice
-        from geometry_msgs.msg import Twist
-        from tbai_ros_msgs.msg import RbdState
-
         self.prepare()
         plan = self.command_plan()
 

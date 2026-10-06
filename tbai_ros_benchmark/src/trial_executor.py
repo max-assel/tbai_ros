@@ -23,6 +23,15 @@ def execute_trial(config):
                 result = trial.execute()
                 results.append(result)
                 print(f"{world}/{controller}/trial_{repetition:03d}: {result.status}: {result.reason}", flush=True)
+                print(f"  Trial duration: {result.duration_sim_sec:.3f} simulation seconds; "
+                      f"recovery events: {len(result.recovery_events)}", flush=True)
+                for event in result.recovery_events:
+                    print(f"  Recovery: {event['kind']}; "
+                          f"simulation time {event['start_sim_sec']:.3f}–{event['end_sim_sec']:.3f} s; "
+                          f"duration {event['end_sim_sec'] - event['start_sim_sec']:.3f} s", flush=True)
+                for error in result.cleanup_errors:
+                    print(f"Cleanup error: {error}", flush=True)
+                print(f"  Forward progress: {result.forward_progress_m:.3f} m", flush=True)
                 if result.cleanup_errors or result.status not in config['execution']['continue_after']:
                     return results
     return results

@@ -10,13 +10,15 @@ class TrialResult:
     duration_sim_sec: float = 0.0
     recovery_events: list = field(default_factory=list)
     cleanup_errors: list = field(default_factory=list)
+    forward_progress_m: float = 0.0
 
 
 class TrialMonitor:
     def __init__(self, config, world):
         settings = config['world_settings'][world]
         self.start, self.goal = settings['start_position'], settings['goal_position']
-        self.success, self.recovery = config['success'], config['recovery']
+        self.success = config['success']
+        self.recovery = {**config['recovery'], **settings.get('recovery', {})}
         self.fall = settings['failure']['fall']
         self.boundary = settings['failure']['course_boundary']
         self.no_progress = settings['failure']['no_progress']
@@ -31,6 +33,7 @@ class TrialMonitor:
         self.disturbance = None
         self.duration = 0.0
         self.terrain_entered = False
+        self.progress = 0.0
 
     def held(self, name, condition, stamp, seconds):
         if not condition:
@@ -40,7 +43,8 @@ class TrialMonitor:
         return stamp - self.holds[name] >= seconds
 
     def result(self, status, reason):
-        return TrialResult(status, reason, self.duration, list(self.events))
+        return TrialResult(status, reason, self.duration, list(self.events),
+                           forward_progress_m=self.progress)
 
     def on_terrain(self, x, y):
         # Footprints are convex polygons with counterclockwise vertices.
@@ -63,6 +67,9 @@ class TrialMonitor:
         roll, pitch = values[:2]
         x, y, z = values[3:6]
         start, goal = self.start, self.goal
+        dx, dy, length = self.route
+        progress = ((x - start[0]) * dx + (y - start[1]) * dy) / length
+        self.progress = max(0.0, min(length, progress))
         success, fall = self.success, self.fall
         upright = (abs(roll) <= success['max_abs_roll_rad']
                    and abs(pitch) <= success['max_abs_pitch_rad'])
@@ -79,8 +86,6 @@ class TrialMonitor:
         if self.held('low', z < fall['min_base_height_world_m'], stamp, fall['hold_sim_sec']) and not outside:
             return self.result('failure', 'base_below_height_limit')
 
-        dx, dy, length = self.route
-        progress = ((x - start[0]) * dx + (y - start[1]) * dy) / length
         recovery = self.recovery
         disturbed = (abs(roll) > recovery['disturbance_roll_rad'] or
                      abs(pitch) > recovery['disturbance_pitch_rad'])
