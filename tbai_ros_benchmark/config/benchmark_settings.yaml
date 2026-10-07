@@ -1,10 +1,11 @@
-worlds: [balance_beam, pegboard, ramped_balance_beam, ramped_stepping_stones]
+worlds: [pegboard]
 # other worlds: balance_beam, pegboard, ramped_balance_beam, ramped_stepping_stones, rubble, side_stones, sparse_stones, stairs, ramp_10
 controllers: [MPC]
 repetitions: 10
 
 gazebo_gui: false
 rviz: true
+record_rosbag: false
 
 scripts: 
   reset: /home/aiyer334/TBAI/src/tbai_ros/tbai_ros_gazebo/reset_gazebo.sh

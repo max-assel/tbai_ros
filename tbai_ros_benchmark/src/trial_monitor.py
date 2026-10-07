@@ -11,6 +11,7 @@ class TrialResult:
     recovery_events: list = field(default_factory=list)
     cleanup_errors: list = field(default_factory=list)
     forward_progress_m: float = 0.0
+    positions: list = field(default_factory=list)
 
 
 class TrialMonitor:
@@ -34,6 +35,7 @@ class TrialMonitor:
         self.duration = 0.0
         self.terrain_entered = False
         self.progress = 0.0
+        self.positions = []
 
     def held(self, name, condition, stamp, seconds):
         if not condition:
@@ -44,7 +46,8 @@ class TrialMonitor:
 
     def result(self, status, reason):
         return TrialResult(status, reason, self.duration, list(self.events),
-                           forward_progress_m=self.progress)
+                           forward_progress_m=self.progress,
+                           positions=list(self.positions))
 
     def on_terrain(self, x, y):
         # Footprints are convex polygons with counterclockwise vertices.
@@ -66,6 +69,8 @@ class TrialMonitor:
         self.duration = stamp - self.started
         roll, pitch = values[:2]
         x, y, z = values[3:6]
+        self.positions.append({'time_sim_sec': self.duration,
+                               'x_m': x, 'y_m': y, 'z_m': z})
         start, goal = self.start, self.goal
         dx, dy, length = self.route
         progress = ((x - start[0]) * dx + (y - start[1]) * dy) / length

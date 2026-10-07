@@ -59,7 +59,7 @@ class TrialLifecycle:
         "mapping": [*roslaunch, "tbai_ros_gridmap", "elevation_mapping.launch"],
         "record": ["rosbag", "record", "-O",
                     str(self.attempt_dir / "recording.bag"),
-                    *self.config["record_topics"]],
+                    *self.config.get("record_topics", [])],
         "run": ["bash", "-e", self.config["scripts"]["run"], self.world, self.controller],
         }
     
@@ -265,9 +265,10 @@ class TrialLifecycle:
             self.subscribers.append(rospy.Subscriber(
                 self.config["monitor"]["motion_topic"], Twist, self.on_motion, queue_size=1,
             ))
-            self.stage = "record"
-            self.start("record", plan["record"] + ["__name:=benchmark_recorder"])
-            self.wait(self.recording_ready, self.config["activation_timeout_wall_sec"], "recording ready")
+            if self.config.get("record_rosbag", True):
+                self.stage = "record"
+                self.start("record", plan["record"] + ["__name:=benchmark_recorder"])
+                self.wait(self.recording_ready, self.config["activation_timeout_wall_sec"], "recording ready")
             self.stage = "arm_monitor"
             self.monitor = TrialMonitor(self.config, self.world)
             result_factory = self.monitor.result
