@@ -1,4 +1,4 @@
-worlds: [pegboard]
+worlds: [side_stones, sparse_stones, stairs, ramp_10]
 # other worlds: balance_beam, pegboard, ramped_balance_beam, ramped_stepping_stones, rubble, side_stones, sparse_stones, stairs, ramp_10
 controllers: [MPC]
 repetitions: 10
@@ -94,6 +94,9 @@ world_settings:
   pegboard:
     start_position: [-2.5, 1.4, 0.15]
     goal_position: [3.5, 1.4, 0.575]
+    recovery:
+      disturbance_roll_rad: 0.50
+      disturbance_pitch_rad: 0.50
     failure:
       fall:
         <<: *fall_defaults
@@ -128,6 +131,9 @@ world_settings:
   ramped_balance_beam:
     start_position: [0.0, 0.5, 0.2]
     goal_position: [-8.5, 0.5, 0.575]
+    recovery:
+      # Allow normal pitch on ramps with slopes up to about 0.55 rad.
+      disturbance_pitch_rad: 0.65
     failure:
       fall:
         <<: *fall_defaults

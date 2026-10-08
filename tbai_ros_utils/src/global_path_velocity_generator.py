@@ -31,7 +31,7 @@ class GlobalPathVelocityGenerator:
         elif (self.world_name == "sparse_stones"):
             self.global_goal = [2.0, 1.4, 0.575]             
         elif (self.world_name == "side_stones"):
-            self.global_goal = [2.0, 0.0, 0.575]                        
+            self.global_goal = [2.0, 0.0, 0.575]
         elif (self.world_name == "stairs"):
             self.global_goal = [3.0, 0.0, 1.5]                      
         else:

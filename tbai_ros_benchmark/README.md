@@ -37,4 +37,8 @@ python3 src/tbai_ros/tbai_ros_benchmark/src/trial_executor.py \
 Each attempt writes process logs, `recording.bag` if enabled, and `result.json` beneath
 `output_dir`. 
 
-Recovery events are posture-based estimates confirmed by resumed progress. Leaving the configured terrain footprint for 0.5 simulation seconds produces `status: failure` with `reason: fell_off_terrain`. This check is armed only after the base crosses `terrain_entry_x_m` toward the goal.
+Recovery events are posture-based estimates confirmed by resumed progress. A sample exceeding the roll or pitch threshold arms a recovery candidate immediately. Pegboard uses 0.50 rad roll and pitch thresholds to reduce counts from ordinary terrain transitions. Recovery then requires upright posture and resumed progress for `hold_sim_sec`. These estimates do not prove a foot slip or controller recovery; tune the thresholds against observed trials.
+
+Leaving the configured terrain footprint for 0.5 simulation seconds produces `status: failure` with `reason: fell_off_terrain`. This check is armed only after the base crosses `terrain_entry_x_m` toward the goal.
+
+Ramped balance beam overrides the recovery pitch threshold to 0.65 rad to allow normal posture on its ramps (up to about 0.55 rad slope). Its roll threshold remains 0.30 rad. Disturbances arm immediately on a threshold crossing.
