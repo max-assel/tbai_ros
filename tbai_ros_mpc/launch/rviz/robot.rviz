@@ -499,7 +499,7 @@ Visualization Manager:
       Visual Enabled: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
-      Cell Walls: false
+      Cell Walls: true
       Class: grid_map_rviz_plugin/GridMap
       Color: 156; 156; 156
       Color Layer: elevation
