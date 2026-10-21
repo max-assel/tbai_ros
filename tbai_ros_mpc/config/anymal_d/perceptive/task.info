@@ -3,6 +3,7 @@ model_settings
   algorithm                     SQP
   recompileLibraries            false
   robotName                     anymal_d
+  autodiffLibraryFolder         /home/aiyer334/TBAI/.ocs2_cache
 
   analyticalInverseKinematics   true
 

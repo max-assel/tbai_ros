@@ -1,9 +1,9 @@
-worlds: [balance_beam, pegboard, ramped_balance_beam, ramped_stepping_stones, rubble, side_stones, sparse_stones, stairs, ramp_10]
+worlds: [ramped_stepping_stones, sparse_stones]
 # other worlds: balance_beam, pegboard, ramped_balance_beam, ramped_stepping_stones, rubble, side_stones, sparse_stones, stairs, ramp_10
-controllers: [RL]
-repetitions: 10
+controllers: [MPC, DTC, RL]
+repetitions: 3
 
-gazebo_gui: false
+gazebo_gui: true
 rviz: true
 record_rosbag: false
 

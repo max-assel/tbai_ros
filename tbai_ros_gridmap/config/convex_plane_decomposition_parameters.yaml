@@ -1,7 +1,7 @@
 preprocessing:
   resolution: -1   # Resampling resolution, set negative to skip, requires inpainting to be used
   kernelSize: 3       # Kernel size of the median filter, either 3 or 5
-  numberOfRepeats: 1  # Number of times to apply the same filter
+  numberOfRepeats: 0  # Number of times to apply the same filter
 
 sliding_window_plane_extractor:
   kernel_size: 3                                        # Size of the sliding window patch used for normal vector calculation and planarity detection. Should be an odd number and at least 3.
@@ -28,7 +28,7 @@ contour_extraction:
 postprocessing:
   extracted_planes_height_offset: 0.0   # Added offset in Z direction for the full map to compensate for the location of the foot frame w.r.t. the contact point
   nonplanar_height_offset: 0.02         # Added offset in Z direction for non-planar cells of the map. (Additional to extracted_planes_height_offset)
-  nonplanar_horizontal_offset: 1        # Added offset in XY direction for non-planar cells of the map. In number of pixels.
+  nonplanar_horizontal_offset: 0        # Added offset in XY direction for non-planar cells of the map. In number of pixels.
   smoothing_dilation_size: 0.2          # Half the width of the dilation used before the smooth layer [m]
   smoothing_box_kernel_size: 0.1        # Half the width of the box kernel used for the smooth layer [m]
   smoothing_gauss_kernel_size: 0.05     # Half the width of the Gaussian kernel used for the smooth layer [m]
