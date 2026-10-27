@@ -1,9 +1,0 @@
-{
-  "status": "error",
-  "reason": "readiness: launch exited (0) during readiness",
-  "duration_sim_sec": 0.0,
-  "recovery_events": [],
-  "cleanup_errors": [],
-  "forward_progress_m": 0.0,
-  "positions": []
-}
