@@ -9,9 +9,10 @@ multiple_shooting
   inequalityConstraintDelta             5.0
   projectStateInputEqualityConstraints  true
   printSolverStatistics                 true
+  logFilePath                           /home/aiyer334/TBAI/.ocs2_cache/go2_backpack/sqp_log/
   printSolverStatus                     false
   printLinesearch                       false
-  useFeedbackPolicy                     true
+  useFeedbackPolicy                     false
   integratorType                        RK2
   nThreads                              4
   threadPriority                        50

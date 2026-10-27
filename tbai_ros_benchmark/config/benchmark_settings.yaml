@@ -1,9 +1,10 @@
-worlds: [ramped_stepping_stones, sparse_stones]
+robot: anymal_d
+worlds: [ramped_stepping_stones]
 # other worlds: balance_beam, pegboard, ramped_balance_beam, ramped_stepping_stones, rubble, side_stones, sparse_stones, stairs, ramp_10
 controllers: [MPC, DTC, RL]
-repetitions: 3
+repetitions: 15
 
-gazebo_gui: true
+gazebo_gui: false
 rviz: true
 record_rosbag: false
 

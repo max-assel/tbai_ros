@@ -1,0 +1,530 @@
+[31mWARNING: disk usage in log directory [/home/aiyer334/.ros/log] is over 1GB.
+It's recommended that you use the 'rosclean' command.[0m
+xacro: in-order processing became default in ROS Melodic. You can drop the option.
+Loading gait file: /home/aiyer334/TBAI/src/tbai_ros/tbai_ros_deploy_go2/tbai_ros_deploy_go2_mpc/config/gait.info
+[0m[ INFO] [1792871948.867550175]: anymal_mpc_mode_schedule node is setting up ...[0m
+ #### 'list': {stance, trot, standing_trot, flying_trot, pace, standing_pace, dynamic_walk, static_walk, amble, lindyhop, skipping, pawup, }
+ #### 'stance.switchingTimes': {0, 0.5, }
+ #### 'stance.modeSequence': {STANCE, }
+ #### 'trot.switchingTimes': {0, 0.25, 0.5, }
+ #### 'trot.modeSequence': {LF_RH, RF_LH, }
+ #### 'standing_trot.switchingTimes': {0, 0.25, 0.3, 0.55, 0.6, }
+ #### 'standing_trot.modeSequence': {LF_RH, STANCE, RF_LH, STANCE, }
+ #### 'flying_trot.switchingTimes': {0, 0.22, 0.25, 0.47, 0.5, }
+ #### 'flying_trot.modeSequence': {LF_RH, FLY, RF_LH, FLY, }
+ #### 'pace.switchingTimes': {0, 0.28, 0.3, 0.58, 0.6, }
+ #### 'pace.modeSequence': {LF_LH, FLY, RF_RH, FLY, }
+ #### 'standing_pace.switchingTimes': {0, 0.3, 0.35, 0.65, 0.7, }
+ #### 'standing_pace.modeSequence': {LF_LH, STANCE, RF_RH, STANCE, }
+ #### 'dynamic_walk.switchingTimes': {0, 0.2, 0.3, 0.5, 0.7, 0.8, 1, }
+ #### 'dynamic_walk.modeSequence': {LF_RF_RH, RF_RH, RF_LH_RH, LF_RF_LH, LF_LH, LF_LH_RH, }
+ #### 'static_walk.switchingTimes': {0, 0.3, 0.6, 0.9, 1.2, }
+ #### 'static_walk.modeSequence': {LF_RF_RH, RF_LH_RH, LF_RF_LH, LF_LH_RH, }
+ #### 'amble.switchingTimes': {0, 0.15, 0.4, 0.55, 0.8, }
+ #### 'amble.modeSequence': {RF_LH, LF_LH, LF_RH, RF_RH, }
+ #### 'lindyhop.switchingTimes': {0, 0.35, 0.45, 0.8, 0.9, 1.125, 1.35, 1.7, 1.8, 2.025, 2.25, 2.6, 2.7, }
+ #### 'lindyhop.modeSequence': {LF_RH, STANCE, RF_LH, STANCE, LF_LH, RF_RH, LF_LH, STANCE, RF_RH, LF_LH, RF_RH, STANCE, }
+ #### 'skipping.switchingTimes': {0, 0.27, 0.3, 0.57, 0.6, 0.87, 0.9, 1.17, 1.2, }
+ #### 'skipping.modeSequence': {LF_RH, FLY, LF_RH, FLY, RF_LH, FLY, RF_LH, FLY, }
+ #### 'pawup.switchingTimes': {0, 2, }
+ #### 'pawup.modeSequence': {RF_LH_RH, }
+[0m[ INFO] [1792871948.876156133]: anymal_mpc_mode_schedule command node is ready.[0m
+Enter the desired gait, for the list of available gait enter "list": [15:59:08.930] [info] [central_controller] Setting changeControllerSubscriber callback function
+[15:59:08.930] [info] [central_controller] Init time: 0 | Fallback controller type: SIT
+[15:59:08.949] [info] [tbai_static] Controller state publishing is disabled
+
+ #### Rollout Settings: 
+ #### =============================================================================
+ #### 'AbsTolODE'..........................................................1e-05
+ #### 'RelTolODE'..........................................................0.001
+ #### 'maxNumStepsPerSecond'...............................................10000
+ #### 'timeStep'...........................................................0.015
+ #### 'integratorType'.....................................................ODE45
+ #### 'checkNumericalStability'................................................0
+ #### 'reconstructInputTrajectory'.............................................1 (default)
+ #### 'rootFindingAlgorithm'...................................................0 (default)
+ #### 'maxSingleEventIterations'..............................................10 (default)
+ #### 'useTrajectorySpreadingController'.......................................0 (default)
+ #### =============================================================================
+
+ #### Robot Model Settings:
+ #### ==================================================
+ #### 'algorithm'............................................................SQP
+ #### 'phaseTransitionStanceTime'............................................0.4 (default)
+ #### 'recompileLibraries'.....................................................0
+ #### 'robotName'.......................................................anymal_d
+ #### 'autodiffLibraryFolder'..................../home/aiyer334/TBAI/.ocs2_cache
+ #### 'analyticalInverseKinematics'............................................1
+ #### 'frictionCoefficient'..................................................0.5
+ #### 'coneRegularization'....................................................25 (default)
+ #### 'gripperForce'...........................................................0
+ #### 'muFrictionCone'.......................................................0.1
+ #### 'deltaFrictionCone'......................................................5
+ #### 'muFootPlacement'........................................................1
+ #### 'deltaFootPlacement'..................................................0.01
+ #### 'muSdf'................................................................0.1
+ #### 'deltaSdf'...........................................................0.005
+ #### 'muJointsPosition'.....................................................0.1
+ #### 'deltaJointsPosition'.................................................0.01
+ #### 'muJointsVelocity'.....................................................0.1
+ #### 'deltaJointsVelocity'..................................................0.1
+ #### 'muJointsTorque'.........................................................1
+ #### 'deltaJointsTorque'......................................................1
+ joint lower limits:   -0.7 -1e+30   -2.7 -1e+30 -1e+30   -2.7   -0.7 -1e+30      0 -1e+30 -1e+30      0
+ joint upper limits: 1e+30 1e+30    -0   0.7 1e+30    -0 1e+30 1e+30   2.7   0.7 1e+30   2.7
+ joint velocity limits: 7 7 7 7 7 7 7 7 7 7 7 7
+ joint torque limits: 150 150 150 150 150 150 150 150 150 150 150 150
+ #### ================================================ ####
+
+ #### Tacking Cost Weights:
+ #### ==================================================
+ #### 'roll'.................................................................100
+ #### 'pitch'................................................................300
+ #### 'yaw'..................................................................300
+ #### 'base_position_x'.....................................................1000
+ #### 'base_position_y'.....................................................1000
+ #### 'base_position_z'.....................................................1500
+ #### 'base_angular_vel_x'....................................................10
+ #### 'base_angular_vel_y'....................................................30
+ #### 'base_angular_vel_z'....................................................30
+ #### 'base_linear_vel_x'.....................................................15
+ #### 'base_linear_vel_y'.....................................................15
+ #### 'base_linear_vel_z'.....................................................30
+ #### 'joint_position_HAA'.....................................................2
+ #### 'joint_position_HFE'.....................................................2
+ #### 'joint_position_KFE'.....................................................1
+ #### 'foot_position_x'.......................................................20
+ #### 'foot_position_y'.......................................................20
+ #### 'foot_position_z'.......................................................20
+ #### 'joint_velocity_HAA'..................................................0.02
+ #### 'joint_velocity_HFE'..................................................0.02
+ #### 'joint_velocity_KFE'..................................................0.01
+ #### 'foot_velocity_x'.......................................................30
+ #### 'foot_velocity_y'.......................................................30
+ #### 'foot_velocity_z'.......................................................30
+ #### 'contact_force_x'....................................................0.001
+ #### 'contact_force_y'....................................................0.001
+ #### 'contact_force_z'....................................................0.001
+ #### ================================================ ####
+
+ #### Rollout Settings: 
+ #### =============================================================================
+ #### 'AbsTolODE'..........................................................1e-05
+ #### 'RelTolODE'..........................................................0.001
+ #### 'maxNumStepsPerSecond'...............................................10000
+ #### 'timeStep'...........................................................0.015
+ #### 'integratorType'.....................................................ODE45
+ #### 'checkNumericalStability'................................................0
+ #### 'reconstructInputTrajectory'.............................................1 (default)
+ #### 'rootFindingAlgorithm'...................................................0 (default)
+ #### 'maxSingleEventIterations'..............................................10 (default)
+ #### 'useTrajectorySpreadingController'.......................................0 (default)
+ #### =============================================================================
+
+ #### Robot Model Settings:
+ #### ==================================================
+ #### 'algorithm'............................................................SQP
+ #### 'phaseTransitionStanceTime'............................................0.4 (default)
+ #### 'recompileLibraries'.....................................................0
+ #### 'robotName'.......................................................anymal_d
+ #### 'autodiffLibraryFolder'..................../home/aiyer334/TBAI/.ocs2_cache
+ #### 'analyticalInverseKinematics'............................................1
+ #### 'frictionCoefficient'..................................................0.5
+ #### 'coneRegularization'....................................................25 (default)
+ #### 'gripperForce'...........................................................0
+ #### 'muFrictionCone'.......................................................0.1
+ #### 'deltaFrictionCone'......................................................5
+ #### 'muFootPlacement'........................................................1
+ #### 'deltaFootPlacement'..................................................0.01
+ #### 'muSdf'................................................................0.1
+ #### 'deltaSdf'...........................................................0.005
+ #### 'muJointsPosition'.....................................................0.1
+ #### 'deltaJointsPosition'.................................................0.01
+ #### 'muJointsVelocity'.....................................................0.1
+ #### 'deltaJointsVelocity'..................................................0.1
+ #### 'muJointsTorque'.........................................................1
+ #### 'deltaJointsTorque'......................................................1
+ joint lower limits:   -0.7 -1e+30   -2.7 -1e+30 -1e+30   -2.7   -0.7 -1e+30      0 -1e+30 -1e+30      0
+ joint upper limits: 1e+30 1e+30    -0   0.7 1e+30    -0 1e+30 1e+30   2.7   0.7 1e+30   2.7
+ joint velocity limits: 7 7 7 7 7 7 7 7 7 7 7 7
+ joint torque limits: 150 150 150 150 150 150 150 150 150 150 150 150
+ #### ================================================ ####
+
+ #### Tacking Cost Weights:
+ #### ==================================================
+ #### 'roll'.................................................................100
+ #### 'pitch'................................................................300
+ #### 'yaw'..................................................................300
+ #### 'base_position_x'.....................................................1000
+ #### 'base_position_y'.....................................................1000
+ #### 'base_position_z'.....................................................1500
+ #### 'base_angular_vel_x'....................................................10
+ #### 'base_angular_vel_y'....................................................30
+ #### 'base_angular_vel_z'....................................................30
+ #### 'base_linear_vel_x'.....................................................15
+ #### 'base_linear_vel_y'.....................................................15
+ #### 'base_linear_vel_z'.....................................................30
+ #### 'joint_position_HAA'.....................................................2
+ #### 'joint_position_HFE'.....................................................2
+ #### 'joint_position_KFE'.....................................................1
+ #### 'foot_position_x'.......................................................20
+ #### 'foot_position_y'.......................................................20
+ #### 'foot_position_z'.......................................................20
+ #### 'joint_velocity_HAA'..................................................0.02
+ #### 'joint_velocity_HFE'..................................................0.02
+ #### 'joint_velocity_KFE'..................................................0.01
+ #### 'foot_velocity_x'.......................................................30
+ #### 'foot_velocity_y'.......................................................30
+ #### 'foot_velocity_z'.......................................................30
+ #### 'contact_force_x'....................................................0.001
+ #### 'contact_force_y'....................................................0.001
+ #### 'contact_force_z'....................................................0.001
+ #### ================================================ ####
+
+ #### Swing trajectory Settings:
+ #### ==================================================
+ #### 'liftOffVelocity'......................................................0.2
+ #### 'touchDownVelocity'...................................................-0.4
+ #### 'swingHeight'.........................................................0.08
+ #### 'errorGain'..............................................................1
+ #### 'swingTimeScale'......................................................0.15
+ #### 'sdfMidswingMargin'..................................................0.005
+ #### 'terrainMargin'..........................................................0
+ #### 'previousFootholdFactor'.............................................0.333
+ #### 'previousFootholdDeadzone'............................................0.05
+ #### 'previousFootholdTimeDeadzone'........................................0.25
+ #### 'invertedPendulumHeight'...............................................0.5 (default)
+ #### 'nominalLegExtension'.................................................0.55 (default)
+ #### 'legOverExtensionPenalty'................................................5 (default)
+ #### 'referenceExtensionAfterHorizon'.........................................1 (default)
+ #### 'maximumReferenceSampleTime'..........................................0.05 (default)
+ #### 'swingTrajectoryFromReference'...........................................0 (default)
+ #### ==================================================
+
+ #### terrain plane:
+ #### ==================================================
+ #### 'x'......................................................................0
+ #### 'y'......................................................................0
+ #### 'z'......................................................................0
+ #### 'roll'...................................................................0
+ #### 'pitch'..................................................................0
+ #### 'yaw'....................................................................0
+ #### ==================================================
+
+ #### Swing trajectory Settings:
+ #### ==================================================
+ #### 'liftOffVelocity'......................................................0.2
+ #### 'touchDownVelocity'...................................................-0.4
+ #### 'swingHeight'.........................................................0.08
+ #### 'errorGain'..............................................................1
+ #### 'swingTimeScale'......................................................0.15
+ #### 'sdfMidswingMargin'..................................................0.005
+ #### 'terrainMargin'..........................................................0
+ #### 'previousFootholdFactor'.............................................0.333
+ #### 'previousFootholdDeadzone'............................................0.05
+ #### 'previousFootholdTimeDeadzone'........................................0.25
+ #### 'invertedPendulumHeight'...............................................0.5 (default)
+ #### 'nominalLegExtension'.................................................0.55 (default)
+ #### 'legOverExtensionPenalty'................................................5 (default)
+ #### 'referenceExtensionAfterHorizon'.........................................1 (default)
+ #### 'maximumReferenceSampleTime'..........................................0.05 (default)
+ #### 'swingTrajectoryFromReference'...........................................0 (default)
+ #### ==================================================
+
+ #### terrain plane:
+ #### ==================================================
+ #### 'x'......................................................................0
+ #### 'y'......................................................................0
+ #### 'z'......................................................................0
+ #### 'roll'...................................................................0
+ #### 'pitch'..................................................................0
+ #### 'yaw'....................................................................0
+ #### ==================================================
+[CppAdInterface] Loading Shared Library: /home/aiyer334/TBAI/.ocs2_cache/anymal_d_Precomputation_intermediateLinearOutputs/cppad_generated/anymal_d_Precomputation_intermediateLinearOutputs_lib.so
+[CppAdInterface] Loading Shared Library: /home/aiyer334/TBAI/.ocs2_cache/anymal_d_Precomputation_prejumpLinearOutputs/cppad_generated/anymal_d_Precomputation_prejumpLinearOutputs_lib.so
+[CppAdInterface] Loading Shared Library: /home/aiyer334/TBAI/.ocs2_cache/anymal_d_MotionTrackingCost/cppad_generated/anymal_d_MotionTrackingCost_lib.so
+[CppAdInterface] Loading Shared Library: /home/aiyer334/TBAI/.ocs2_cache/anymal_d_dynamics_flow_map/cppad_generated/anymal_d_dynamics_flow_map_lib.so
+[CppAdInterface] Loading Shared Library: /home/aiyer334/TBAI/.ocs2_cache/anymal_d_dynamics_jump_map/cppad_generated/anymal_d_dynamics_jump_map_lib.so
+[CppAdInterface] Loading Shared Library: /home/aiyer334/TBAI/.ocs2_cache/anymal_d_dynamics_guard_surfaces/cppad_generated/anymal_d_dynamics_guard_surfaces_lib.so
+[CppAdInterface] Loading Shared Library: /home/aiyer334/TBAI/.ocs2_cache/anymal_d_Precomputation_intermediateLinearOutputs/cppad_generated/anymal_d_Precomputation_intermediateLinearOutputs_lib.so
+[CppAdInterface] Loading Shared Library: /home/aiyer334/TBAI/.ocs2_cache/anymal_d_Precomputation_prejumpLinearOutputs/cppad_generated/anymal_d_Precomputation_prejumpLinearOutputs_lib.so
+[CppAdInterface] Loading Shared Library: /home/aiyer334/TBAI/.ocs2_cache/anymal_d_MotionTrackingCost/cppad_generated/anymal_d_MotionTrackingCost_lib.so
+[CppAdInterface] Loading Shared Library: /home/aiyer334/TBAI/.ocs2_cache/anymal_d_dynamics_flow_map/cppad_generated/anymal_d_dynamics_flow_map_lib.so
+[CppAdInterface] Loading Shared Library: /home/aiyer334/TBAI/.ocs2_cache/anymal_d_dynamics_jump_map/cppad_generated/anymal_d_dynamics_jump_map_lib.so
+[CppAdInterface] Loading Shared Library: /home/aiyer334/TBAI/.ocs2_cache/anymal_d_dynamics_guard_surfaces/cppad_generated/anymal_d_dynamics_guard_surfaces_lib.so
+
+ #### MPC Settings:
+ #### =============================================================================
+ #### 'timeHorizon'............................................................1
+ #### 'solutionTimeWindow'....................................................-1
+ #### 'coldStart'..............................................................0
+ #### 'debugPrint'.............................................................0
+ #### 'mpcDesiredFrequency'...................................................50
+ #### 'mrtDesiredFrequency'..................................................400
+ #### =============================================================================
+[2026-10-24 15:59:09.024] [info] [MpcNode.cpp:49] Using SQP MPC
+
+ #### Multiple-Shooting SQP Settings:
+ #### =============================================================================
+ #### 'sqpIteration'...........................................................5
+ #### 'deltaTol'..........................................................0.0001
+ #### 'alpha_decay'..........................................................0.5 (default)
+ #### 'alpha_min'.........................................................0.0001
+ #### 'gamma_c'............................................................1e-06 (default)
+ #### 'g_max'...............................................................0.01
+ #### 'g_min'..............................................................1e-06
+ #### 'armijoFactor'......................................................0.0001 (default)
+ #### 'costTol'...........................................................0.0001
+ #### 'dt'.................................................................0.015
+ #### 'useFeedbackPolicy'......................................................0
+ #### 'createValueFunction'....................................................0 (default)
+ #### 'integratorType'.......................................................RK2
+ #### 'inequalityConstraintMu'.................................................0 (default)
+ #### 'inequalityConstraintDelta'..........................................1e-06 (default)
+ #### 'projectStateInputEqualityConstraints'...................................1
+ #### 'extractProjectionMultiplier'............................................0 (default)
+ #### 'printSolverStatus'......................................................0
+ #### 'printSolverStatistics'..................................................0
+ #### 'printLinesearch'........................................................0
+ #### 'enableLogging'..........................................................1 (default)
+ #### 'logSize'.............................................................1000 (default)
+ #### 'logFilePath'.........................................../tmp/ocs2/sqp_log/ (default)
+ #### 'nThreads'...............................................................3
+ #### 'threadPriority'........................................................99
+
+ #### HPIPM Settings:
+ #### =============================================================================
+ #### 'mode'...................................................................1 (default)
+ #### 'iter_max'..............................................................30 (default)
+ #### 'alpha_min'..........................................................1e-12 (default)
+ #### 'mu0'...................................................................10 (default)
+ #### 'tol_stat'...........................................................1e-06 (default)
+ #### 'tol_eq'.............................................................1e-08 (default)
+ #### 'tol_ineq'...........................................................1e-08 (default)
+ #### 'tol_comp'...........................................................1e-08 (default)
+ #### 'reg_prim'...........................................................1e-12 (default)
+ #### 'warm_start'.............................................................0 (default)
+ #### 'pred_corr'..............................................................1 (default)
+ #### 'ric_alg'................................................................0 (default)
+ #### =============================================================================
+ #### =============================================================================
+WARNING: Failed to set threads priority (one possible reason could be that the user and the group permissions are not set properly.)
+WARNING: Failed to set threads priority (one possible reason could be that the user and the group permissions are not set properly.)
+[0m[ INFO] [1792871949.035454914]: MRT node is setting up ...[0m
+[0m[ INFO] [1792871949.037212552]: Publishing MRT messages on a separate thread.[0m
+[0m[ INFO] [1792871949.037239146]: MRT node is ready.[0m
+[15:59:09.037] [info] [central_controller] Starting central controller loop
+[15:59:09.037] [info] [central_controller] Active controller found!
+[15:59:09.037] [info] [central_controller] Fallback controller: SIT
+[15:59:09.037] [info] [central_controller] Waiting for controllers to initialize
+[0m[ INFO] [1792871949.774426694]: Finished loading Gazebo ROS API Plugin.[0m
+[0m[ INFO] [1792871949.775297610]: waitForService: Service [/gazebo/set_physics_properties] has not been advertised, waiting...[0m
+[0m[ INFO] [1792871950.149458126]: waitForService: Service [/gazebo/set_physics_properties] is now available.[0m
+[0m[ INFO] [1792871951.142231581, 0.138000000]: Camera Plugin: Using the 'robotNamespace' param: '/'[0m
+[0m[ INFO] [1792871951.143927214, 0.138000000]: Camera Plugin (ns = /)  <tf_prefix_>, set to ""[0m
+[2026-10-24 15:59:11.147] [info] [ContactSensor.cpp:37] Loading ContactSensor plugin. Publishing on topic /lf_foot_contact
+[2026-10-24 15:59:11.179] [info] [ContactSensor.cpp:43] Loaded ContactSensor plugin. Update rate: 1000 Hz
+[0m[ INFO] [1792871951.213133277, 0.138000000]: Physics dynamic reconfigure ready.[0m
+[2026-10-24 15:59:11.678] [info] [ContactSensor.cpp:37] Loading ContactSensor plugin. Publishing on topic /lh_foot_contact
+[2026-10-24 15:59:11.678] [info] [ContactSensor.cpp:43] Loaded ContactSensor plugin. Update rate: 1000 Hz
+[2026-10-24 15:59:11.679] [info] [ContactSensor.cpp:37] Loading ContactSensor plugin. Publishing on topic /rf_foot_contact
+[2026-10-24 15:59:11.679] [info] [ContactSensor.cpp:43] Loaded ContactSensor plugin. Update rate: 1000 Hz
+[2026-10-24 15:59:11.680] [info] [ContactSensor.cpp:37] Loading ContactSensor plugin. Publishing on topic /rh_foot_contact
+[2026-10-24 15:59:11.680] [info] [ContactSensor.cpp:43] Loaded ContactSensor plugin. Update rate: 1000 Hz
+[0m[ INFO] [1792871951.719667358, 0.138000000]: Loading gazebo_ros_control plugin[0m
+[0m[ INFO] [1792871951.719702156, 0.138000000]: Starting gazebo_ros_control plugin in namespace: /anymal_d[0m
+[0m[ INFO] [1792871951.720042896, 0.138000000]: gazebo_ros_control plugin is waiting for model URDF in parameter [/robot_description] on the ROS param server.[0m
+[0m[ INFO] [1792871951.835971947, 0.138000000]: Loaded gazebo_ros_control.[0m
+[2026-10-24 15:59:11.838] [info] [StatePublisher.cpp:22] Loading StatePublisher plugin
+[2026-10-24 15:59:11.840] [info] [StatePublisher.cpp:42] Base link base found: true
+[2026-10-24 15:59:11.840] [info] [StatePublisher.cpp:49] Joint LF_HAA found: true
+[2026-10-24 15:59:11.840] [info] [StatePublisher.cpp:49] Joint LF_HFE found: true
+[2026-10-24 15:59:11.840] [info] [StatePublisher.cpp:49] Joint LF_KFE found: true
+[2026-10-24 15:59:11.840] [info] [StatePublisher.cpp:49] Joint LH_HAA found: true
+[2026-10-24 15:59:11.840] [info] [StatePublisher.cpp:49] Joint LH_HFE found: true
+[2026-10-24 15:59:11.840] [info] [StatePublisher.cpp:49] Joint LH_KFE found: true
+[2026-10-24 15:59:11.840] [info] [StatePublisher.cpp:49] Joint RF_HAA found: true
+[2026-10-24 15:59:11.840] [info] [StatePublisher.cpp:49] Joint RF_HFE found: true
+[2026-10-24 15:59:11.840] [info] [StatePublisher.cpp:49] Joint RF_KFE found: true
+[2026-10-24 15:59:11.840] [info] [StatePublisher.cpp:49] Joint RH_HAA found: true
+[2026-10-24 15:59:11.840] [info] [StatePublisher.cpp:49] Joint RH_HFE found: true
+[2026-10-24 15:59:11.840] [info] [StatePublisher.cpp:49] Joint RH_KFE found: true
+[2026-10-24 15:59:11.845] [info] [StatePublisher.cpp:66] Loaded StatePublisher plugin
+[2026-10-24 15:59:11.847] [info] [RobotStatePublisher.cpp:22] Loading RobotStatePublisher plugin
+[2026-10-24 15:59:11.847] [info] [RobotStatePublisher.cpp:26] Muse state publisher disabled.
+[2026-10-24 15:59:11.975] [info] [JointController.cpp:21] Loading 12 joint controllers for joints ["LF_HAA", "LF_HFE", "LF_KFE", "LH_HAA", "LH_HFE", "LH_KFE", "RF_HAA", "RF_HFE", "RF_KFE", "RH_HAA", "RH_HFE", "RH_KFE"]
+[2026-10-24 15:59:11.983] [info] [JointController.cpp:58] Loaded joint 'LF_HAA' with limits [-0.7853985, 0.6108655] and effort limit 80
+[2026-10-24 15:59:11.983] [info] [JointController.cpp:58] Loaded joint 'LF_HFE' with limits [-9.42477796076938, 9.42477796076938] and effort limit 80
+[2026-10-24 15:59:11.983] [info] [JointController.cpp:58] Loaded joint 'LF_KFE' with limits [-9.42477796076938, 9.42477796076938] and effort limit 80
+[2026-10-24 15:59:11.983] [info] [JointController.cpp:58] Loaded joint 'LH_HAA' with limits [-0.7853985, 0.6108655] and effort limit 80
+[2026-10-24 15:59:11.983] [info] [JointController.cpp:58] Loaded joint 'LH_HFE' with limits [-9.42477796076938, 9.42477796076938] and effort limit 80
+[2026-10-24 15:59:11.983] [info] [JointController.cpp:58] Loaded joint 'LH_KFE' with limits [-9.42477796076938, 9.42477796076938] and effort limit 80
+[2026-10-24 15:59:11.983] [info] [JointController.cpp:58] Loaded joint 'RF_HAA' with limits [-0.6108655, 0.7853985] and effort limit 80
+[2026-10-24 15:59:11.983] [info] [JointController.cpp:58] Loaded joint 'RF_HFE' with limits [-9.42477796076938, 9.42477796076938] and effort limit 80
+[2026-10-24 15:59:11.983] [info] [JointController.cpp:58] Loaded joint 'RF_KFE' with limits [-9.42477796076938, 9.42477796076938] and effort limit 80
+[2026-10-24 15:59:11.983] [info] [JointController.cpp:58] Loaded joint 'RH_HAA' with limits [-0.6108655, 0.7853985] and effort limit 80
+[2026-10-24 15:59:11.983] [info] [JointController.cpp:58] Loaded joint 'RH_HFE' with limits [-9.42477796076938, 9.42477796076938] and effort limit 80
+[2026-10-24 15:59:11.983] [info] [JointController.cpp:58] Loaded joint 'RH_KFE' with limits [-9.42477796076938, 9.42477796076938] and effort limit 80
+[2026-10-24 15:59:11.984] [info] [JointController.cpp:64] Subscribing to anymal_d/command for joint commands
+[15:59:12.150] [info] [central_controller] All controllers initialized
+[15:59:12.150] [info] [central_controller] Active controller: StaticController | Rate: 50 Hz
+[15:59:12.150] [info] [central_controller] Starting! Current time: 0.439
+[15:59:12.150] [info] [tbai_static] Disabling state estimator
+[15:59:12.150] [info] [tbai_static] Interpolating from:    0.0275897    -0.134109   -0.0101717 -0.000173834    -0.404968      0.49191   -0.0231626    -0.133868   -0.0099598   0.00393542    -0.402524     0.488131
+[15:59:12.150] [info] [tbai_static] Interpolating to:    0  1.5 -2.6    0 -1.5  2.6    0  1.5 -2.6    0 -1.5  2.6
+[15:59:12.150] [info] [tbai_static] Interpolating time: 1
+[15:59:12.170] [info] [central_controller] Loop duration: 137 us, Sleep duration: 20129 us, Sleep time percentage: 99.32399092075397 % Current controller running: StaticController
+[15:59:20.044] [info] [tbai_static] Disabling state estimator
+[15:59:20.044] [info] [tbai_static] Interpolating from:  0.0599396     1.3869   -2.45826  0.0593813   -1.38491    2.46707 -0.0584175     1.3869   -2.45843 -0.0574159   -1.38501    2.46749
+[15:59:20.044] [info] [tbai_static] Interpolating to:    0  0.4 -0.8    0 -0.4  0.8    0  0.4 -0.8    0 -0.4  0.8
+[15:59:20.044] [info] [tbai_static] Interpolating time: 1
+[15:59:20.044] [info] [central_controller] Controller changed to STAND, loop rate: 50 Hz
+[15:59:21.031] [info] [tbai_static] Enabling state estimator
+[15:59:22.177] [info] [central_controller] Loop duration: 14 us, Sleep duration: 21361 us, Sleep time percentage: 99.93450292397661 % Current controller running: StaticController
+[0m[ INFO] [1792871949.055964743]: MPC node is setting up ...[0m
+[0m[ INFO] [1792871949.062102034]: Publishing SLQ-MPC messages on a separate thread.[0m
+[0m[ INFO] [1792871949.062122891]: MPC node is ready.[0m
+[0m[ INFO] [1792871949.062130971]: Start spinning now ...[0m
+
+#####################################################
+#####################################################
+#################  MPC is reset.  ###################
+#####################################################
+#####################################################
+[0m[ INFO] [1792871965.513345960, 6.486000000]: MPC node has been reset.[0m
+[15:59:25.513] [info] [mpc_controller] Waiting for initial policy...
+[15:59:25.613] [info] [mpc_controller] Waiting for initial policy...
+[15:59:25.714] [info] [mpc_controller] Initial policy received.
+[15:59:25.714] [info] [central_controller] Controller changed to WBC, loop rate: 400 Hz
+[15:59:25.714] [info] [mpc_controller] Publishing reference
+Gait command: trot
+[GaitReceiver]: Setting new gait after time 12.594
+[GaitReceiver]: Duration:       0.5
+Event phases:  {0.5}
+Mode sequence: {9, 6}
+
+[15:59:30.743] [info] [mpc_controller] Publishing reference
+[15:59:32.177] [info] [central_controller] Loop duration: 275 us, Sleep duration: 1481 us, Sleep time percentage: 84.33940774487472 % Current controller running: MpcController
+[15:59:35.770] [info] [mpc_controller] Publishing reference
+[15:59:40.792] [info] [mpc_controller] Publishing reference
+[15:59:42.179] [info] [central_controller] Loop duration: 239 us, Sleep duration: 2666 us, Sleep time percentage: 91.77280550774526 % Current controller running: MpcController
+[15:59:45.837] [info] [mpc_controller] Publishing reference
+[15:59:50.899] [info] [mpc_controller] Publishing reference
+[15:59:52.179] [info] [central_controller] Loop duration: 232 us, Sleep duration: 1787 us, Sleep time percentage: 88.50916295195641 % Current controller running: MpcController
+[15:59:55.928] [info] [mpc_controller] Publishing reference
+[15:59:57.962] [info] [central_controller] Central controller loop stopped.
+terminate called without an active exception
+terminate called without an active exception
+terminate called after throwing an instance of 'boost::filesystem::filesystem_error'
+  what():  boost::filesystem::create_directories: Permission denied [system:13]: "/tmp/ocs2/sqp_log/", "/tmp/ocs2/sqp_log"
+[0m[ INFO] [1792871948.937427259]: rviz version 1.14.20[0m
+[0m[ INFO] [1792871948.937442959]: compiled against Qt version 5.15.8[0m
+[0m[ INFO] [1792871948.937447507]: compiled against OGRE version 1.10.12 (Xalafu)[0m
+[0m[ INFO] [1792871948.969064330]: Forcing OpenGl version 0.[0m
+[0m[ INFO] [1792871949.329961147]: Stereo is NOT SUPPORTED[0m
+[0m[ INFO] [1792871949.329989002]: OpenGL device: Mesa Intel(R) UHD Graphics 770 (ADL-S GT1)[0m
+[0m[ INFO] [1792871949.329994669]: OpenGl version: 4.6 (GLSL 4.6) limited to GLSL 1.4 on Mesa system.[0m
+[31m[gazebo-1] escalating to SIGTERM[0m
+[31m[anymal_d/controller_spawner-3] escalating to SIGTERM[0m
+[WARN] [1792872007.866264, 38.569000]: Controller Spawner error while taking down controllers: transport error completing service call: unable to receive data from sender, check sender's logs for details
+[INFO] [1792871949.226614, 0.000000]: Controller Spawner: Waiting for service controller_manager/load_controller
+[INFO] [1792871951.944651, 0.234000]: Controller Spawner: Waiting for service controller_manager/switch_controller
+[INFO] [1792871951.950140, 0.240000]: Controller Spawner: Waiting for service controller_manager/unload_controller
+[INFO] [1792871951.958880, 0.248000]: Loading controller: joint_controller
+[INFO] [1792871951.992891, 0.282000]: Controller Spawner: Loaded controllers: joint_controller
+[INFO] [1792871952.004041, 0.293000]: Started controllers: joint_controller
+[INFO] [1792871997.818165, 38.567000]: Shutting down spawner. Stopping and unloading controllers...
+[INFO] [1792871997.821203, 38.569000]: Stopping all controllers...
+... logging to /home/aiyer334/.ros/log/04ee7b66-cfe5-11f1-a05a-c45ab1cf0b18/roslaunch-MEL05336D.me.gatech.edu-2562244.log
+Checking log directory for disk usage. This may take a while.
+Press Ctrl-C to interrupt
+]2;/home/aiyer334/TBAI/src/tbai_ros/tbai_ros_mpc/launch/anymal_d_perceptive.launch
+[1mstarted roslaunch server http://MEL05336D.me.gatech.edu:33843/[0m
+
+SUMMARY
+========
+
+PARAMETERS
+ * /anymal_d/joint_controller/joints: ['LF_HAA', 'LF_HF...
+ * /anymal_d/joint_controller/type: tbai_ros_gazebo/J...
+ * /base_name: base
+ * /change_controller_topic: anymal_d/change_c...
+ * /command_topic: anymal_d/command
+ * /contact_topics: ['/lf_foot_contac...
+ * /controller_config_file: /home/aiyer334/TB...
+ * /estimator_type: ground_truth
+ * /frame_declaration_file: /home/aiyer334/TB...
+ * /gait_command_file: /home/aiyer334/TB...
+ * /gazebo/contact_sensor/enabled: True
+ * /gazebo/contact_sensor/update_rate: 1000
+ * /gazebo/enable_ros_network: True
+ * /gazebo/ground_truth_state_publisher/enabled: True
+ * /gazebo/ground_truth_state_publisher/update_rate: 400
+ * /gazebo/muse_state_publisher/enabled: False
+ * /gazebo/muse_state_publisher/update_rate: 1000
+ * /joint_names: ['LF_HAA', 'LF_HF...
+ * /mpc_controller/reference_trajectory/blind: False
+ * /mpc_controller/reference_trajectory/observation_topic: /anymal_mpc_obser...
+ * /mpc_controller/reference_trajectory/reference_topic: /anymal_mpc_target
+ * /mpc_controller/reference_trajectory/terrain_topic: /convex_plane_dec...
+ * /mpc_controller/reference_trajectory/traj_dt: 0.1
+ * /mpc_controller/reference_trajectory/traj_knots: 10
+ * /mpc_controller/wbc_type: sqp
+ * /reference_generator/joystick/ramped_velocity: 5.0
+ * /reference_generator/joystick/topic: joy
+ * /reference_generator/joystick/x_index: 1
+ * /reference_generator/joystick/x_scale: 1.0
+ * /reference_generator/joystick/y_index: 0
+ * /reference_generator/joystick/y_scale: 0.5
+ * /reference_generator/joystick/yaw_index: 3
+ * /reference_generator/joystick/yaw_scale: 0.5
+ * /reference_generator/twist/topic: cmd_vel
+ * /reference_generator/type: twist
+ * /robot_description: <?xml version="1....
+ * /robot_name: anymal_d
+ * /rosdistro: noetic
+ * /rosversion: 1.16.0
+ * /sqp_settings_file: /home/aiyer334/TB...
+ * /state_topic: anymal_d/state
+ * /static_controller/interpolation_time: 1.0
+ * /static_controller/kd: 5
+ * /static_controller/kp: 400
+ * /static_controller/rate: 50
+ * /static_controller/sit_controller/joint_angles: [0.0, 1.5, -2.6, ...
+ * /static_controller/stand_controller/joint_angles: [0.0, 0.4, -0.8, ...
+ * /target_command_config_file: /home/aiyer334/TB...
+ * /task_settings_file: /home/aiyer334/TB...
+ * /tbai_config_path: /home/aiyer334/TB...
+ * /use_sim_time: True
+
+NODES
+  /
+    anymal_mpc_node (tbai_ros_mpc/anymal_mpc_node)
+    gazebo (gazebo_ros/gzserver)
+    go2_gait_node (tbai_ros_deploy_go2_mpc/go2_gait_node)
+    rviz (rviz/rviz)
+    simple_perceptive (tbai_ros_mpc/simple_perceptive)
+    spawn_urdf (gazebo_ros/spawn_model)
+  /anymal_d/
+    controller_spawner (controller_manager/spawner)
+
+[1mROS_MASTER_URI=http://localhost:11311[0m
+]2;/home/aiyer334/TBAI/src/tbai_ros/tbai_ros_mpc/launch/anymal_d_perceptive.launch http://localhost:11311
+[1mprocess[gazebo-1]: started with pid [2562409][0m
+[1mprocess[spawn_urdf-2]: started with pid [2562412][0m
+[1mprocess[anymal_d/controller_spawner-3]: started with pid [2562415][0m
+[1mprocess[simple_perceptive-4]: started with pid [2562416][0m
+[1mprocess[anymal_mpc_node-5]: started with pid [2562418][0m
+[1mprocess[go2_gait_node-6]: started with pid [2562420][0m
+[1mprocess[rviz-7]: started with pid [2562421][0m
+[1m[spawn_urdf-2] process has finished cleanly
+log file: /home/aiyer334/.ros/log/04ee7b66-cfe5-11f1-a05a-c45ab1cf0b18/spawn_urdf-2*.log[0m
+[rviz-7] killing on exit
+[go2_gait_node-6] killing on exit
+[anymal_mpc_node-5] killing on exit
+[simple_perceptive-4] killing on exit
+[anymal_d/controller_spawner-3] killing on exit
+[gazebo-1] killing on exit
+shutting down processing monitor...
+... shutting down processing monitor complete
+[1mdone[0m

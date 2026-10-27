@@ -1,0 +1,2 @@
+[31mWARNING: disk usage in log directory [/home/aiyer334/.ros/log] is over 1GB.
+It's recommended that you use the 'rosclean' command.[0m

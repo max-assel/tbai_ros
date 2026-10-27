@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+<xacro:macro name="rplidar" params="name parent_link mesh_directory:='package://tbai_ros_description/back_platform/meshes' *origin">
+    <xacro:property name="mass"                 value="0.17"/>
+    <xacro:property name="length_x"             value="0.071" />
+    <xacro:property name="length_y"             value="0.100" />
+    <xacro:property name="length_z"             value="0.060" />
+    <xacro:property name="collision_x_offset"   value="0.000" />
+    <xacro:property name="collision_y_offset"   value="0.013" />
+    <xacro:property name="collision_z_offset"   value="-0.019" />
+
+    <joint name="${name}_joint" type="fixed">
+        <parent link="${parent_link}"/>
+        <child link="${name}"/>
+        <xacro:insert_block name="origin"/>
+    </joint> 
+
+    <link name="${name}">
+    <visual>
+        <geometry>
+        <mesh filename="${mesh_directory}/rplidar.dae" scale="0.5 0.5 0.5" />
+        </geometry>
+    </visual>
+    <collision>
+        <origin xyz="${collision_x_offset} ${collision_y_offset} ${collision_z_offset}"/>
+        <geometry>
+        <box size="${length_x} ${length_y} ${length_z}"/>
+        </geometry>
+    </collision>
+    <inertial>
+        <mass value="0.17"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <inertia
+        ixx="${0.17/12 * (length_y*length_y + length_z*length_z)}"
+        iyy="${0.17/12 * (length_x*length_x + length_z*length_z)}"
+        izz="${0.17/12 * (length_x*length_x + length_y*length_y)}"
+        ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+    </link>
+
+</xacro:macro>
+</robot>

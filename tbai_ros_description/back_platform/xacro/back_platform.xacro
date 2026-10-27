@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<robot name="back_platform" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ===== Arguments ===== -->
+  <xacro:arg name="mesh_directory" default="package://tbai_ros_description/back_platform/meshes"/>
+
+  <xacro:arg name="base_frame"   default="rail_plate"/>
+  <xacro:arg name="camera_frame" default="camera_link"/>
+  <xacro:arg name="lidar_frame"  default="lidar_link"/>
+
+  <xacro:arg name="use_camera"   default="true"/>
+  <xacro:arg name="use_lidar"    default="false"/>
+
+  <xacro:arg name="camera_xyz"   default="-0.022 0 0.34261"/>
+  <xacro:arg name="camera_rpy"   default="0 0 0"/>
+  <xacro:arg name="lidar_xyz"    default="-0.022 0 0.34261"/>
+  <xacro:arg name="lidar_rpy"    default="0 0 0"/>
+
+  <!-- Colors (visual only) -->
+  <xacro:property name="body_rgba"  value="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
+  <xacro:property name="lidar_rgba" value="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+
+
+  <!-- ===== Base link ===== -->
+  <link name="rail_plate">
+    <inertial>
+      <origin xyz="0.00635250945240217 1.13458578397634e-06 0.0871174348643237" rpy="0 0 0"/>
+      <mass value="3.25808083608894"/>
+      <inertia
+        ixx="0.00692550734039648" ixy="-1.33166622387711e-12" ixz="-1.17448587841972e-05"
+        iyy="0.00748683155664127" iyz="-1.07167205682874e-08"
+        izz="0.0128115370066176"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="$(arg mesh_directory)/base_link.STL"/>
+      </geometry>
+      <material name="body_mat">
+        <color rgba="${body_rgba}"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="$(arg mesh_directory)/base_link.STL"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- ===== Camera (optional) ===== -->
+  <xacro:if value="$(arg use_camera)">
+    <link name="$(arg camera_frame)">
+      <inertial>
+        <origin xyz="-1.1195613161194e-07 -1.26868574311553e-05 -0.041268053741871" rpy="0 0 0"/>
+        <mass value="0.1358671710581"/>
+        <inertia
+          ixx="0.000186506702465536" ixy="4.80971346739502e-10" ixz="-2.86507431910387e-10"
+          iyy="0.00016828774014945" iyz="-1.11354563750735e-08"
+          izz="2.95132685389021e-05"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="$(arg mesh_directory)/camera_link.STL"/>
+        </geometry>
+        <material name="body_mat">
+          <color rgba="${body_rgba}"/>
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="$(arg mesh_directory)/camera_link.STL"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="platform2camera" type="fixed">
+      <origin xyz="$(arg camera_xyz)" rpy="$(arg camera_rpy)"/>
+      <parent link="$(arg base_frame)"/>
+      <child  link="$(arg camera_frame)"/>
+      <axis xyz="0 0 0"/>
+    </joint>
+  </xacro:if>
+
+  <!-- ===== LiDAR (optional) ===== -->
+  <xacro:if value="$(arg use_lidar)">
+    <link name="$(arg lidar_frame)">
+      <inertial>
+        <origin xyz="-0.0925413033857373 0.000199571080035991 -0.170576837922296" rpy="0 0 0"/>
+        <mass value="0.141887448474832"/>
+        <inertia
+          ixx="4.78524766184578e-05" ixy="1.0962370569689e-07" ixz="-7.62461165868898e-06"
+          iyy="4.17978820621662e-05" iyz="-2.85023367727814e-07"
+          izz="6.60245326449438e-05"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="$(arg mesh_directory)/lidar_link.STL"/>
+        </geometry>
+        <material name="lidar_mat">
+          <color rgba="${lidar_rgba}"/>
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="$(arg mesh_directory)/lidar_link.STL"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="platform2lidar" type="fixed">
+      <origin xyz="$(arg lidar_xyz)" rpy="$(arg lidar_rpy)"/>
+      <parent link="$(arg base_frame)"/>
+      <child  link="$(arg lidar_frame)"/>
+      <axis xyz="0 0 0"/>
+    </joint>
+  </xacro:if>
+
+</robot>

@@ -10,6 +10,7 @@ source $(catkin locate)/devel/setup.bash
 
 ENV_NAME=$1
 BASELINE=$2
+ROBOT_NAME=$(rosparam get /robot_name)
 
 ENV_X=0
 ENV_Y=0
@@ -161,7 +162,12 @@ rosservice call /gazebo/set_model_state "
                 }
             }"
 
-## Reset model configuration
+## Reset model configuration, in the joint_names order below.
+if [ "$ROBOT_NAME" == "go2" ]; then
+    RESET_JOINT_POSITIONS='[-2.55, -2.55, -2.55, -2.55, 0.0, 0.0, 0.0, 0.0, 1.36, 1.36, 1.36, 1.36]'
+else
+    RESET_JOINT_POSITIONS='[-2.60, 2.60, -2.60, 2.60, 0.0, 0.0, 0.0, 0.0, 1.50, -1.50, 1.50, -1.50]'
+fi
 rosservice call /gazebo/set_model_configuration "
             model_name: 'robot'
             urdf_param_name: 'robot_description'
@@ -178,19 +184,7 @@ rosservice call /gazebo/set_model_configuration "
                 - 'LH_HFE'
                 - 'RF_HFE'
                 - 'RH_HFE'
-            joint_positions:
-                - -2.60
-                - 2.60
-                - -2.60
-                - 2.60
-                - 0.0
-                - 0.0
-                - 0.0
-                - 0.0
-                - 1.50
-                - -1.50
-                - 1.50
-                - -1.50"
+            joint_positions: ${RESET_JOINT_POSITIONS}"
 
 ## Set in ControlMode 1
 # rosservice call /ControlMode 1

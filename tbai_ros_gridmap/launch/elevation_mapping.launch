@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <launch>
+  <arg name="plane_parameters_file" default="$(find tbai_ros_gridmap)/config/convex_plane_decomposition_parameters.yaml"/>
   <!-- Launch convex decomposition node -->
   <include file="$(find convex_plane_decomposition_ros)/launch/convex_plane_decomposition.launch">
-    <arg name="parameter_file"      default="$(find tbai_ros_gridmap)/config/convex_plane_decomposition_parameters.yaml"/>
+    <arg name="parameter_file"      value="$(arg plane_parameters_file)"/>
     <arg name="node_parameter_file" default="$(find tbai_ros_gridmap)/config/convex_plane_decomposition_node.yaml"/>
   </include>
 

@@ -8,6 +8,7 @@ multiple_shooting
   g_min                                 1e-6
   projectStateInputEqualityConstraints  true
   printSolverStatistics                 false
+  logFilePath                           /home/aiyer334/TBAI/.ocs2_cache/sqp_log/
   printSolverStatus                     false
   printLinesearch                       false
   useFeedbackPolicy                     false

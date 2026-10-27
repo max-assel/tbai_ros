@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- Optional physical payload for the existing Go2. Mount pose is relative
+       to base; defaults are the pose supplied with the imported backpack. -->
+  <xacro:arg name="backpack" default="false"/>
+  <xacro:arg name="backpack_xyz" default="-0.04 0 0.057"/>
+  <xacro:arg name="backpack_rpy" default="0 0 1.5707"/>
+  <xacro:arg name="backpack_lidar" default="true"/>
+  <xacro:arg name="backpack_rplidar" default="true"/>
+  <xacro:arg name="backpack_oak" default="true"/>
+  <xacro:arg name="backpack_camera" default="false"/>
+  <xacro:include filename="../back_platform/xacro/back_platform_unit.xacro"/>
+
+  <xacro:if value="$(arg backpack)">
+    <xacro:back_platform parent="base"
+        mount_xyz="$(arg backpack_xyz)" mount_rpy="$(arg backpack_rpy)"
+        use_lidar="$(arg backpack_lidar)" use_rplidar="$(arg backpack_rplidar)"
+        use_oak="$(arg backpack_oak)" use_ricoh="$(arg backpack_camera)"/>
+  </xacro:if>
+</robot>

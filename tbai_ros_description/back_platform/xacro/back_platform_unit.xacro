@@ -1,0 +1,240 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="../urdf/rplidar.urdf.xacro"/>
+
+  <!-- Physical backpack assembly. Sensor meshes are inertial/collision assets;
+       they do not install drivers or simulation plugins. -->
+  <xacro:macro name="back_platform" params="
+      parent:='base'
+      mount_xyz:='-0.04 0 0.057'
+      mount_rpy:='0 0 1.5707'
+      mesh_directory:='package://tbai_ros_description/back_platform/meshes'
+      camera_frame:='bp_camera_link'
+      lidar_frame:='bp_lidar_link'
+      rplidar_frame:='rplidar_link'
+      oak_frame:='bp_oak_link'
+      use_ricoh:='false'
+      use_lidar:='false'
+      use_rplidar:='false'
+      use_oak:='true'
+      camera_xyz:='-0.022 0 0.34261'
+      camera_rpy:='0 0 0'
+      lidar_xyz:='-0.12307 0 0.1955'
+      lidar_rpy:='0.0 -0.34907 0.0'
+      oak_xyz = '0.3750 0.0 0.0100'
+      oak_rpy = '0.0 0.0 0.0'
+      rplidar_xyz:='-0.022 0 0.234'
+      rplidar_rpy:='0 0 -1.57079633'
+    ">
+
+    <!-- Colors -->
+    <xacro:property name="body_rgba"  value="0.792156862745098 0.819607843137255 0.933333333333333 1"/>
+    <xacro:property name="lidar_rgba" value="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+    <xacro:property name="oak_rgba"   value="0.752941176470588 0.752941176470588 0.752941176470588 1"/>
+
+    <joint name="backpack_mount_joint" type="fixed">
+      <parent link="${parent}"/>
+      <child link="jetson_link"/>
+      <origin xyz="${mount_xyz}" rpy="${mount_rpy}"/>
+    </joint>
+
+    <link
+      name="jetson_link">
+      <inertial>
+        <origin
+          xyz="0.000574344904865853 -0.00279031515922523 0.0228824162327047"
+          rpy="0 0 0" />
+        <mass
+          value="0.0292436308636726" />
+        <inertia
+          ixx="6.94011039571282E-05"
+          ixy="-9.43753604654009E-12"
+          ixz="1.60692729023905E-12"
+          iyy="8.39187562983013E-07"
+          iyz="-1.53132419820761E-10"
+          izz="6.96890419648369E-05" />
+      </inertial>
+      <visual>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="${mesh_directory}/jetson_link.STL" />
+        </geometry>
+        <material
+          name="">
+          <color
+            rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="${mesh_directory}/jetson_link.STL" />
+        </geometry>
+      </collision>
+  </link>
+
+    <joint
+      name="jetson2backplatform"
+      type="fixed">
+      <origin
+        xyz="0.00057437 0 0.0285"
+        rpy="0 0 -1.5707" />
+      <parent
+        link="jetson_link" />
+      <child
+        link="rail_plate" />
+      <axis
+        xyz="0 0 0" />
+    </joint>
+
+    <!-- Base link for the back platform -->
+    <link name="rail_plate">
+      <inertial>
+        <origin xyz="0.00635250945240217 0.00000113458578398 0.0871174348643237" rpy="0 0 0"/>
+        <mass value="3.25808083608894"/>
+        <inertia
+          ixx="0.00692550734039648" ixy="-1.33166622387711e-12" ixz="-1.17448587841972e-05"
+          iyy="0.00748683155664127" iyz="-1.07167205682874e-08"
+          izz="0.0128115370066176"/>
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="${mesh_directory}/base_link.STL"/>
+        </geometry>
+        <material name="body_mat">
+          <color rgba="${body_rgba}"/>
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="${mesh_directory}/base_link.STL"/>
+        </geometry>
+      </collision>
+    </link>
+
+    <!-- Camera (optional) -->
+    <xacro:if value="${use_ricoh}">
+      <link name="${camera_frame}">
+        <inertial>
+          <origin xyz="-1.1195613161194e-07 -1.26868574311553e-05 -0.041268053741871" rpy="0 0 0"/>
+          <mass value="0.1358671710581"/>
+          <inertia
+            ixx="0.000186506702465536" ixy="4.80971346739502e-10" ixz="-2.86507431910387e-10"
+            iyy="0.00016828774014945" iyz="-1.11354563750735e-08"
+            izz="2.95132685389021e-05"/>
+        </inertial>
+        <visual>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <mesh filename="${mesh_directory}/camera_link.STL"/>
+          </geometry>
+          <material name="body_mat">
+            <color rgba="${body_rgba}"/>
+          </material>
+        </visual>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <mesh filename="${mesh_directory}/camera_link.STL"/>
+          </geometry>
+        </collision>
+      </link>
+
+      <joint name="rail_plate_platform2camera" type="fixed">
+        <origin xyz="${camera_xyz}" rpy="${camera_rpy}"/>
+        <parent link="rail_plate"/>
+        <child  link="${camera_frame}"/>
+        <axis xyz="0 0 0"/>
+      </joint>
+    </xacro:if>
+
+    <!-- rplidar (optional) -->
+    <xacro:if value="${use_rplidar}">
+      <xacro:rplidar name="${rplidar_frame}" parent_link="rail_plate" mesh_directory="${mesh_directory}">
+        <origin xyz="${rplidar_xyz}" rpy="${rplidar_rpy}"/>
+      </xacro:rplidar>
+    </xacro:if>
+
+    <!-- LiDAR (optional) -->
+    <xacro:if value="${use_lidar}">
+      <link name="${lidar_frame}">
+        <inertial>
+          <origin xyz="-0.0925413033857373 0.000199571080035991 -0.170576837922296" rpy="0 0 0"/>
+          <mass value="0.141887448474832"/>
+          <inertia
+            ixx="4.78524766184578e-05" ixy="1.0962370569689e-07" ixz="-7.62461165868898e-06"
+            iyy="4.17978820621662e-05" iyz="-2.85023367727814e-07"
+            izz="6.60245326449438e-05"/>
+        </inertial>
+        <visual>
+          <origin xyz="0 0 0" rpy="1.5708 0 1.5708"/>
+          <geometry>
+            <mesh filename="${mesh_directory}/lidar_link.STL" scale="0.001 0.001 0.001"/>
+          </geometry>
+          <material name="lidar_mat">
+            <color rgba="${lidar_rgba}"/>
+          </material>
+        </visual>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <mesh filename="${mesh_directory}/lidar_link.STL" scale="0.001 0.001 0.001"/>
+          </geometry>
+        </collision>
+      </link>
+
+      <joint name="rail_plate_platform2lidar" type="fixed">
+        <origin xyz="${lidar_xyz}" rpy="${lidar_rpy}"/>
+        <parent link="rail_plate"/>
+        <child  link="${lidar_frame}"/>
+        <axis xyz="0 0 0"/>
+      </joint>
+    </xacro:if>
+
+    <xacro:if value="${use_oak}">
+      <link name="${oak_frame}">
+        <inertial>
+          <origin xyz="-0.0925413033857373 0.000199571080035991 -0.170576837922296" rpy="0 0 0"/>
+          <mass value="0.141887448474832"/>
+          <inertia
+            ixx="4.78524766184578e-05" ixy="1.0962370569689e-07" ixz="-7.62461165868898e-06"
+            iyy="4.17978820621662e-05" iyz="-2.85023367727814e-07"
+            izz="6.60245326449438e-05"/>
+        </inertial>
+        <visual>
+          <origin xyz="0 0 0" rpy="0.0 0.0 0.0"/>
+          <geometry>
+            <mesh filename="${mesh_directory}/oak_link.STL" scale="0.001 0.001 0.001" />
+          </geometry>
+          <material name="oak_mat">
+            <color rgba="${oak_rgba}"/>
+          </material>
+        </visual>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+            <mesh filename="${mesh_directory}/oak_link.STL" scale="0.001 0.001 0.001"/>
+          </geometry>
+        </collision>
+      </link>
+
+      <joint name="rail_plate_platform2oak" type="fixed">
+        <origin xyz="${oak_xyz}" rpy="${oak_rpy}"/>
+        <parent link="rail_plate"/>
+        <child  link="${oak_frame}"/>
+        <axis xyz="0 0 0"/>
+      </joint>
+    </xacro:if>
+
+
+
+  </xacro:macro>
+</robot>

@@ -48,15 +48,21 @@ class TrialLifecycle:
                 prefix=f"trial_{self.repetition:03d}_", dir=trial_root
             ))
     def command_plan(self):
+        robot = self.config.get("robot", "anymal_d")
+        if robot not in ("anymal_d", "go2"):
+            raise ValueError(f"Unsupported benchmark robot: {robot}")
         cleanup = self.config["cleanup"]
         roslaunch = ["roslaunch", "--sigint-timeout", str(cleanup["process_sigint_timeout_wall_sec"]),
                      "--sigterm-timeout", str(cleanup["process_sigterm_timeout_wall_sec"])]
+        mapping_launch = ["tbai_ros_gridmap", "elevation_mapping.launch"]
+        if robot == "go2" and self.controller == "MPC":
+            mapping_launch = ["tbai_ros_mpc", "go2_mapping.launch"]
         return {
-        "launch": [*roslaunch, CONTROLLERS[self.controller], "anymal_d_perceptive.launch",
+        "launch": [*roslaunch, CONTROLLERS[self.controller], f"{robot}_perceptive.launch",
                     f"world:={self.world}", f"gui:={str(self.config['gazebo_gui']).lower()}",
                     f"rviz:={str(self.config.get('rviz', True)).lower()}"],
         "reset": ["bash", "-e", self.config["scripts"]["reset"], self.world, self.controller],
-        "mapping": [*roslaunch, "tbai_ros_gridmap", "elevation_mapping.launch"],
+        "mapping": [*roslaunch, *mapping_launch],
         "record": ["rosbag", "record", "-O",
                     str(self.attempt_dir / "recording.bag"),
                     *self.config.get("record_topics", [])],

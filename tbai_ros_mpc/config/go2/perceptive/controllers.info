@@ -21,8 +21,8 @@ sqpWbc
   eulerKd                 0.1
 
   ; Joint swing leg kp and kd
-  jointSwingKp            50.0
-  jointSwingKd            5.0
+  jointSwingKp            25.0
+  jointSwingKd            2.5
 
   ; Joint stance leg kp and kd
   jointStanceKp            50.0

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+  <!-- Use the tested Go2 plane profile with the shared elevation pipeline. -->
+  <include file="$(find tbai_ros_gridmap)/launch/elevation_mapping.launch">
+    <arg name="plane_parameters_file" value="$(find tbai_ros_mpc)/config/go2/perceptive/convex_plane_decomposition_parameters.yaml"/>
+  </include>
+</launch>

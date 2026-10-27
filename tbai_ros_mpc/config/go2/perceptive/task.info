@@ -2,7 +2,8 @@ model_settings
 {
   algorithm                     SQP
   recompileLibraries            false
-  robotName                     go2
+  robotName                     go2_backpack
+  autodiffLibraryFolder         /home/aiyer334/TBAI/.ocs2_cache/go2_backpack
 
   analyticalInverseKinematics   true
 
@@ -26,34 +27,34 @@ model_settings
 
 joint_lower_limits
   {
-     (0,0)  -10.70       ; LF_HAA
-     (1,0)  -1e30       ; LF_HFE
-     (2,0)  -12.70       ; LF_KFE
-     (3,0)  -1e30       ; RF_HAA
-     (4,0)  -1e30       ; RF_HFE
-     (5,0)  -12.70       ; RF_KFE
-     (6,0)  -10.70       ; LH_HAA
-     (7,0)  -1e30       ; LH_HFE
-     (8,0)   -10.00       ; LH_KFE
-     (9,0)  -1e30       ; RH_HAA
-     (10,0) -1e30       ; RH_HFE
-     (11,0)  -10.00       ; RH_KFE
+     (0,0)  -1.0472      ; LF_HAA
+     (1,0)  -1.5708      ; LF_HFE
+     (2,0)  -2.7227      ; LF_KFE
+     (3,0)  -1.0472      ; RF_HAA
+     (4,0)  -1.5708      ; RF_HFE
+     (5,0)  -2.7227      ; RF_KFE
+     (6,0)  -1.0472      ; LH_HAA
+     (7,0)  -0.5236      ; LH_HFE
+     (8,0)  -2.7227      ; LH_KFE
+     (9,0)  -1.0472      ; RH_HAA
+     (10,0)  -0.5236      ; RH_HFE
+     (11,0)  -2.7227      ; RH_KFE
   }
 
   joint_upper_limits
   {
-     (0,0)   1e30       ; LF_HAA
-     (1,0)   1e30       ; LF_HFE
-     (2,0)  10.00       ; LF_KFE
-     (3,0)   10.70       ; RF_HAA
-     (4,0)   1e30       ; RF_HFE
-     (5,0)  10.00       ; RF_KFE
-     (6,0)   1e30       ; LH_HAA
-     (7,0)   1e30       ; LH_HFE
-     (8,0)   12.70       ; LH_KFE
-     (9,0)   10.70       ; RH_HAA
-     (10,0)  1e30       ; RH_HFE
-     (11,0)  12.70       ; RH_KFE
+     (0,0)  1.0472       ; LF_HAA
+     (1,0)  3.4907       ; LF_HFE
+     (2,0)  -0.83776     ; LF_KFE
+     (3,0)  1.0472       ; RF_HAA
+     (4,0)  3.4907       ; RF_HFE
+     (5,0)  -0.83776     ; RF_KFE
+     (6,0)  1.0472       ; LH_HAA
+     (7,0)  4.5379       ; LH_HFE
+     (8,0)  -0.83776     ; LH_KFE
+     (9,0)  1.0472       ; RH_HAA
+     (10,0)  4.5379       ; RH_HFE
+     (11,0)  -0.83776     ; RH_KFE
   }
 
   joint_velocity_limits
@@ -74,24 +75,24 @@ joint_lower_limits
 
   joint_torque_limits
   {
-     (0,0)   150.0       ; LF_HAA
-     (1,0)   150.0       ; LF_HFE
-     (2,0)   150.0       ; LF_KFE
-     (3,0)   150.0       ; RF_HAA
-     (4,0)   150.0       ; RF_HFE
-     (5,0)   150.0       ; RF_KFE
-     (6,0)   150.0       ; LH_HAA
-     (7,0)   150.0       ; LH_HFE
-     (8,0)   150.0       ; LH_KFE
-     (9,0)   150.0       ; RH_HAA
-     (10,0)  150.0       ; RH_HFE
-     (11,0)  150.0       ; RH_KFE
+     (0,0)  23.7         ; LF_HAA
+     (1,0)  23.7         ; LF_HFE
+     (2,0)  45.43        ; LF_KFE
+     (3,0)  23.7         ; RF_HAA
+     (4,0)  23.7         ; RF_HFE
+     (5,0)  45.43        ; RF_KFE
+     (6,0)  23.7         ; LH_HAA
+     (7,0)  23.7         ; LH_HFE
+     (8,0)  45.43        ; LH_KFE
+     (9,0)  23.7         ; RH_HAA
+     (10,0)  23.7         ; RH_HFE
+     (11,0)  45.43        ; RH_KFE
   }
 
   swing_trajectory_settings
   {
-    liftOffVelocity               0.2
-    touchDownVelocity            -0.4
+    liftOffVelocity               0.1
+    touchDownVelocity            -0.2
     swingHeight                   0.08
     touchdownAfterHorizon         0.2
     errorGain                     0.0

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="world" default="sparse_stones"/>
+  <arg name="gui" default="true"/>
+  <arg name="rviz" default="true"/>
+
+  <include file="$(find tbai_ros_mpc)/launch/anymal_d_perceptive.launch">
+    <arg name="world" value="$(arg world)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="rviz" value="$(arg rviz)"/>
+    <arg name="x" value="-3.0"/>
+    <arg name="y" value="1.4"/>
+    <arg name="z" value="0.5"/>
+    <arg name="description_file" value="$(find tbai_ros_description)/urdf/go2_gazebo_backpack.urdf.xacro"/>
+    <arg name="tbai_config_path" value="$(find tbai_ros_mpc)/config/go2/perceptive/default_config.yaml"/>
+    <arg name="sqp_settings_file" value="$(find tbai_ros_mpc)/config/go2/perceptive/sqp.info"/>
+    <arg name="frame_declaration_file" value="$(find tbai_ros_mpc)/config/go2/perceptive/frame_declarations.info"/>
+    <arg name="task_settings_file" value="$(find tbai_ros_mpc)/config/go2/perceptive/task.info"/>
+    <arg name="target_command_config_file" value="$(find tbai_ros_mpc)/config/go2/perceptive/targetCommand.info"/>
+    <arg name="controller_config_file" value="$(find tbai_ros_mpc)/config/go2/perceptive/controllers.info"/>
+  </include>
+</launch>

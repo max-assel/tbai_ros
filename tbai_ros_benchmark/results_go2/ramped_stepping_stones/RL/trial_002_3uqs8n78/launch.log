@@ -1,0 +1,218 @@
+[31mWARNING: disk usage in log directory [/home/aiyer334/.ros/log] is over 1GB.
+It's recommended that you use the 'rosclean' command.[0m
+xacro: in-order processing became default in ROS Melodic. You can drop the option.
+[15:38:39.830] [info] [central_controller] Setting changeControllerSubscriber callback function
+[15:38:39.830] [info] [central_controller] Init time: 0 | Fallback controller type: SIT
+[15:38:39.838] [info] [tbai_static] Controller state publishing is disabled
+[15:38:39.844] [info] [bob_controller] Loading URDF from string
+[15:38:39.847] [info] [bob_controller] Loading HF model: kubjonai/tbai-models/anymal_model_action12_anymal_d_perceptive.pt
+[WARN] [1792870719.884011, 0.000000]: wait_for_service(/anymal_d/controller_manager/load_controller): failed to contact, will keep trying
+[WARN] [1792870719.922132, 0.000000]: wait_for_service(/gazebo/spawn_urdf_model): failed to contact, will keep trying
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[32m✓ Downloaded[0m
+  path: /tmp/tbai_hf_cache_aiyer334/anymal_model_action12_anymal_d_perceptive.pt
+[15:38:40.359] [info] [bob_controller] Model downloaded to: /tmp/tbai_hf_cache_aiyer334/anymal_model_action12_anymal_d_perceptive.pt
+[15:38:40.388] [info] [bob_controller] Model loaded
+[15:38:40.419] [info] [bob_controller] Resetting history
+[15:38:40.419] [info] [bob_controller] History reset
+[15:38:40.419] [info] [bob_controller] Solving IK
+[15:38:40.419] [info] [bob_controller] Solved IK
+[15:38:40.420] [info] [bob_controller] Stand joint angles loaded
+[15:38:40.420] [info] [bob_controller] Action scale: 0.5
+[15:38:40.420] [info] [bob_controller] Lin vel scale: 2
+[0m[ INFO] [1792870720.424063560]: StateVisualizer initialized[0m
+[15:38:40.430] [info] [bob_controller] Controller state publishing is disabled
+[15:38:40.430] [info] [central_controller] Starting central controller loop
+[15:38:40.430] [info] [central_controller] Active controller found!
+[15:38:40.430] [info] [central_controller] Fallback controller: SIT
+[15:38:40.430] [info] [central_controller] Waiting for controllers to initialize
+[0m[ INFO] [1792870720.396546042]: Finished loading Gazebo ROS API Plugin.[0m
+[0m[ INFO] [1792870720.397429162]: waitForService: Service [/gazebo/set_physics_properties] has not been advertised, waiting...[0m
+[0m[ INFO] [1792870720.767874772]: waitForService: Service [/gazebo/set_physics_properties] is now available.[0m
+[0m[ INFO] [1792870720.797047343, 610.018000000]: Physics dynamic reconfigure ready.[0m
+[0m[ INFO] [1792870721.702090985, 610.122000000]: Camera Plugin: Using the 'robotNamespace' param: '/'[0m
+[0m[ INFO] [1792870721.706697443, 610.122000000]: Camera Plugin (ns = /)  <tf_prefix_>, set to ""[0m
+[2026-10-24 15:38:41.707] [info] [ContactSensor.cpp:37] Loading ContactSensor plugin. Publishing on topic /lf_foot_contact
+[2026-10-24 15:38:41.707] [info] [ContactSensor.cpp:43] Loaded ContactSensor plugin. Update rate: 1000 Hz
+[2026-10-24 15:38:42.133] [info] [ContactSensor.cpp:37] Loading ContactSensor plugin. Publishing on topic /lh_foot_contact
+[2026-10-24 15:38:42.134] [info] [ContactSensor.cpp:43] Loaded ContactSensor plugin. Update rate: 1000 Hz
+[2026-10-24 15:38:42.135] [info] [ContactSensor.cpp:37] Loading ContactSensor plugin. Publishing on topic /rf_foot_contact
+[2026-10-24 15:38:42.135] [info] [ContactSensor.cpp:43] Loaded ContactSensor plugin. Update rate: 1000 Hz
+[2026-10-24 15:38:42.136] [info] [ContactSensor.cpp:37] Loading ContactSensor plugin. Publishing on topic /rh_foot_contact
+[2026-10-24 15:38:42.137] [info] [ContactSensor.cpp:43] Loaded ContactSensor plugin. Update rate: 1000 Hz
+[0m[ INFO] [1792870722.146473862, 610.122000000]: Loading gazebo_ros_control plugin[0m
+[0m[ INFO] [1792870722.146508594, 610.122000000]: Starting gazebo_ros_control plugin in namespace: /anymal_d[0m
+[0m[ INFO] [1792870722.146934594, 610.122000000]: gazebo_ros_control plugin is waiting for model URDF in parameter [/robot_description] on the ROS param server.[0m
+[0m[ INFO] [1792870722.261792030, 610.122000000]: Loaded gazebo_ros_control.[0m
+[2026-10-24 15:38:42.263] [info] [StatePublisher.cpp:22] Loading StatePublisher plugin
+[2026-10-24 15:38:42.264] [info] [StatePublisher.cpp:42] Base link base found: true
+[2026-10-24 15:38:42.264] [info] [StatePublisher.cpp:49] Joint LF_HAA found: true
+[2026-10-24 15:38:42.264] [info] [StatePublisher.cpp:49] Joint LF_HFE found: true
+[2026-10-24 15:38:42.264] [info] [StatePublisher.cpp:49] Joint LF_KFE found: true
+[2026-10-24 15:38:42.265] [info] [StatePublisher.cpp:49] Joint LH_HAA found: true
+[2026-10-24 15:38:42.265] [info] [StatePublisher.cpp:49] Joint LH_HFE found: true
+[2026-10-24 15:38:42.265] [info] [StatePublisher.cpp:49] Joint LH_KFE found: true
+[2026-10-24 15:38:42.265] [info] [StatePublisher.cpp:49] Joint RF_HAA found: true
+[2026-10-24 15:38:42.265] [info] [StatePublisher.cpp:49] Joint RF_HFE found: true
+[2026-10-24 15:38:42.265] [info] [StatePublisher.cpp:49] Joint RF_KFE found: true
+[2026-10-24 15:38:42.265] [info] [StatePublisher.cpp:49] Joint RH_HAA found: true
+[2026-10-24 15:38:42.265] [info] [StatePublisher.cpp:49] Joint RH_HFE found: true
+[2026-10-24 15:38:42.265] [info] [StatePublisher.cpp:49] Joint RH_KFE found: true
+[2026-10-24 15:38:42.268] [info] [StatePublisher.cpp:66] Loaded StatePublisher plugin
+[2026-10-24 15:38:42.269] [info] [RobotStatePublisher.cpp:22] Loading RobotStatePublisher plugin
+[2026-10-24 15:38:42.270] [info] [RobotStatePublisher.cpp:26] Muse state publisher disabled.
+[2026-10-24 15:38:42.317] [info] [JointController.cpp:21] Loading 12 joint controllers for joints ["LF_HAA", "LF_HFE", "LF_KFE", "LH_HAA", "LH_HFE", "LH_KFE", "RF_HAA", "RF_HFE", "RF_KFE", "RH_HAA", "RH_HFE", "RH_KFE"]
+[2026-10-24 15:38:42.319] [info] [JointController.cpp:58] Loaded joint 'LF_HAA' with limits [-0.7853985, 0.6108655] and effort limit 80
+[2026-10-24 15:38:42.319] [info] [JointController.cpp:58] Loaded joint 'LF_HFE' with limits [-9.42477796076938, 9.42477796076938] and effort limit 80
+[2026-10-24 15:38:42.319] [info] [JointController.cpp:58] Loaded joint 'LF_KFE' with limits [-9.42477796076938, 9.42477796076938] and effort limit 80
+[2026-10-24 15:38:42.319] [info] [JointController.cpp:58] Loaded joint 'LH_HAA' with limits [-0.7853985, 0.6108655] and effort limit 80
+[2026-10-24 15:38:42.319] [info] [JointController.cpp:58] Loaded joint 'LH_HFE' with limits [-9.42477796076938, 9.42477796076938] and effort limit 80
+[2026-10-24 15:38:42.319] [info] [JointController.cpp:58] Loaded joint 'LH_KFE' with limits [-9.42477796076938, 9.42477796076938] and effort limit 80
+[2026-10-24 15:38:42.319] [info] [JointController.cpp:58] Loaded joint 'RF_HAA' with limits [-0.6108655, 0.7853985] and effort limit 80
+[2026-10-24 15:38:42.319] [info] [JointController.cpp:58] Loaded joint 'RF_HFE' with limits [-9.42477796076938, 9.42477796076938] and effort limit 80
+[2026-10-24 15:38:42.319] [info] [JointController.cpp:58] Loaded joint 'RF_KFE' with limits [-9.42477796076938, 9.42477796076938] and effort limit 80
+[2026-10-24 15:38:42.319] [info] [JointController.cpp:58] Loaded joint 'RH_HAA' with limits [-0.6108655, 0.7853985] and effort limit 80
+[2026-10-24 15:38:42.319] [info] [JointController.cpp:58] Loaded joint 'RH_HFE' with limits [-9.42477796076938, 9.42477796076938] and effort limit 80
+[2026-10-24 15:38:42.319] [info] [JointController.cpp:58] Loaded joint 'RH_KFE' with limits [-9.42477796076938, 9.42477796076938] and effort limit 80
+[2026-10-24 15:38:42.320] [info] [JointController.cpp:64] Subscribing to anymal_d/command for joint commands
+[0m[ INFO] [1792870722.321170259, 610.173000000]: [StateSubscriber] Waiting for state message...[0m
+[15:38:42.473] [info] [central_controller] All controllers initialized
+[15:38:42.473] [info] [central_controller] Active controller: StaticController | Rate: 50 Hz
+[15:38:42.473] [info] [central_controller] Starting! Current time: 610.324
+[15:38:42.473] [info] [tbai_static] Disabling state estimator
+[15:38:42.473] [info] [tbai_static] Interpolating from: -0.0514002   0.447715    -1.5985 -0.0400244  -0.527241    1.64315  0.0315444   0.477093   -1.62412   0.014016  -0.532526    1.64952
+[15:38:42.473] [info] [tbai_static] Interpolating to:    0  1.5 -2.6    0 -1.5  2.6    0  1.5 -2.6    0 -1.5  2.6
+[15:38:42.473] [info] [tbai_static] Interpolating time: 1
+[15:38:42.493] [info] [central_controller] Loop duration: 185 us, Sleep duration: 20090 us, Sleep time percentage: 99.08754623921085 % Current controller running: StaticController
+[15:38:50.127] [info] [tbai_static] Disabling state estimator
+[15:38:50.127] [info] [tbai_static] Interpolating from:  0.0440888    1.29721   -2.29775  0.0499059    -1.2955    2.29957 -0.0525168    1.29559   -2.29513 -0.0597116   -1.29432    2.29606
+[15:38:50.127] [info] [tbai_static] Interpolating to:    0  0.4 -0.8    0 -0.4  0.8    0  0.4 -0.8    0 -0.4  0.8
+[15:38:50.127] [info] [tbai_static] Interpolating time: 1
+[15:38:50.127] [info] [central_controller] Controller changed to STAND, loop rate: 50 Hz
+[15:38:51.109] [info] [tbai_static] Enabling state estimator
+[15:38:52.515] [info] [central_controller] Loop duration: 17 us, Sleep duration: 22523 us, Sleep time percentage: 99.924578527063 % Current controller running: StaticController
+[15:38:55.538] [info] [central_controller] Controller changed to BOB, loop rate: 50 Hz
+[15:38:55.553] [info] [bob_controller] NN input preparations took 0.54 ms, NN forward pass took: 14.384 ms. Total controller step took: 14.975 ms
+[15:39:02.516] [info] [central_controller] Loop duration: 963 us, Sleep duration: 19031 us, Sleep time percentage: 95.18355506651996 % Current controller running: BobController
+[15:39:05.562] [info] [bob_controller] NN input preparations took 0.128 ms, NN forward pass took: 0.882 ms. Total controller step took: 1.096 ms
+[15:39:12.536] [info] [central_controller] Loop duration: 930 us, Sleep duration: 19079 us, Sleep time percentage: 95.35209155879853 % Current controller running: BobController
+[15:39:15.581] [info] [bob_controller] NN input preparations took 0.259 ms, NN forward pass took: 0.817 ms. Total controller step took: 1.115 ms
+[15:39:22.537] [info] [central_controller] Loop duration: 1001 us, Sleep duration: 19025 us, Sleep time percentage: 95.00149805253172 % Current controller running: BobController
+[15:39:25.587] [info] [bob_controller] NN input preparations took 0.113 ms, NN forward pass took: 0.469 ms. Total controller step took: 0.614 ms
+[15:39:27.675] [warning] [gridmap_interface] Position x: -4.998878419655062, y: 6.168097584192695 is outside the map. Returning 0.0
+[15:39:30.200] [warning] [gridmap_interface] Position x: -3.2695692130181846, y: 7.775783514511307 is outside the map. Returning 0.0
+[15:39:32.365] [warning] [gridmap_interface] Position x: -4.249858277969479, y: 9.311742713616004 is outside the map. Returning 0.0
+[15:39:32.545] [info] [central_controller] Loop duration: 1547 us, Sleep duration: 17935 us, Sleep time percentage: 92.05933682373472 % Current controller running: BobController
+[15:39:34.370] [warning] [gridmap_interface] Position x: -5.130766396965517, y: 6.48104519026395 is outside the map. Returning 0.0
+[15:39:34.954] [info] [central_controller] Central controller loop stopped.
+[0m[ INFO] [1792870719.558961157]: rviz version 1.14.20[0m
+[0m[ INFO] [1792870719.558979136]: compiled against Qt version 5.15.8[0m
+[0m[ INFO] [1792870719.558983662]: compiled against OGRE version 1.10.12 (Xalafu)[0m
+[0m[ INFO] [1792870719.582915292]: Forcing OpenGl version 0.[0m
+[0m[ INFO] [1792870720.000223741]: Stereo is NOT SUPPORTED[0m
+[0m[ INFO] [1792870720.000253393]: OpenGL device: Mesa Intel(R) UHD Graphics 770 (ADL-S GT1)[0m
+[0m[ INFO] [1792870720.000259702]: OpenGl version: 4.6 (GLSL 4.6) limited to GLSL 1.4 on Mesa system.[0m
+[31m[anymal_d/controller_spawner-3] escalating to SIGTERM[0m
+[31m[gazebo-1] escalating to SIGTERM[0m
+[WARN] [1792870784.892662, 655.484000]: Controller Spawner error while taking down controllers: transport error completing service call: unable to receive data from sender, check sender's logs for details
+[INFO] [1792870719.878408, 0.000000]: Controller Spawner: Waiting for service controller_manager/load_controller
+[INFO] [1792870722.299641, 610.151000]: wait_for_service(/anymal_d/controller_manager/load_controller): finally were able to contact [rosrpc://MEL05336D.me.gatech.edu:54783]
+[INFO] [1792870722.300525, 610.152000]: Controller Spawner: Waiting for service controller_manager/switch_controller
+[INFO] [1792870722.305095, 610.157000]: Controller Spawner: Waiting for service controller_manager/unload_controller
+[INFO] [1792870722.309871, 610.162000]: Loading controller: joint_controller
+[INFO] [1792870722.324829, 610.177000]: Controller Spawner: Loaded controllers: joint_controller
+[INFO] [1792870722.330834, 610.183000]: Started controllers: joint_controller
+[INFO] [1792870774.848943, 655.482000]: Shutting down spawner. Stopping and unloading controllers...
+[INFO] [1792870774.850130, 655.483000]: Stopping all controllers...
+... logging to /home/aiyer334/.ros/log/703ac8e0-cfd9-11f1-8b99-c45ab1cf0b18/roslaunch-MEL05336D.me.gatech.edu-2530625.log
+Checking log directory for disk usage. This may take a while.
+Press Ctrl-C to interrupt
+]2;/home/aiyer334/TBAI/src/tbai_ros/tbai_ros_bob/launch/anymal_d_perceptive.launch
+[1mstarted roslaunch server http://MEL05336D.me.gatech.edu:36765/[0m
+
+SUMMARY
+========
+
+PARAMETERS
+ * /anymal_d/joint_controller/joints: ['LF_HAA', 'LF_HF...
+ * /anymal_d/joint_controller/type: tbai_ros_gazebo/J...
+ * /base_name: base
+ * /bob_controller/action_scale: 0.5
+ * /bob_controller/blind: False
+ * /bob_controller/cpg/period: 0.6
+ * /bob_controller/cpg/swing_height: 0.2
+ * /bob_controller/cpg/time_offsets: [0.0, 0.3, 0.3, 0.0]
+ * /bob_controller/default_stance: [[0.00790786, 0.0...
+ * /bob_controller/hf_model: anymal_model_acti...
+ * /bob_controller/hf_repo: kubjonai/tbai-models
+ * /bob_controller/ik/a3: 0.285
+ * /bob_controller/ik/a4: 0.404999816790082
+ * /bob_controller/ik/d2: 0.20875
+ * /bob_controller/kd: 2.0
+ * /bob_controller/kp: 80.0
+ * /bob_controller/lin_vel_scale: 2.0
+ * /change_controller_topic: anymal_d/change_c...
+ * /command_topic: anymal_d/command
+ * /contact_topics: ['/lf_foot_contac...
+ * /estimator_type: ground_truth
+ * /gazebo/contact_sensor/enabled: True
+ * /gazebo/contact_sensor/update_rate: 1000
+ * /gazebo/enable_ros_network: True
+ * /gazebo/ground_truth_state_publisher/enabled: True
+ * /gazebo/ground_truth_state_publisher/update_rate: 400
+ * /gazebo/muse_state_publisher/enabled: False
+ * /gazebo/muse_state_publisher/update_rate: 1000
+ * /gridmap_layer: inpaint
+ * /gridmap_topic: elevation_mapping...
+ * /joint_names: ['LF_HAA', 'LF_HF...
+ * /marker_topic: markers
+ * /odom_frame: odom
+ * /reference_generator/joystick/ramped_velocity: 5.0
+ * /reference_generator/joystick/topic: joy
+ * /reference_generator/joystick/x_index: 1
+ * /reference_generator/joystick/x_scale: 1.0
+ * /reference_generator/joystick/y_index: 0
+ * /reference_generator/joystick/y_scale: 0.5
+ * /reference_generator/joystick/yaw_index: 3
+ * /reference_generator/joystick/yaw_scale: 0.5
+ * /reference_generator/twist/topic: cmd_vel
+ * /reference_generator/type: twist
+ * /robot_description: <?xml version="1....
+ * /robot_name: anymal_d
+ * /rosdistro: noetic
+ * /rosversion: 1.16.0
+ * /state_topic: anymal_d/state
+ * /static_controller/interpolation_time: 1.0
+ * /static_controller/kd: 5
+ * /static_controller/kp: 400
+ * /static_controller/rate: 50
+ * /static_controller/sit_controller/joint_angles: [0.0, 1.5, -2.6, ...
+ * /static_controller/stand_controller/joint_angles: [0.0, 0.4, -0.8, ...
+ * /tbai_config_path: /home/aiyer334/TB...
+ * /use_sim_time: True
+
+NODES
+  /
+    gazebo (gazebo_ros/gzserver)
+    rviz (rviz/rviz)
+    simple (tbai_ros_bob/simple_perceptive)
+    spawn_urdf (gazebo_ros/spawn_model)
+  /anymal_d/
+    controller_spawner (controller_manager/spawner)
+
+[1mROS_MASTER_URI=http://localhost:11311[0m
+]2;/home/aiyer334/TBAI/src/tbai_ros/tbai_ros_bob/launch/anymal_d_perceptive.launch http://localhost:11311
+[1mprocess[gazebo-1]: started with pid [2530687][0m
+[1mprocess[spawn_urdf-2]: started with pid [2530690][0m
+[1mprocess[anymal_d/controller_spawner-3]: started with pid [2530693][0m
+[1mprocess[simple-4]: started with pid [2530694][0m
+[1mprocess[rviz-5]: started with pid [2530695][0m
+[1m[spawn_urdf-2] process has finished cleanly
+log file: /home/aiyer334/.ros/log/703ac8e0-cfd9-11f1-8b99-c45ab1cf0b18/spawn_urdf-2*.log[0m
+[rviz-5] killing on exit
+[simple-4] killing on exit
+[anymal_d/controller_spawner-3] killing on exit
+[gazebo-1] killing on exit
+shutting down processing monitor...
+... shutting down processing monitor complete
+[1mdone[0m

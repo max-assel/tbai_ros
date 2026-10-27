@@ -59,9 +59,18 @@ MpcController::MpcController(const std::shared_ptr<tbai::StateSubscriber> &state
     TBAI_THROW_UNLESS(nh.getParam("/controller_config_file", controllerConfigFile),
                       "Failed to get parameter /controller_config_file");
 
-    quadrupedInterfacePtr_ =
-        anymal::getAnymalInterface(urdfString, switched_model::loadQuadrupedSettings(taskSettingsFile),
-                                   anymal::frameDeclarationFromFile(frameDeclarationFile));
+    const auto modelRobotName = tbai::fromGlobalConfig<std::string>("robot_name");
+    if (modelRobotName == "go2") {
+        quadrupedInterfacePtr_ =
+            anymal::getGo2Interface(urdfString, switched_model::loadQuadrupedSettings(taskSettingsFile),
+                                    anymal::frameDeclarationFromFile(frameDeclarationFile));
+    } else if (modelRobotName == "anymal_d") {
+        quadrupedInterfacePtr_ =
+            anymal::getAnymalInterface(urdfString, switched_model::loadQuadrupedSettings(taskSettingsFile),
+                                       anymal::frameDeclarationFromFile(frameDeclarationFile));
+    } else {
+        TBAI_THROW("Robot name not supported: {}", modelRobotName);
+    }
 
     visualizerPtr_ = std::make_unique<switched_model::QuadrupedVisualizer>(quadrupedInterfacePtr_->getKinematicModel(),
                                                                            quadrupedInterfacePtr_->getJointNames(),

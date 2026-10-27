@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="back_platform">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.00635250945240217 1.13458578397634E-06 0.0871174348643237"
+        rpy="0 0 0" />
+      <mass
+        value="3.25808083608894" />
+      <inertia
+        ixx="0.00692550734039648"
+        ixy="-1.33166622387711E-12"
+        ixz="-1.17448587841972E-05"
+        iyy="0.00748683155664127"
+        iyz="-1.07167205682874E-08"
+        izz="0.0128115370066176" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tbai_ros_description/back_platform/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tbai_ros_description/back_platform/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="camera_link">
+    <inertial>
+      <origin
+        xyz="-1.1195613161194E-07 -1.26868574311553E-05 -0.041268053741871"
+        rpy="0 0 0" />
+      <mass
+        value="0.1358671710581" />
+      <inertia
+        ixx="0.000186506702465536"
+        ixy="4.80971346739502E-10"
+        ixz="-2.86507431910387E-10"
+        iyy="0.00016828774014945"
+        iyz="-1.11354563750735E-08"
+        izz="2.95132685389021E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tbai_ros_description/back_platform/meshes/camera_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tbai_ros_description/back_platform/meshes/camera_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="platform2camera"
+    type="fixed">
+    <origin
+      xyz="-0.022 0 0.34261"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="camera_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="lidar_link">
+    <inertial>
+      <origin
+        xyz="-0.0925413033857373 0.000199571080035991 -0.170576837922296"
+        rpy="0 0 0" />
+      <mass
+        value="0.141887448474832" />
+      <inertia
+        ixx="4.78524766184578E-05"
+        ixy="1.0962370569689E-07"
+        ixz="-7.62461165868898E-06"
+        iyy="4.17978820621662E-05"
+        iyz="-2.85023367727814E-07"
+        izz="6.60245326449438E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tbai_ros_description/back_platform/meshes/lidar_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://tbai_ros_description/back_platform/meshes/lidar_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="platform2lidar"
+    type="fixed">
+    <origin
+      xyz="-0.022 0 0.34261"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="lidar_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+</robot>
