@@ -19,7 +19,7 @@
         filter_limit_min: 0.01
         filter_limit_max: 4.0  <!-- Limit the range of points to forward to 6 meters in viewing direction-->
         filter_limit_negative: False
-        leaf_size: 0.06  <!-- Limit the density to 5 cm-->
+        leaf_size: 0.03  <!-- Downsample points to 3 cm voxels -->
     </rosparam>
   </node>
 

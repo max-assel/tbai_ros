@@ -196,7 +196,7 @@ class DtcController final : public tbai::Controller {
     scalar_t yawLast_ = 0.0;
 
     // Use this to multiply the NN output before using it to generate the command message
-    const scalar_t ACTION_SCALE = 0.5;
+    const scalar_t ACTION_SCALE = 0.6;
 
     scalar_t initTime_;
 
@@ -250,7 +250,7 @@ class DtcController final : public tbai::Controller {
         scalar_t vx = command(0) / LIN_VEL_SCALE;
         scalar_t vy = command(1) / LIN_VEL_SCALE;
         scalar_t wz = command(2) / ANG_VEL_SCALE;
-        scalar_t comHeight = 0.53;
+        scalar_t comHeight = 0.50;
         return {vx, vy, wz, comHeight};
     }
 

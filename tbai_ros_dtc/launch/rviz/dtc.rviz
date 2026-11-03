@@ -36,6 +36,14 @@ Toolbars:
 Visualization Manager:
   Class: ""
   Displays:
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /terrain_ground_truth
+      Name: Ground Truth Terrain
+      Namespaces:
+        terrain_ground_truth: true
+      Queue Size: 1
+      Value: true
     - Alpha: 0.5
       Cell Size: 1
       Class: rviz/Grid

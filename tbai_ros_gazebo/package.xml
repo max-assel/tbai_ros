@@ -17,6 +17,7 @@
   <depend>pluginlib</depend>
   <depend>roscpp</depend>
   <depend>tbai</depend>
+  <depend>visualization_msgs</depend>
 
   <export>
       <controller_interface plugin="${prefix}/controller_plugins.xml"/>

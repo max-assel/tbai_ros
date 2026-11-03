@@ -12,6 +12,7 @@ list
   [9] lindyhop
   [10] skipping
   [11] pawup
+  [12] go2_trot
 }
 
 stance
@@ -39,6 +40,21 @@ trot
      [0]     0.0
      [1]     0.25
      [2]     0.50
+   }
+}
+
+go2_trot
+ {
+   modeSequence
+   {
+     [0]     LF_RH
+     [1]     RF_LH
+   }
+   switchingTimes
+   {
+     [0]     0.0
+     [1]     0.3
+     [2]     0.6
    }
 }
 

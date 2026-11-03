@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   tbai_ros_msgs
   tbai_ros_core
   std_msgs
+  visualization_msgs
   tbai
 )
 
@@ -54,8 +55,16 @@ add_library(ContactSensor SHARED src/ContactSensor.cpp)
 target_link_libraries(ContactSensor ${catkin_LIBRARIES} ${gazebo_LIBRARIES} yaml-cpp spdlog::spdlog)
 target_compile_options(ContactSensor PRIVATE ${OCS2_CXX_FLAGS})
 
+add_executable(terrain_publisher src/terrain_publisher.cpp)
+
+target_link_libraries(terrain_publisher
+  ${catkin_LIBRARIES}
+  ${GAZEBO_LIBRARIES}
+)
+
 install(
   TARGETS
+      terrain_publisher
       JointController
       StatePublisher
       RobotStatePublisher

@@ -109,7 +109,9 @@
         </image>
         <depth_camera></depth_camera>
         <clip>
-            <near>0.2</near>
+            <!-- Render the nearby platform so it occludes the lower floor.
+                 pointCloudCutoff separately enforces the usable sensor range. -->
+            <near>0.05</near>
             <far>3</far>
         </clip>
         <noise>

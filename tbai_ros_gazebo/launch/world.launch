@@ -15,6 +15,8 @@
 	<arg name="world"					 default="normal"/>
 	<arg name="paused"					 default="false"/>
     <arg name="use_sim_time"             default="true"/>
+    <!-- Ground-truth simulation state uses Gazebo world coordinates in odom. -->
+    <arg name="terrain_frame"            default="odom"/>
 
     <!-- Upload some data to ROS param server -->
     <rosparam file="$(arg config_file)" command="load"/>
@@ -38,5 +40,12 @@
     <!-- Load joint controllers -->
 	<node name="controller_spawner" pkg="controller_manager" type="spawner"
       respawn="false" output="screen" ns="$(arg controllers_ns)" args="$(arg controllers_args)"/>
-
+	<node pkg="tbai_ros_gazebo"
+      type="terrain_publisher"
+      name="terrain_publisher"
+      output="screen">
+		<param name="world_file"
+				value="$(find tbai_ros_gazebo)/launch/worlds/$(arg world)/$(arg world).world"/>
+		<param name="frame_id" value="$(arg terrain_frame)"/>
+	</node>
 </launch>

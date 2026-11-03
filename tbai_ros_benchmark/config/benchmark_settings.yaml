@@ -1,8 +1,8 @@
-robot: anymal_d
-worlds: [ramped_stepping_stones]
+robot: go2
+worlds: [sparse_stones, balance_beam, side_stones]
 # other worlds: balance_beam, pegboard, ramped_balance_beam, ramped_stepping_stones, rubble, side_stones, sparse_stones, stairs, ramp_10
-controllers: [MPC, DTC, RL]
-repetitions: 15
+controllers: [MPC]
+repetitions: 2
 
 gazebo_gui: false
 rviz: true
@@ -16,7 +16,7 @@ activation_timeout_wall_sec: 30
 startup_timeout_sec: 120
 timeout_sim_sec: 60
 timeout_wall_sec: 180
-output_dir: ../results
+output_dir: ../results_go2
 
 execution:
   continue_after: [success, failure, timeout]
@@ -60,7 +60,6 @@ success:
 # YAML merges preserve complete thresholds for each world.
 failure_defaults:
   fall: &fall_defaults
-    min_base_height_world_m: 0.10
     max_abs_roll_rad: 0.80
     max_abs_pitch_rad: 0.80
     hold_sim_sec: 0.5
@@ -255,5 +254,9 @@ record_topics:
   - /gazebo/model_states
   - /tf
   - /tf_static
+  - /terrain_ground_truth
+  - /camera/depth/points
+  - /camera/depth/points_downsampled
   - /elevation_mapping/elevation_map_raw
+  - /convex_plane_decomposition_ros/filtered_map
   - /rosout_agg

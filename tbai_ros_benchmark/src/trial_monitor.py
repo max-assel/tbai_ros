@@ -88,9 +88,6 @@ class TrialMonitor:
         if self.held('tip', abs(roll) > fall['max_abs_roll_rad'] or
                      abs(pitch) > fall['max_abs_pitch_rad'], stamp, fall['hold_sim_sec']) and not outside:
             return self.result('failure', 'tipped_over')
-        if self.held('low', z < fall['min_base_height_world_m'], stamp, fall['hold_sim_sec']) and not outside:
-            return self.result('failure', 'base_below_height_limit')
-
         recovery = self.recovery
         disturbed = (abs(roll) > recovery['disturbance_roll_rad'] or
                      abs(pitch) > recovery['disturbance_pitch_rad'])

@@ -12,9 +12,13 @@ ENV_NAME=$1
 BASELINE=$2
 
 if [ "$BASELINE" == "MPC" ]; then
+    GAIT_NAME=trot
+    if [ "$(rosparam get /robot_name)" = "go2" ]; then
+        GAIT_NAME=go2_trot
+    fi
     rostopic pub /anymal_d/change_controller std_msgs/String "data: WBC" --once
     sleep 1
-    rostopic pub /gait_command std_msgs/String "data: trot" --once
+    rostopic pub /gait_command std_msgs/String "data: $GAIT_NAME" --once
 elif [ "$BASELINE" == "RL" ]; then
     rostopic pub /anymal_d/change_controller std_msgs/String "data: BOB" --once
 elif [ "$BASELINE" == "DTC" ]; then

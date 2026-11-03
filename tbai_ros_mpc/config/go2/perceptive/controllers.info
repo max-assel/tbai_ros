@@ -1,8 +1,8 @@
 sqpWbc
 {
   ; Task weights
-  weightBaseTracking            1.0
-  weightSwingLeg                200.0
+  weightBaseTracking            20.0
+  weightSwingLeg                400.0
   weightContactForce            0.001
 
   ; Friction cone parameters
