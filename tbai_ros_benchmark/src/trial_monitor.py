@@ -12,6 +12,8 @@ class TrialResult:
     cleanup_errors: list = field(default_factory=list)
     forward_progress_m: float = 0.0
     positions: list = field(default_factory=list)
+    map_update_rate_wall_hz: float | None = None
+    retryable: bool = False
 
 
 class TrialMonitor:

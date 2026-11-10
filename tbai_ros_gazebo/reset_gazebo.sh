@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 
-if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 <envname> <baseline>"
+if [[ $# -ne 2 && ! ( $# -eq 3 && $3 == --no-stand ) ]]; then
+    echo "Usage: $0 <envname> <baseline> [--no-stand]"
     exit 1
 fi
 
@@ -143,7 +143,8 @@ fi
 ## Pause Gazebo physics
 rosservice call /gazebo/pause_physics
 
-## Reset model state
+## Reset only the robot. A world reset moves terrain from saved-state poses back
+## to its original model definitions. The zero twist clears robot link velocities.
 rosservice call /gazebo/set_model_state "
             {
                 model_state: 
@@ -186,12 +187,11 @@ rosservice call /gazebo/set_model_configuration "
                 - 'RH_HFE'
             joint_positions: ${RESET_JOINT_POSITIONS}"
 
-## Set in ControlMode 1
-# rosservice call /ControlMode 1
-rostopic pub /anymal_d/change_controller std_msgs/String "data: STAND" --once
-
-## Unause Gazebo physics
+## Resume state updates before asking the controller to stand after teleporting.
 rosservice call /gazebo/unpause_physics
+if [ "${3:-}" != "--no-stand" ]; then
+    rostopic pub /anymal_d/change_controller std_msgs/String "data: STAND" --once
+fi
 
 # sleep 1
 

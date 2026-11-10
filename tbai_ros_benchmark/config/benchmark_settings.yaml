@@ -1,8 +1,8 @@
 robot: go2
-worlds: [sparse_stones, balance_beam, side_stones]
+worlds: [ramped_balance_beam, ramped_stepping_stones, rubble, side_stones, sparse_stones, stairs, ramp_10]
 # other worlds: balance_beam, pegboard, ramped_balance_beam, ramped_stepping_stones, rubble, side_stones, sparse_stones, stairs, ramp_10
 controllers: [MPC]
-repetitions: 2
+repetitions: 10
 
 gazebo_gui: false
 rviz: true
@@ -32,6 +32,8 @@ robot_readiness:
   poll_wall_sec: 0.05
   state_stale_wall_sec: 1.0
   reset_timeout_wall_sec: 30  
+  # Go2's settled SIT knees track about 0.12 rad from the commanded angles.
+  sit_joint_tolerance_rad: 0.15
   mapping_timeout_wall_sec: 60  
   stable_stand_hold_sim_sec: 1.0
   reset_xy_tolerance_m: 0.15
@@ -41,9 +43,9 @@ robot_readiness:
 
 cleanup:
   recorder_sigint_timeout_wall_sec: 30
-  process_sigint_timeout_wall_sec: 10
-  process_sigterm_timeout_wall_sec: 5
-  process_sigkill_timeout_wall_sec: 5
+  process_sigint_timeout_wall_sec: 2
+  process_sigterm_timeout_wall_sec: 1
+  process_sigkill_timeout_wall_sec: 2
 
 monitor:
   state_topic: /anymal_d/state

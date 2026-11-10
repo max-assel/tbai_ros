@@ -18,21 +18,29 @@ def execute_trial(config):
     for world in config['worlds']:
         for controller in config['controllers']:
             for repetition in range(1, config['repetitions'] + 1):
-                trial = TrialLifecycle(config, world, controller, repetition)
-                print(f"Starting {world}/{controller}/trial_{repetition:03d}", flush=True)
-                result = trial.execute()
+                for attempt in (1, 2):
+                    trial = TrialLifecycle(config, world, controller, repetition, attempt=attempt)
+                    label = f"{world}/{controller}/trial_{repetition:03d} (attempt {attempt}/2)"
+                    print(f"Starting {label}", flush=True)
+                    result = trial.execute()
+                    print(f"{label}: {result.status}: {result.reason}", flush=True)
+                    print(f"  Trial duration: {result.duration_sim_sec:.3f} simulation seconds; "
+                          f"recovery events: {len(result.recovery_events)}", flush=True)
+                    for event in result.recovery_events:
+                        print(f"  Recovery: {event['kind']}; "
+                              f"simulation time {event['start_sim_sec']:.3f}–{event['end_sim_sec']:.3f} s; "
+                              f"duration {event['end_sim_sec'] - event['start_sim_sec']:.3f} s", flush=True)
+                    for error in result.cleanup_errors:
+                        print(f"Cleanup error: {error}", flush=True)
+                    print(f"  Forward progress: {result.forward_progress_m:.3f} m", flush=True)
+                    if attempt == 1 and result.retryable and not result.cleanup_errors:
+                        print(f"Retrying after startup/no-progress failure; logs: {trial.attempt_dir}", flush=True)
+                        continue
+                    break
                 results.append(result)
-                print(f"{world}/{controller}/trial_{repetition:03d}: {result.status}: {result.reason}", flush=True)
-                print(f"  Trial duration: {result.duration_sim_sec:.3f} simulation seconds; "
-                      f"recovery events: {len(result.recovery_events)}", flush=True)
-                for event in result.recovery_events:
-                    print(f"  Recovery: {event['kind']}; "
-                          f"simulation time {event['start_sim_sec']:.3f}–{event['end_sim_sec']:.3f} s; "
-                          f"duration {event['end_sim_sec'] - event['start_sim_sec']:.3f} s", flush=True)
-                for error in result.cleanup_errors:
-                    print(f"Cleanup error: {error}", flush=True)
-                print(f"  Forward progress: {result.forward_progress_m:.3f} m", flush=True)
-                if result.cleanup_errors or result.status not in config['execution']['continue_after']:
+                if result.retryable:
+                    print(f"Second attempt failed before walking; stopping. Logs: {trial.attempt_dir}", flush=True)
+                if result.cleanup_errors or result.retryable or result.status not in config['execution']['continue_after']:
                     return results
     return results
 
@@ -46,7 +54,7 @@ def main():
         results = execute_trial(config)
 
         if any(
-            r.status in ("error", "interrupted") or r.cleanup_errors
+            r.status in ("error", "interrupted") or r.cleanup_errors or r.retryable
             for r in results
         ):
             parser.exit(

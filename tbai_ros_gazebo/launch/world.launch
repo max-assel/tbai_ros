@@ -21,14 +21,19 @@
     <!-- Upload some data to ROS param server -->
     <rosparam file="$(arg config_file)" command="load"/>
 
-	<!-- Empty World -->
-	<include file="$(find gazebo_ros)/launch/empty_world.launch">
-		<arg name="world_name" value="$(find tbai_ros_gazebo)/launch/worlds/$(arg world)/$(arg world).world"/>
-		<arg name="use_sim_time" value="$(arg use_sim_time)"/>
-		<arg name="gui" value="$(arg gui)"/>
-		<arg name="paused" value="$(arg paused)"/>
-        <arg name="server_required" value="true"/>
-	</include>
+    <!-- gazebo_ros sources the active Gazebo setup script itself. Inheriting a
+         second installation's media causes duplicate Ogre resources at startup.
+         Scope this to Gazebo so other nodes retain their environment. -->
+    <group>
+        <env name="GAZEBO_RESOURCE_PATH" value=""/>
+        <include file="$(find gazebo_ros)/launch/empty_world.launch">
+            <arg name="world_name" value="$(find tbai_ros_gazebo)/launch/worlds/$(arg world)/$(arg world).world"/>
+            <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+            <arg name="gui" value="$(arg gui)"/>
+            <arg name="paused" value="$(arg paused)"/>
+            <arg name="server_required" value="true"/>
+        </include>
+    </group>
 
 	<!-- Load gazebo description -->
 	<param name="$(arg description_name)" command="$(find xacro)/xacro --inorder $(arg description_file)" />
