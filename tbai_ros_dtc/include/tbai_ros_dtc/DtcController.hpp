@@ -250,7 +250,7 @@ class DtcController final : public tbai::Controller {
         scalar_t vx = command(0) / LIN_VEL_SCALE;
         scalar_t vy = command(1) / LIN_VEL_SCALE;
         scalar_t wz = command(2) / ANG_VEL_SCALE;
-        scalar_t comHeight = 0.50;
+        scalar_t comHeight = 0.53;
         return {vx, vy, wz, comHeight};
     }
 

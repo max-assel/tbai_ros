@@ -1,12 +1,12 @@
-robot: go2
-worlds: [ramped_balance_beam, ramped_stepping_stones, rubble, side_stones, sparse_stones, stairs, ramp_10]
+robot: anymal_d
+worlds: [ramped_stepping_stones]
 # other worlds: balance_beam, pegboard, ramped_balance_beam, ramped_stepping_stones, rubble, side_stones, sparse_stones, stairs, ramp_10
-controllers: [MPC]
-repetitions: 10
+controllers: [DTC]
+repetitions: 2
 
 gazebo_gui: false
 rviz: true
-record_rosbag: false
+record_rosbag: true
 
 scripts: 
   reset: /home/aiyer334/TBAI/src/tbai_ros/tbai_ros_gazebo/reset_gazebo.sh
@@ -16,7 +16,7 @@ activation_timeout_wall_sec: 30
 startup_timeout_sec: 120
 timeout_sim_sec: 60
 timeout_wall_sec: 180
-output_dir: ../results_go2
+output_dir: ../results_test
 
 execution:
   continue_after: [success, failure, timeout]
@@ -262,3 +262,6 @@ record_topics:
   - /elevation_mapping/elevation_map_raw
   - /convex_plane_decomposition_ros/filtered_map
   - /rosout_agg
+  - /anymal_mpc_policy
+  - /anymal_mpc_observation
+  - /anymal_mpc_target
